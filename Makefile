@@ -24,4 +24,13 @@ dropdb:
 sqlc:
 	sqlc generate
 
-.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc
+sqlcinit:
+	sqlc init
+
+test:
+	go test -v -coverage -short -count=1 ./...
+
+coverage:
+	go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
+
+.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test
