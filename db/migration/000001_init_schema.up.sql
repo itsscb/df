@@ -43,7 +43,6 @@ CREATE TABLE "persons" (
   "zip" varchar NOT NULL,
   "street" varchar NOT NULL,
   "country" varchar NOT NULL,
-  "documents" bigserial,
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
@@ -52,6 +51,7 @@ CREATE TABLE "persons" (
 
 CREATE TABLE "documents" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "personID" bigserial,
   "name" varchar NOT NULL,
   "type" varchar NOT NULL,
   "path" varchar NOT NULL,
@@ -120,7 +120,7 @@ ALTER TABLE "mails" ADD FOREIGN KEY ("attachments") REFERENCES "documents" ("ID"
 
 ALTER TABLE "persons" ADD FOREIGN KEY ("customerID") REFERENCES "customers" ("ID");
 
-ALTER TABLE "persons" ADD FOREIGN KEY ("documents") REFERENCES "documents" ("ID");
+ALTER TABLE "documents" ADD FOREIGN KEY ("personID") REFERENCES "persons" ("ID");
 
 ALTER TABLE "payments" ADD FOREIGN KEY ("customerID") REFERENCES "customers" ("ID");
 
