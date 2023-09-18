@@ -35,7 +35,7 @@ type Customer struct {
 
 type Document struct {
 	ID          int64          `json:"ID"`
-	PersonID    sql.NullInt64  `json:"personID"`
+	PersonID    int64          `json:"personID"`
 	Name        string         `json:"name"`
 	Type        string         `json:"type"`
 	Path        string         `json:"path"`
@@ -43,6 +43,10 @@ type Document struct {
 	Valid       bool           `json:"valid"`
 	ValidDate   sql.NullTime   `json:"validDate"`
 	ValidatedBy sql.NullString `json:"validatedBy"`
+	Creator     string         `json:"creator"`
+	Created     time.Time      `json:"created"`
+	Changer     string         `json:"changer"`
+	Changed     time.Time      `json:"changed"`
 }
 
 type Mail struct {
