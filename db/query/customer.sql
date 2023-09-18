@@ -2,7 +2,7 @@
 SELECT * FROM customers
 WHERE "ID" = $1 LIMIT 1;
 
--- name: CreateCutomer :one
+-- name: CreateCustomer :one
 INSERT INTO customers (
     username,
     passwordhash,

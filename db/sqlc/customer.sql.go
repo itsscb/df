@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const createCutomer = `-- name: CreateCutomer :one
+const createCustomer = `-- name: CreateCustomer :one
 INSERT INTO customers (
     username,
     passwordhash,
@@ -31,7 +31,7 @@ INSERT INTO customers (
 ) RETURNING "ID", username, passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
 `
 
-type CreateCutomerParams struct {
+type CreateCustomerParams struct {
 	Username     string         `json:"username"`
 	Passwordhash string         `json:"passwordhash"`
 	Firstname    string         `json:"firstname"`
@@ -47,8 +47,8 @@ type CreateCutomerParams struct {
 	Changer      string         `json:"changer"`
 }
 
-func (q *Queries) CreateCutomer(ctx context.Context, arg CreateCutomerParams) (Customer, error) {
-	row := q.db.QueryRowContext(ctx, createCutomer,
+func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) (Customer, error) {
+	row := q.db.QueryRowContext(ctx, createCustomer,
 		arg.Username,
 		arg.Passwordhash,
 		arg.Firstname,
