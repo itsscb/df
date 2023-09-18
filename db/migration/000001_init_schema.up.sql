@@ -6,7 +6,7 @@ CREATE TABLE "mails" (
   "timestamp" timestamptz NOT NULL DEFAULT (now()),
   "subject" varchar NOT NULL,
   "body" text NOT NULL,
-  "attachments" integer
+  "attachments" bigserial
 );
 
 CREATE TABLE "customers" (
