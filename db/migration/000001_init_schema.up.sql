@@ -35,7 +35,7 @@ CREATE TABLE "customers" (
 
 CREATE TABLE "persons" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "customerID" bigserial,
+  "customerID" bigserial NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
   "birthday" timestamptz NOT NULL,
