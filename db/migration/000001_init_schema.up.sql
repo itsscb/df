@@ -51,14 +51,18 @@ CREATE TABLE "persons" (
 
 CREATE TABLE "documents" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "personID" bigserial,
+  "personID" bigserial NOT NULL,
   "name" varchar NOT NULL,
   "type" varchar NOT NULL,
   "path" varchar NOT NULL,
   "url" varchar NOT NULL,
   "valid" boolean NOT NULL DEFAULT false,
   "validDate" timestamptz,
-  "validatedBy" varchar
+  "validatedBy" varchar,
+  "creator" varchar NOT NULL,
+  "created" timestamptz NOT NULL DEFAULT (now()),
+  "changer" varchar NOT NULL,
+  "changed" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "payments" (
