@@ -34,7 +34,7 @@ sqlcinit:
 	sqlc init
 
 test:
-	go test -v -coverage -short -count=1 ./...
+	go test -v -cover -short -count=1 ./...
 
 coverage:
 	go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
