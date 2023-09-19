@@ -38,7 +38,7 @@ func createRandomDocumentUpload(t *testing.T) Document {
 	require.Equal(t, arg.Url, document.Url)
 	require.Equal(t, arg.Creator, document.Creator)
 	require.Equal(t, arg.Changer, document.Changer)
-	require.Equal(t, false, document.Valid)
+	require.Equal(t, document.Valid, false)
 	require.Zero(t, document.ValidatedBy)
 	require.Zero(t, document.ValidDate)
 
@@ -46,6 +46,42 @@ func createRandomDocumentUpload(t *testing.T) Document {
 	require.NotZero(t, document.Created)
 
 	return document
+}
+
+func TestCreateDocumentMail(t *testing.T) {
+	mail := createRandomMail(t)
+	require.NotEmpty(t, mail)
+
+	arg := CreateDocumentMailParams{
+		MailID: sql.NullInt64{
+			Valid: true,
+			Int64: mail.ID,
+		},
+		Name:    util.RandomUser(),
+		Type:    util.RandomUser(),
+		Path:    util.RandomString(50),
+		Url:     util.RandomString(60),
+		Creator: util.RandomUser(),
+		Changer: util.RandomUser(),
+	}
+
+	document, err := testQueries.CreateDocumentMail(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, document)
+
+	require.Equal(t, arg.MailID, document.MailID)
+	require.Equal(t, arg.Name, document.Name)
+	require.Equal(t, arg.Type, document.Type)
+	require.Equal(t, arg.Path, document.Path)
+	require.Equal(t, arg.Url, document.Url)
+	require.Equal(t, arg.Creator, document.Creator)
+	require.Equal(t, arg.Changer, document.Changer)
+	require.Equal(t, document.Valid, false)
+	require.Zero(t, document.ValidatedBy)
+	require.Zero(t, document.ValidDate)
+
+	require.NotZero(t, document.ID)
+	require.NotZero(t, document.Created)
 }
 
 func TestCreateDocumentUpload(t *testing.T) {

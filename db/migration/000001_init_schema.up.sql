@@ -1,8 +1,8 @@
 CREATE TABLE "mails" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "from" varchar NOT NULL,
-  "to" varchar NOT NULL,
-  "cc" varchar,
+  "to" varchar[] NOT NULL,
+  "cc" varchar[],
   "timestamp" timestamptz NOT NULL DEFAULT (now()),
   "subject" varchar NOT NULL,
   "body" text NOT NULL,

@@ -7,8 +7,9 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 const createMail = `-- name: CreateMail :one
@@ -29,21 +30,21 @@ RETURNING "ID", "from", "to", cc, timestamp, subject, body, creator, created, ch
 `
 
 type CreateMailParams struct {
-	From      string         `json:"from"`
-	To        string         `json:"to"`
-	Cc        sql.NullString `json:"cc"`
-	Subject   string         `json:"subject"`
-	Body      string         `json:"body"`
-	Timestamp time.Time      `json:"timestamp"`
-	Creator   string         `json:"creator"`
-	Changer   string         `json:"changer"`
+	From      string    `json:"from"`
+	To        []string  `json:"to"`
+	Cc        []string  `json:"cc"`
+	Subject   string    `json:"subject"`
+	Body      string    `json:"body"`
+	Timestamp time.Time `json:"timestamp"`
+	Creator   string    `json:"creator"`
+	Changer   string    `json:"changer"`
 }
 
 func (q *Queries) CreateMail(ctx context.Context, arg CreateMailParams) (Mail, error) {
 	row := q.db.QueryRowContext(ctx, createMail,
 		arg.From,
-		arg.To,
-		arg.Cc,
+		pq.Array(arg.To),
+		pq.Array(arg.Cc),
 		arg.Subject,
 		arg.Body,
 		arg.Timestamp,
@@ -54,8 +55,8 @@ func (q *Queries) CreateMail(ctx context.Context, arg CreateMailParams) (Mail, e
 	err := row.Scan(
 		&i.ID,
 		&i.From,
-		&i.To,
-		&i.Cc,
+		pq.Array(&i.To),
+		pq.Array(&i.Cc),
 		&i.Timestamp,
 		&i.Subject,
 		&i.Body,
@@ -104,8 +105,8 @@ func (q *Queries) GetMail(ctx context.Context, id int64) (Mail, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.From,
-		&i.To,
-		&i.Cc,
+		pq.Array(&i.To),
+		pq.Array(&i.Cc),
 		&i.Timestamp,
 		&i.Subject,
 		&i.Body,
@@ -141,8 +142,8 @@ func (q *Queries) ListMails(ctx context.Context, arg ListMailsParams) ([]Mail, e
 		if err := rows.Scan(
 			&i.ID,
 			&i.From,
-			&i.To,
-			&i.Cc,
+			pq.Array(&i.To),
+			pq.Array(&i.Cc),
 			&i.Timestamp,
 			&i.Subject,
 			&i.Body,
