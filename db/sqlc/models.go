@@ -35,7 +35,7 @@ type Customer struct {
 
 type Document struct {
 	ID          int64          `json:"ID"`
-	PersonID    int64          `json:"personID"`
+	PersonID    sql.NullInt64  `json:"personID"`
 	Name        string         `json:"name"`
 	Type        string         `json:"type"`
 	Path        string         `json:"path"`
@@ -43,6 +43,7 @@ type Document struct {
 	Valid       bool           `json:"valid"`
 	ValidDate   sql.NullTime   `json:"validDate"`
 	ValidatedBy sql.NullString `json:"validatedBy"`
+	MailID      sql.NullInt64  `json:"mailID"`
 	Creator     string         `json:"creator"`
 	Created     time.Time      `json:"created"`
 	Changer     string         `json:"changer"`
@@ -50,14 +51,17 @@ type Document struct {
 }
 
 type Mail struct {
-	ID          int64          `json:"ID"`
-	From        string         `json:"from"`
-	To          string         `json:"to"`
-	Cc          sql.NullString `json:"cc"`
-	Timestamp   time.Time      `json:"timestamp"`
-	Subject     string         `json:"subject"`
-	Body        string         `json:"body"`
-	Attachments sql.NullInt32  `json:"attachments"`
+	ID        int64          `json:"ID"`
+	From      string         `json:"from"`
+	To        string         `json:"to"`
+	Cc        sql.NullString `json:"cc"`
+	Timestamp time.Time      `json:"timestamp"`
+	Subject   string         `json:"subject"`
+	Body      string         `json:"body"`
+	Creator   string         `json:"creator"`
+	Created   time.Time      `json:"created"`
+	Changer   string         `json:"changer"`
+	Changed   time.Time      `json:"changed"`
 }
 
 type Payment struct {
