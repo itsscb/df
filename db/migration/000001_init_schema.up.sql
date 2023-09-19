@@ -6,7 +6,11 @@ CREATE TABLE "mails" (
   "timestamp" timestamptz NOT NULL DEFAULT (now()),
   "subject" varchar NOT NULL,
   "body" text NOT NULL,
-  "attachments" bigserial
+  "creator" varchar NOT NULL,
+  "created" timestamptz NOT NULL DEFAULT (now()),
+  "changer" varchar NOT NULL,
+  "changed" timestamptz NOT NULL DEFAULT (now())
+
 );
 
 CREATE TABLE "customers" (
@@ -35,7 +39,7 @@ CREATE TABLE "customers" (
 
 CREATE TABLE "persons" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "customerID" bigserial NOT NULL,
+  "customerID" bigint NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
   "birthday" timestamptz NOT NULL,
@@ -51,7 +55,7 @@ CREATE TABLE "persons" (
 
 CREATE TABLE "documents" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "personID" bigserial NOT NULL,
+  "personID" bigint,
   "name" varchar NOT NULL,
   "type" varchar NOT NULL,
   "path" varchar NOT NULL,
@@ -59,6 +63,7 @@ CREATE TABLE "documents" (
   "valid" boolean NOT NULL DEFAULT false,
   "validDate" timestamptz,
   "validatedBy" varchar,
+  "mailID" bigint,
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
@@ -67,7 +72,7 @@ CREATE TABLE "documents" (
 
 CREATE TABLE "payments" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "customerID" bigserial NOT NULL,
+  "customerID" bigint NOT NULL,
   "paymentCategory" varchar NOT NULL,
   "bankname" varchar,
   "IBAN" varchar,
@@ -96,8 +101,8 @@ CREATE TABLE "providers" (
 
 CREATE TABLE "returns" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "personID" bigserial NOT NULL,
-  "providerID" bigserial NOT NULL,
+  "personID" bigint NOT NULL,
+  "providerID" bigint NOT NULL,
   "name" varchar NOT NULL,
   "description" text NOT NULL,
   "category" varchar NOT NULL,
@@ -111,8 +116,8 @@ CREATE TABLE "returns" (
 
 CREATE TABLE "returnsLog" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "returnsID" bigserial,
-  "mailID" bigserial,
+  "returnsID" bigint,
+  "mailID" bigint,
   "status" varchar,
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
@@ -120,11 +125,11 @@ CREATE TABLE "returnsLog" (
   "changed" timestamptz NOT NULL DEFAULT (now())
 );
 
-ALTER TABLE "mails" ADD FOREIGN KEY ("attachments") REFERENCES "documents" ("ID");
-
 ALTER TABLE "persons" ADD FOREIGN KEY ("customerID") REFERENCES "customers" ("ID");
 
 ALTER TABLE "documents" ADD FOREIGN KEY ("personID") REFERENCES "persons" ("ID");
+
+ALTER TABLE "documents" ADD FOREIGN KEY ("mailID") REFERENCES "mails" ("ID");
 
 ALTER TABLE "payments" ADD FOREIGN KEY ("customerID") REFERENCES "customers" ("ID");
 
