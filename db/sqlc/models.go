@@ -51,17 +51,17 @@ type Document struct {
 }
 
 type Mail struct {
-	ID        int64          `json:"ID"`
-	From      string         `json:"from"`
-	To        string         `json:"to"`
-	Cc        sql.NullString `json:"cc"`
-	Timestamp time.Time      `json:"timestamp"`
-	Subject   string         `json:"subject"`
-	Body      string         `json:"body"`
-	Creator   string         `json:"creator"`
-	Created   time.Time      `json:"created"`
-	Changer   string         `json:"changer"`
-	Changed   time.Time      `json:"changed"`
+	ID        int64     `json:"ID"`
+	From      string    `json:"from"`
+	To        []string  `json:"to"`
+	Cc        []string  `json:"cc"`
+	Timestamp time.Time `json:"timestamp"`
+	Subject   string    `json:"subject"`
+	Body      string    `json:"body"`
+	Creator   string    `json:"creator"`
+	Created   time.Time `json:"created"`
+	Changer   string    `json:"changer"`
+	Changed   time.Time `json:"changed"`
 }
 
 type Payment struct {
