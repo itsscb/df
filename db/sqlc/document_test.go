@@ -10,21 +10,24 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createRandomDocument(t *testing.T) Document {
+func createRandomDocumentUpload(t *testing.T) Document {
 	person := createRandomPerson(t)
 	require.NotEmpty(t, person)
 
-	arg := CreateDocumentParams{
-		PersonID: person.ID,
-		Name:     util.RandomUser(),
-		Type:     util.RandomUser(),
-		Path:     util.RandomString(50),
-		Url:      util.RandomString(60),
-		Creator:  util.RandomUser(),
-		Changer:  util.RandomUser(),
+	arg := CreateDocumentUploadParams{
+		PersonID: sql.NullInt64{
+			Valid: true,
+			Int64: person.ID,
+		},
+		Name:    util.RandomUser(),
+		Type:    util.RandomUser(),
+		Path:    util.RandomString(50),
+		Url:     util.RandomString(60),
+		Creator: util.RandomUser(),
+		Changer: util.RandomUser(),
 	}
 
-	document, err := testQueries.CreateDocument(context.Background(), arg)
+	document, err := testQueries.CreateDocumentUpload(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, document)
 
@@ -45,12 +48,12 @@ func createRandomDocument(t *testing.T) Document {
 	return document
 }
 
-func TestCreateDocument(t *testing.T) {
-	createRandomDocument(t)
+func TestCreateDocumentUpload(t *testing.T) {
+	createRandomDocumentUpload(t)
 }
 
 func TestGetDocument(t *testing.T) {
-	newdocument := createRandomDocument(t)
+	newdocument := createRandomDocumentUpload(t)
 	require.NotEmpty(t, newdocument)
 
 	document, err := testQueries.GetDocument(context.Background(), newdocument.ID)
@@ -72,7 +75,7 @@ func TestGetDocument(t *testing.T) {
 }
 
 func TestDeleteDocument(t *testing.T) {
-	document1 := createRandomDocument(t)
+	document1 := createRandomDocumentUpload(t)
 	err := testQueries.DeleteDocument(context.Background(), document1.ID)
 	require.NoError(t, err)
 
@@ -83,7 +86,7 @@ func TestDeleteDocument(t *testing.T) {
 }
 
 func TestUpdateDocument(t *testing.T) {
-	document1 := createRandomDocument(t)
+	document1 := createRandomDocumentUpload(t)
 	require.NotEmpty(t, document1)
 
 	arg := UpdateDocumentParams{
@@ -105,7 +108,7 @@ func TestUpdateDocument(t *testing.T) {
 
 func TestListDocuments(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		createRandomDocument(t)
+		createRandomDocumentUpload(t)
 	}
 
 	arg := ListDocumentsParams{
@@ -123,7 +126,7 @@ func TestListDocuments(t *testing.T) {
 }
 
 func TestValidateDocument(t *testing.T) {
-	document1 := createRandomDocument(t)
+	document1 := createRandomDocumentUpload(t)
 
 	validator := util.RandomUser()
 
@@ -148,7 +151,7 @@ func TestValidateDocument(t *testing.T) {
 }
 
 func TestInvalidateDocument(t *testing.T) {
-	document1 := createRandomDocument(t)
+	document1 := createRandomDocumentUpload(t)
 
 	validator := util.RandomUser()
 

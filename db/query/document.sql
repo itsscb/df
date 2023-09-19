@@ -2,9 +2,22 @@
 SELECT * FROM documents
 WHERE "ID" = $1 LIMIT 1;
 
--- name: CreateDocument :one
+-- name: CreateDocumentUpload :one
 INSERT INTO documents (
     "personID",
+    name,
+    type,
+    path,
+    url,
+    creator,
+    changer
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7
+) RETURNING *;
+
+-- name: CreateDocumentMail :one
+INSERT INTO documents (
+    "mailID",
     name,
     type,
     path,
