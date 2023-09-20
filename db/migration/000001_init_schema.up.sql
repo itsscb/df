@@ -115,7 +115,7 @@ CREATE TABLE "returns" (
 
 CREATE TABLE "returnsLog" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "returnsID" bigint NOT NULL,
+  "returnID" bigint NOT NULL,
   "mailID" bigint NOT NULL,
   "status" varchar,
   "creator" varchar NOT NULL,
@@ -136,6 +136,6 @@ ALTER TABLE "returns" ADD FOREIGN KEY ("personID") REFERENCES "persons" ("ID");
 
 ALTER TABLE "returns" ADD FOREIGN KEY ("providerID") REFERENCES "providers" ("ID");
 
-ALTER TABLE "returnsLog" ADD FOREIGN KEY ("returnsID") REFERENCES "returns" ("ID");
+ALTER TABLE "returnsLog" ADD FOREIGN KEY ("returnID") REFERENCES "returns" ("ID");
 
 ALTER TABLE "returnsLog" ADD FOREIGN KEY ("mailID") REFERENCES "mails" ("ID");
