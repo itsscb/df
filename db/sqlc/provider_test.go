@@ -11,12 +11,16 @@ import (
 )
 
 func createRandomProvider(t *testing.T) Provider {
+
+	creator := util.RandomUser()
+
 	arg := CreateProviderParams{
 		Name:        util.RandomUser(),
 		Description: util.RandomString(30),
 		Category:    util.RandomUser(),
 		Email:       util.RandomUser(),
-		Creator:     util.RandomUser(),
+		Creator:     creator,
+		Changer:     creator,
 	}
 
 	provider, err := testQueries.CreateProvider(context.Background(), arg)

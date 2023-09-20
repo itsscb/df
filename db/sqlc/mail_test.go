@@ -12,6 +12,8 @@ import (
 
 func createRandomMail(t *testing.T) Mail {
 
+	creator := util.RandomUser()
+
 	arg := CreateMailParams{
 		From:      util.RandomEmail(),
 		To:        []string{util.RandomEmail()},
@@ -19,8 +21,8 @@ func createRandomMail(t *testing.T) Mail {
 		Subject:   util.RandomString(20),
 		Body:      util.RandomString(300),
 		Timestamp: time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
-		Creator:   util.RandomUser(),
-		Changer:   util.RandomUser(),
+		Creator:   creator,
+		Changer:   creator,
 	}
 
 	mail, err := testQueries.CreateMail(context.Background(), arg)
