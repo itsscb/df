@@ -10,7 +10,6 @@ CREATE TABLE "mails" (
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
   "changed" timestamptz NOT NULL DEFAULT (now())
-
 );
 
 CREATE TABLE "customers" (
@@ -116,8 +115,8 @@ CREATE TABLE "returns" (
 
 CREATE TABLE "returnsLog" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "returnsID" bigint,
-  "mailID" bigint,
+  "returnsID" bigint NOT NULL,
+  "mailID" bigint NOT NULL,
   "status" varchar,
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
