@@ -126,8 +126,8 @@ type Return struct {
 
 type ReturnsLog struct {
 	ID        int64          `json:"ID"`
-	ReturnsID sql.NullInt64  `json:"returnsID"`
-	MailID    sql.NullInt64  `json:"mailID"`
+	ReturnsID int64          `json:"returnsID"`
+	MailID    int64          `json:"mailID"`
 	Status    sql.NullString `json:"status"`
 	Creator   string         `json:"creator"`
 	Created   time.Time      `json:"created"`
