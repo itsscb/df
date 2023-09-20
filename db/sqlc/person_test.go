@@ -14,6 +14,8 @@ func createRandomPerson(t *testing.T) Person {
 	account := createRandomCustomer(t)
 	require.NotEmpty(t, account)
 
+	creator := util.RandomUser()
+
 	arg := CreatePersonParams{
 		CustomerID: account.ID,
 		Firstname:  util.RandomUser(),
@@ -23,7 +25,8 @@ func createRandomPerson(t *testing.T) Person {
 		Zip:        util.RandomString(5),
 		Street:     util.RandomString(20),
 		Country:    util.RandomString(15),
-		Creator:    util.RandomUser(),
+		Creator:    creator,
+		Changer:    creator,
 	}
 
 	person, err := testQueries.CreatePerson(context.Background(), arg)

@@ -11,6 +11,9 @@ import (
 )
 
 func createRandomCustomer(t *testing.T) Customer {
+
+	creator := util.RandomUser()
+
 	arg := CreateCustomerParams{
 		Username:     util.RandomUser(),
 		Passwordhash: util.RandomString(30),
@@ -26,7 +29,8 @@ func createRandomCustomer(t *testing.T) Customer {
 		Zip:     util.RandomString(5),
 		Street:  util.RandomString(20),
 		Country: util.RandomString(15),
-		Creator: util.RandomUser(),
+		Creator: creator,
+		Changer: creator,
 	}
 
 	account, err := testQueries.CreateCustomer(context.Background(), arg)
@@ -45,6 +49,7 @@ func createRandomCustomer(t *testing.T) Customer {
 	require.Equal(t, arg.Street, account.Street)
 	require.Equal(t, arg.Country, account.Country)
 	require.Equal(t, arg.Creator, account.Creator)
+	require.Equal(t, arg.Changer, account.Changer)
 
 	require.NotZero(t, account.ID)
 	require.NotZero(t, account.Created)
@@ -76,6 +81,7 @@ func TestGetCustomer(t *testing.T) {
 	require.Equal(t, newAccount.Street, account.Street)
 	require.Equal(t, newAccount.Country, account.Country)
 	require.Equal(t, newAccount.Creator, account.Creator)
+	require.Equal(t, newAccount.Changer, account.Changer)
 
 	require.WithinDuration(t, newAccount.Created, account.Created, time.Second)
 }
@@ -110,6 +116,7 @@ func TestUpdateCustomer(t *testing.T) {
 	require.Equal(t, account1.ID, account2.ID)
 	require.Equal(t, account1.Username, account2.Username)
 	require.NotEqual(t, account1.Phone, account2.Phone)
+	require.NotEqual(t, account1.Changer, account2.Changer)
 }
 
 func TestListCustomers(t *testing.T) {

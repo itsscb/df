@@ -14,6 +14,8 @@ func createRandomDocumentUpload(t *testing.T) Document {
 	person := createRandomPerson(t)
 	require.NotEmpty(t, person)
 
+	creator := util.RandomUser()
+
 	arg := CreateDocumentUploadParams{
 		PersonID: sql.NullInt64{
 			Valid: true,
@@ -23,8 +25,8 @@ func createRandomDocumentUpload(t *testing.T) Document {
 		Type:    util.RandomUser(),
 		Path:    util.RandomString(50),
 		Url:     util.RandomString(60),
-		Creator: util.RandomUser(),
-		Changer: util.RandomUser(),
+		Creator: creator,
+		Changer: creator,
 	}
 
 	document, err := testQueries.CreateDocumentUpload(context.Background(), arg)

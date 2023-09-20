@@ -15,6 +15,8 @@ func createRandomReturn(t *testing.T) Return {
 	person := createRandomPerson(t)
 	provider := createRandomProvider(t)
 
+	creator := util.RandomUser()
+
 	arg := CreateReturnParams{
 		Personid:    person.ID,
 		Providerid:  provider.ID,
@@ -23,7 +25,8 @@ func createRandomReturn(t *testing.T) Return {
 		Description: util.RandomString(30),
 		Category:    util.RandomUser(),
 		Email:       util.RandomUser(),
-		Creator:     util.RandomUser(),
+		Creator:     creator,
+		Changer:     creator,
 	}
 
 	ret, err := testQueries.CreateReturn(context.Background(), arg)

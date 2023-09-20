@@ -125,12 +125,12 @@ type Return struct {
 }
 
 type ReturnsLog struct {
-	ID        int64          `json:"ID"`
-	ReturnsID int64          `json:"returnsID"`
-	MailID    int64          `json:"mailID"`
-	Status    sql.NullString `json:"status"`
-	Creator   string         `json:"creator"`
-	Created   time.Time      `json:"created"`
-	Changer   string         `json:"changer"`
-	Changed   time.Time      `json:"changed"`
+	ID       int64          `json:"ID"`
+	ReturnID int64          `json:"returnID"`
+	MailID   int64          `json:"mailID"`
+	Status   sql.NullString `json:"status"`
+	Creator  string         `json:"creator"`
+	Created  time.Time      `json:"created"`
+	Changer  string         `json:"changer"`
+	Changed  time.Time      `json:"changed"`
 }

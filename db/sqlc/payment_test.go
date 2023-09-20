@@ -14,6 +14,8 @@ func createRandomPayment(t *testing.T) Payment {
 	account := createRandomCustomer(t)
 	require.NotEmpty(t, account)
 
+	creator := util.RandomUser()
+
 	arg := CreatePaymentParams{
 		CustomerID:      account.ID,
 		PaymentCategory: util.RandomUser(),
@@ -42,7 +44,8 @@ func createRandomPayment(t *testing.T) Payment {
 			String: util.RandomUser(),
 		},
 		Type:    util.RandomUser(),
-		Creator: util.RandomUser(),
+		Creator: creator,
+		Changer: creator,
 	}
 
 	person, err := testQueries.CreatePayment(context.Background(), arg)
