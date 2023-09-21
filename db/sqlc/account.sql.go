@@ -13,7 +13,6 @@ import (
 
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts (
-    username,
     passwordhash,
     firstname,
     lastname,
@@ -27,12 +26,11 @@ INSERT INTO accounts (
     creator,
     changer
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
-) RETURNING "ID", username, passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $11
+) RETURNING "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
 `
 
 type CreateAccountParams struct {
-	Username     string         `json:"username"`
 	Passwordhash string         `json:"passwordhash"`
 	Firstname    string         `json:"firstname"`
 	Lastname     string         `json:"lastname"`
@@ -44,12 +42,10 @@ type CreateAccountParams struct {
 	Street       string         `json:"street"`
 	Country      string         `json:"country"`
 	Creator      string         `json:"creator"`
-	Changer      string         `json:"changer"`
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
 	row := q.db.QueryRowContext(ctx, createAccount,
-		arg.Username,
 		arg.Passwordhash,
 		arg.Firstname,
 		arg.Lastname,
@@ -61,12 +57,10 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		arg.Street,
 		arg.Country,
 		arg.Creator,
-		arg.Changer,
 	)
 	var i Account
 	err := row.Scan(
 		&i.ID,
-		&i.Username,
 		&i.Passwordhash,
 		&i.Firstname,
 		&i.Lastname,
@@ -101,7 +95,7 @@ func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT "ID", username, passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
+SELECT "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
 WHERE "ID" = $1 LIMIT 1
 `
 
@@ -110,7 +104,6 @@ func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
 	var i Account
 	err := row.Scan(
 		&i.ID,
-		&i.Username,
 		&i.Passwordhash,
 		&i.Firstname,
 		&i.Lastname,
@@ -135,8 +128,8 @@ func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
 }
 
 const listAccounts = `-- name: ListAccounts :many
-SELECT "ID", username, passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
-ORDER BY username
+SELECT "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
+ORDER BY lastname, firstname
 LIMIT $1
 OFFSET $2
 `
@@ -157,7 +150,6 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 		var i Account
 		if err := rows.Scan(
 			&i.ID,
-			&i.Username,
 			&i.Passwordhash,
 			&i.Firstname,
 			&i.Lastname,
@@ -194,27 +186,25 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts
 SET
-    username = COALESCE($3, username),
-    passwordhash = COALESCE($4, passwordhash),
-    firstname = COALESCE($5, firstname),
-    lastname = COALESCE($6, lastname),
-    birthday = COALESCE($7, birthday),
-    email = COALESCE($8, email),
-    phone = COALESCE($9, phone),
-    city = COALESCE($10, city),
-    zip = COALESCE($11, zip),
-    street = COALESCE($12, street),
-    country = COALESCE($13, country),
+    passwordhash = COALESCE($3, passwordhash),
+    firstname = COALESCE($4, firstname),
+    lastname = COALESCE($5, lastname),
+    birthday = COALESCE($6, birthday),
+    email = COALESCE($7, email),
+    phone = COALESCE($8, phone),
+    city = COALESCE($9, city),
+    zip = COALESCE($10, zip),
+    street = COALESCE($11, street),
+    country = COALESCE($12, country),
     changer = $2,
     changed = now()
 WHERE "ID" = $1
-RETURNING "ID", username, passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
+RETURNING "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
 `
 
 type UpdateAccountParams struct {
 	ID           int64          `json:"ID"`
 	Changer      string         `json:"changer"`
-	Username     sql.NullString `json:"username"`
 	Passwordhash sql.NullString `json:"passwordhash"`
 	Firstname    sql.NullString `json:"firstname"`
 	Lastname     sql.NullString `json:"lastname"`
@@ -231,7 +221,6 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 	row := q.db.QueryRowContext(ctx, updateAccount,
 		arg.ID,
 		arg.Changer,
-		arg.Username,
 		arg.Passwordhash,
 		arg.Firstname,
 		arg.Lastname,
@@ -246,7 +235,6 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 	var i Account
 	err := row.Scan(
 		&i.ID,
-		&i.Username,
 		&i.Passwordhash,
 		&i.Firstname,
 		&i.Lastname,

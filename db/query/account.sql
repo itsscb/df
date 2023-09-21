@@ -4,7 +4,6 @@ WHERE "ID" = $1 LIMIT 1;
 
 -- name: CreateAccount :one
 INSERT INTO accounts (
-    username,
     passwordhash,
     firstname,
     lastname,
@@ -18,19 +17,18 @@ INSERT INTO accounts (
     creator,
     changer
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $11
 ) RETURNING *;
 
 -- name: ListAccounts :many
 SELECT * FROM accounts
-ORDER BY username
+ORDER BY lastname, firstname
 LIMIT $1
 OFFSET $2;
 
 -- name: UpdateAccount :one
 UPDATE accounts
 SET
-    username = COALESCE(sqlc.narg(username), username),
     passwordhash = COALESCE(sqlc.narg(passwordhash), passwordhash),
     firstname = COALESCE(sqlc.narg(firstname), firstname),
     lastname = COALESCE(sqlc.narg(lastname), lastname),

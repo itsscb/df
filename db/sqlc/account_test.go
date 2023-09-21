@@ -15,7 +15,6 @@ func createRandomAccount(t *testing.T) Account {
 	creator := util.RandomUser()
 
 	arg := CreateAccountParams{
-		Username:     util.RandomUser(),
 		Passwordhash: util.RandomString(30),
 		Firstname:    util.RandomUser(),
 		Lastname:     util.RandomUser(),
@@ -30,14 +29,12 @@ func createRandomAccount(t *testing.T) Account {
 		Street:  util.RandomString(20),
 		Country: util.RandomString(15),
 		Creator: creator,
-		Changer: creator,
 	}
 
 	account, err := testQueries.CreateAccount(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, account)
 
-	require.Equal(t, arg.Username, account.Username)
 	require.Equal(t, arg.Passwordhash, account.Passwordhash)
 	require.Equal(t, arg.Firstname, account.Firstname)
 	require.Equal(t, arg.Lastname, account.Lastname)
@@ -49,7 +46,7 @@ func createRandomAccount(t *testing.T) Account {
 	require.Equal(t, arg.Street, account.Street)
 	require.Equal(t, arg.Country, account.Country)
 	require.Equal(t, arg.Creator, account.Creator)
-	require.Equal(t, arg.Changer, account.Changer)
+	require.Equal(t, arg.Creator, account.Changer)
 
 	require.NotZero(t, account.ID)
 	require.NotZero(t, account.Created)
@@ -69,7 +66,6 @@ func TestGetAccount(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, account)
 
-	require.Equal(t, newAccount.Username, account.Username)
 	require.Equal(t, newAccount.Passwordhash, account.Passwordhash)
 	require.Equal(t, newAccount.Firstname, account.Firstname)
 	require.Equal(t, newAccount.Lastname, account.Lastname)
@@ -114,7 +110,7 @@ func TestUpdateAccount(t *testing.T) {
 	require.NotEmpty(t, account2)
 
 	require.Equal(t, account1.ID, account2.ID)
-	require.Equal(t, account1.Username, account2.Username)
+	require.Equal(t, account1.Lastname, account2.Lastname)
 	require.NotEqual(t, account1.Phone, account2.Phone)
 	require.NotEqual(t, account1.Changer, account2.Changer)
 }

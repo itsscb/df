@@ -14,7 +14,6 @@ CREATE TABLE "mails" (
 
 CREATE TABLE "accounts" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "username" varchar UNIQUE NOT NULL,
   "passwordhash" varchar NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,

@@ -11,7 +11,6 @@ import (
 
 type Account struct {
 	ID                  int64          `json:"ID"`
-	Username            string         `json:"username"`
 	Passwordhash        string         `json:"passwordhash"`
 	Firstname           string         `json:"firstname"`
 	Lastname            string         `json:"lastname"`
