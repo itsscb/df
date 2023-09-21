@@ -13,7 +13,7 @@ import (
 
 const createPerson = `-- name: CreatePerson :one
 INSERT INTO persons (
-    "customerID",
+    "accountID",
     firstname,
     lastname,
     birthday,
@@ -25,25 +25,25 @@ INSERT INTO persons (
     changer
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-) RETURNING "ID", "customerID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed
+) RETURNING "ID", "accountID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed
 `
 
 type CreatePersonParams struct {
-	CustomerID int64     `json:"customerID"`
-	Firstname  string    `json:"firstname"`
-	Lastname   string    `json:"lastname"`
-	Birthday   time.Time `json:"birthday"`
-	City       string    `json:"city"`
-	Zip        string    `json:"zip"`
-	Street     string    `json:"street"`
-	Country    string    `json:"country"`
-	Creator    string    `json:"creator"`
-	Changer    string    `json:"changer"`
+	AccountID int64     `json:"accountID"`
+	Firstname string    `json:"firstname"`
+	Lastname  string    `json:"lastname"`
+	Birthday  time.Time `json:"birthday"`
+	City      string    `json:"city"`
+	Zip       string    `json:"zip"`
+	Street    string    `json:"street"`
+	Country   string    `json:"country"`
+	Creator   string    `json:"creator"`
+	Changer   string    `json:"changer"`
 }
 
 func (q *Queries) CreatePerson(ctx context.Context, arg CreatePersonParams) (Person, error) {
 	row := q.db.QueryRowContext(ctx, createPerson,
-		arg.CustomerID,
+		arg.AccountID,
 		arg.Firstname,
 		arg.Lastname,
 		arg.Birthday,
@@ -57,7 +57,7 @@ func (q *Queries) CreatePerson(ctx context.Context, arg CreatePersonParams) (Per
 	var i Person
 	err := row.Scan(
 		&i.ID,
-		&i.CustomerID,
+		&i.AccountID,
 		&i.Firstname,
 		&i.Lastname,
 		&i.Birthday,
@@ -84,7 +84,7 @@ func (q *Queries) DeletePerson(ctx context.Context, id int64) error {
 }
 
 const getPerson = `-- name: GetPerson :one
-SELECT "ID", "customerID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed FROM persons
+SELECT "ID", "accountID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed FROM persons
 WHERE "ID" = $1 LIMIT 1
 `
 
@@ -93,7 +93,7 @@ func (q *Queries) GetPerson(ctx context.Context, id int64) (Person, error) {
 	var i Person
 	err := row.Scan(
 		&i.ID,
-		&i.CustomerID,
+		&i.AccountID,
 		&i.Firstname,
 		&i.Lastname,
 		&i.Birthday,
@@ -110,7 +110,7 @@ func (q *Queries) GetPerson(ctx context.Context, id int64) (Person, error) {
 }
 
 const listPersons = `-- name: ListPersons :many
-SELECT "ID", "customerID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed FROM persons
+SELECT "ID", "accountID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed FROM persons
 ORDER BY lastname, firstname
 LIMIT $1
 OFFSET $2
@@ -132,7 +132,7 @@ func (q *Queries) ListPersons(ctx context.Context, arg ListPersonsParams) ([]Per
 		var i Person
 		if err := rows.Scan(
 			&i.ID,
-			&i.CustomerID,
+			&i.AccountID,
 			&i.Firstname,
 			&i.Lastname,
 			&i.Birthday,
@@ -161,7 +161,7 @@ func (q *Queries) ListPersons(ctx context.Context, arg ListPersonsParams) ([]Per
 const updatePerson = `-- name: UpdatePerson :one
 UPDATE persons
 SET
-    "customerID" = COALESCE($3, "customerID"),
+    "accountID" = COALESCE($3, "accountID"),
     firstname = COALESCE($4, firstname),
     lastname = COALESCE($5, lastname),
     birthday = COALESCE($6, birthday),
@@ -172,27 +172,27 @@ SET
     changer = $2,
     changed = now()
 WHERE "ID" = $1
-RETURNING "ID", "customerID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed
+RETURNING "ID", "accountID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed
 `
 
 type UpdatePersonParams struct {
-	ID         int64          `json:"ID"`
-	Changer    string         `json:"changer"`
-	Customerid sql.NullInt64  `json:"customerid"`
-	Firstname  sql.NullString `json:"firstname"`
-	Lastname   sql.NullString `json:"lastname"`
-	Birthday   sql.NullTime   `json:"birthday"`
-	City       sql.NullString `json:"city"`
-	Zip        sql.NullString `json:"zip"`
-	Street     sql.NullString `json:"street"`
-	Country    sql.NullString `json:"country"`
+	ID        int64          `json:"ID"`
+	Changer   string         `json:"changer"`
+	Accountid sql.NullInt64  `json:"accountid"`
+	Firstname sql.NullString `json:"firstname"`
+	Lastname  sql.NullString `json:"lastname"`
+	Birthday  sql.NullTime   `json:"birthday"`
+	City      sql.NullString `json:"city"`
+	Zip       sql.NullString `json:"zip"`
+	Street    sql.NullString `json:"street"`
+	Country   sql.NullString `json:"country"`
 }
 
 func (q *Queries) UpdatePerson(ctx context.Context, arg UpdatePersonParams) (Person, error) {
 	row := q.db.QueryRowContext(ctx, updatePerson,
 		arg.ID,
 		arg.Changer,
-		arg.Customerid,
+		arg.Accountid,
 		arg.Firstname,
 		arg.Lastname,
 		arg.Birthday,
@@ -204,7 +204,7 @@ func (q *Queries) UpdatePerson(ctx context.Context, arg UpdatePersonParams) (Per
 	var i Person
 	err := row.Scan(
 		&i.ID,
-		&i.CustomerID,
+		&i.AccountID,
 		&i.Firstname,
 		&i.Lastname,
 		&i.Birthday,

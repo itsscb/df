@@ -11,29 +11,29 @@ import (
 )
 
 func createRandomPerson(t *testing.T) Person {
-	account := createRandomCustomer(t)
+	account := createRandomAccount(t)
 	require.NotEmpty(t, account)
 
 	creator := util.RandomUser()
 
 	arg := CreatePersonParams{
-		CustomerID: account.ID,
-		Firstname:  util.RandomUser(),
-		Lastname:   util.RandomUser(),
-		Birthday:   time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
-		City:       util.RandomString(15),
-		Zip:        util.RandomString(5),
-		Street:     util.RandomString(20),
-		Country:    util.RandomString(15),
-		Creator:    creator,
-		Changer:    creator,
+		AccountID: account.ID,
+		Firstname: util.RandomUser(),
+		Lastname:  util.RandomUser(),
+		Birthday:  time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
+		City:      util.RandomString(15),
+		Zip:       util.RandomString(5),
+		Street:    util.RandomString(20),
+		Country:   util.RandomString(15),
+		Creator:   creator,
+		Changer:   creator,
 	}
 
 	person, err := testQueries.CreatePerson(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, person)
 
-	require.Equal(t, arg.CustomerID, person.CustomerID)
+	require.Equal(t, arg.AccountID, person.AccountID)
 	require.Equal(t, arg.Firstname, person.Firstname)
 	require.Equal(t, arg.Lastname, person.Lastname)
 	require.Equal(t, arg.Birthday, person.Birthday)

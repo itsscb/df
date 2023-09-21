@@ -39,4 +39,7 @@ test:
 coverage:
 	go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
 
-.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test
+server:
+	go run main.go
+
+.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server
