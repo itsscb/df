@@ -4,7 +4,7 @@ WHERE "ID" = $1 LIMIT 1;
 
 -- name: CreatePayment :one
 INSERT INTO payments (
-    "customerID",
+    "accountID",
     "paymentCategory",
     bankname,
     "IBAN",
@@ -28,7 +28,7 @@ OFFSET $2;
 -- name: UpdatePayment :one
 UPDATE payments
 SET
-    "customerID" = COALESCE(sqlc.narg(customerID), "customerID"),
+    "accountID" = COALESCE(sqlc.narg(accountID), "accountID"),
     "paymentCategory" = COALESCE(sqlc.narg(paymentCategory), "paymentCategory"),
     bankname = COALESCE(sqlc.narg(bankname), bankname),
     "IBAN" = COALESCE(sqlc.narg(IBAN), "IBAN"),

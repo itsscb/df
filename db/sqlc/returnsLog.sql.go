@@ -22,7 +22,7 @@ INSERT INTO "returnsLog" (
     $2,
     $3,
     $4,
-    $5
+    $4
 ) RETURNING "ID", "returnID", "mailID", status, creator, created, changer, changed
 `
 
@@ -31,7 +31,6 @@ type CreateReturnsLogParams struct {
 	Mailid   int64          `json:"mailid"`
 	Status   sql.NullString `json:"status"`
 	Creator  string         `json:"creator"`
-	Changer  string         `json:"changer"`
 }
 
 func (q *Queries) CreateReturnsLog(ctx context.Context, arg CreateReturnsLogParams) (ReturnsLog, error) {
@@ -40,7 +39,6 @@ func (q *Queries) CreateReturnsLog(ctx context.Context, arg CreateReturnsLogPara
 		arg.Mailid,
 		arg.Status,
 		arg.Creator,
-		arg.Changer,
 	)
 	var i ReturnsLog
 	err := row.Scan(

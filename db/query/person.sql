@@ -4,7 +4,7 @@ WHERE "ID" = $1 LIMIT 1;
 
 -- name: CreatePerson :one
 INSERT INTO persons (
-    "customerID",
+    "accountID",
     firstname,
     lastname,
     birthday,
@@ -27,7 +27,7 @@ OFFSET $2;
 -- name: UpdatePerson :one
 UPDATE persons
 SET
-    "customerID" = COALESCE(sqlc.narg(customerID), "customerID"),
+    "accountID" = COALESCE(sqlc.narg(accountID), "accountID"),
     firstname = COALESCE(sqlc.narg(firstname), firstname),
     lastname = COALESCE(sqlc.narg(lastname), lastname),
     birthday = COALESCE(sqlc.narg(birthday), birthday),

@@ -12,7 +12,7 @@ import (
 
 const createPayment = `-- name: CreatePayment :one
 INSERT INTO payments (
-    "customerID",
+    "accountID",
     "paymentCategory",
     bankname,
     "IBAN",
@@ -25,11 +25,11 @@ INSERT INTO payments (
     changer
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
-) RETURNING "ID", "customerID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed
+) RETURNING "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed
 `
 
 type CreatePaymentParams struct {
-	CustomerID      int64          `json:"customerID"`
+	AccountID       int64          `json:"accountID"`
 	PaymentCategory string         `json:"paymentCategory"`
 	Bankname        sql.NullString `json:"bankname"`
 	IBAN            sql.NullString `json:"IBAN"`
@@ -44,7 +44,7 @@ type CreatePaymentParams struct {
 
 func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (Payment, error) {
 	row := q.db.QueryRowContext(ctx, createPayment,
-		arg.CustomerID,
+		arg.AccountID,
 		arg.PaymentCategory,
 		arg.Bankname,
 		arg.IBAN,
@@ -59,7 +59,7 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (P
 	var i Payment
 	err := row.Scan(
 		&i.ID,
-		&i.CustomerID,
+		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
 		&i.IBAN,
@@ -87,7 +87,7 @@ func (q *Queries) DeletePayment(ctx context.Context, id int64) error {
 }
 
 const getPayment = `-- name: GetPayment :one
-SELECT "ID", "customerID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed FROM payments
+SELECT "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed FROM payments
 WHERE "ID" = $1 LIMIT 1
 `
 
@@ -96,7 +96,7 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
 	var i Payment
 	err := row.Scan(
 		&i.ID,
-		&i.CustomerID,
+		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
 		&i.IBAN,
@@ -114,7 +114,7 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
 }
 
 const listPayments = `-- name: ListPayments :many
-SELECT "ID", "customerID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed FROM payments
+SELECT "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed FROM payments
 ORDER BY "paymentCategory"
 LIMIT $1
 OFFSET $2
@@ -136,7 +136,7 @@ func (q *Queries) ListPayments(ctx context.Context, arg ListPaymentsParams) ([]P
 		var i Payment
 		if err := rows.Scan(
 			&i.ID,
-			&i.CustomerID,
+			&i.AccountID,
 			&i.PaymentCategory,
 			&i.Bankname,
 			&i.IBAN,
@@ -166,7 +166,7 @@ func (q *Queries) ListPayments(ctx context.Context, arg ListPaymentsParams) ([]P
 const updatePayment = `-- name: UpdatePayment :one
 UPDATE payments
 SET
-    "customerID" = COALESCE($3, "customerID"),
+    "accountID" = COALESCE($3, "accountID"),
     "paymentCategory" = COALESCE($4, "paymentCategory"),
     bankname = COALESCE($5, bankname),
     "IBAN" = COALESCE($6, "IBAN"),
@@ -178,13 +178,13 @@ SET
     changer = $2,
     changed = now()
 WHERE "ID" = $1
-RETURNING "ID", "customerID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed
+RETURNING "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed
 `
 
 type UpdatePaymentParams struct {
 	ID              int64          `json:"ID"`
 	Changer         string         `json:"changer"`
-	Customerid      sql.NullInt64  `json:"customerid"`
+	Accountid       sql.NullInt64  `json:"accountid"`
 	Paymentcategory sql.NullString `json:"paymentcategory"`
 	Bankname        sql.NullString `json:"bankname"`
 	Iban            sql.NullString `json:"iban"`
@@ -199,7 +199,7 @@ func (q *Queries) UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (P
 	row := q.db.QueryRowContext(ctx, updatePayment,
 		arg.ID,
 		arg.Changer,
-		arg.Customerid,
+		arg.Accountid,
 		arg.Paymentcategory,
 		arg.Bankname,
 		arg.Iban,
@@ -212,7 +212,7 @@ func (q *Queries) UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (P
 	var i Payment
 	err := row.Scan(
 		&i.ID,
-		&i.CustomerID,
+		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
 		&i.IBAN,

@@ -12,7 +12,7 @@ CREATE TABLE "mails" (
   "changed" timestamptz NOT NULL DEFAULT (now())
 );
 
-CREATE TABLE "customers" (
+CREATE TABLE "accounts" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "username" varchar UNIQUE NOT NULL,
   "passwordhash" varchar NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE "customers" (
 
 CREATE TABLE "persons" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "customerID" bigint NOT NULL,
+  "accountID" bigint NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
   "birthday" timestamptz NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE "documents" (
 
 CREATE TABLE "payments" (
   "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "customerID" bigint NOT NULL,
+  "accountID" bigint NOT NULL,
   "paymentCategory" varchar NOT NULL,
   "bankname" varchar,
   "IBAN" varchar,
@@ -124,13 +124,13 @@ CREATE TABLE "returnsLog" (
   "changed" timestamptz NOT NULL DEFAULT (now())
 );
 
-ALTER TABLE "persons" ADD FOREIGN KEY ("customerID") REFERENCES "customers" ("ID");
+ALTER TABLE "persons" ADD FOREIGN KEY ("accountID") REFERENCES "accounts" ("ID");
 
 ALTER TABLE "documents" ADD FOREIGN KEY ("personID") REFERENCES "persons" ("ID");
 
 ALTER TABLE "documents" ADD FOREIGN KEY ("mailID") REFERENCES "mails" ("ID");
 
-ALTER TABLE "payments" ADD FOREIGN KEY ("customerID") REFERENCES "customers" ("ID");
+ALTER TABLE "payments" ADD FOREIGN KEY ("accountID") REFERENCES "accounts" ("ID");
 
 ALTER TABLE "returns" ADD FOREIGN KEY ("personID") REFERENCES "persons" ("ID");
 

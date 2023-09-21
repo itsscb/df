@@ -10,11 +10,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createRandomCustomer(t *testing.T) Customer {
+func createRandomAccount(t *testing.T) Account {
 
 	creator := util.RandomUser()
 
-	arg := CreateCustomerParams{
+	arg := CreateAccountParams{
 		Username:     util.RandomUser(),
 		Passwordhash: util.RandomString(30),
 		Firstname:    util.RandomUser(),
@@ -33,7 +33,7 @@ func createRandomCustomer(t *testing.T) Customer {
 		Changer: creator,
 	}
 
-	account, err := testQueries.CreateCustomer(context.Background(), arg)
+	account, err := testQueries.CreateAccount(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, account)
 
@@ -57,15 +57,15 @@ func createRandomCustomer(t *testing.T) Customer {
 	return account
 }
 
-func TestCreateCustomer(t *testing.T) {
-	createRandomCustomer(t)
+func TestCreateAccount(t *testing.T) {
+	createRandomAccount(t)
 }
 
-func TestGetCustomer(t *testing.T) {
-	newAccount := createRandomCustomer(t)
+func TestGetAccount(t *testing.T) {
+	newAccount := createRandomAccount(t)
 	require.NotEmpty(t, newAccount)
 
-	account, err := testQueries.GetCustomer(context.Background(), newAccount.ID)
+	account, err := testQueries.GetAccount(context.Background(), newAccount.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, account)
 
@@ -86,22 +86,22 @@ func TestGetCustomer(t *testing.T) {
 	require.WithinDuration(t, newAccount.Created, account.Created, time.Second)
 }
 
-func TestDeleteCustomer(t *testing.T) {
-	account1 := createRandomCustomer(t)
-	err := testQueries.DeleteCustomer(context.Background(), account1.ID)
+func TestDeleteAccount(t *testing.T) {
+	account1 := createRandomAccount(t)
+	err := testQueries.DeleteAccount(context.Background(), account1.ID)
 	require.NoError(t, err)
 
-	account2, err := testQueries.GetCustomer(context.Background(), account1.ID)
+	account2, err := testQueries.GetAccount(context.Background(), account1.ID)
 	require.Error(t, err)
 	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, account2)
 }
 
-func TestUpdateCustomer(t *testing.T) {
-	account1 := createRandomCustomer(t)
+func TestUpdateAccount(t *testing.T) {
+	account1 := createRandomAccount(t)
 	require.NotEmpty(t, account1)
 
-	arg := UpdateCustomerParams{
+	arg := UpdateAccountParams{
 		ID: account1.ID,
 		Phone: sql.NullString{
 			String: util.RandomPhone(),
@@ -109,7 +109,7 @@ func TestUpdateCustomer(t *testing.T) {
 		},
 	}
 
-	account2, err := testQueries.UpdateCustomer(context.Background(), arg)
+	account2, err := testQueries.UpdateAccount(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, account2)
 
@@ -119,17 +119,17 @@ func TestUpdateCustomer(t *testing.T) {
 	require.NotEqual(t, account1.Changer, account2.Changer)
 }
 
-func TestListCustomers(t *testing.T) {
+func TestListAccounts(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		createRandomCustomer(t)
+		createRandomAccount(t)
 	}
 
-	arg := ListCustomersParams{
+	arg := ListAccountsParams{
 		Limit:  5,
 		Offset: 5,
 	}
 
-	accounts, err := testQueries.ListCustomers(context.Background(), arg)
+	accounts, err := testQueries.ListAccounts(context.Background(), arg)
 	require.NoError(t, err)
 	require.Len(t, accounts, 5)
 

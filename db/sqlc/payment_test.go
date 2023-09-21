@@ -11,13 +11,13 @@ import (
 )
 
 func createRandomPayment(t *testing.T) Payment {
-	account := createRandomCustomer(t)
+	account := createRandomAccount(t)
 	require.NotEmpty(t, account)
 
 	creator := util.RandomUser()
 
 	arg := CreatePaymentParams{
-		CustomerID:      account.ID,
+		AccountID:       account.ID,
 		PaymentCategory: util.RandomUser(),
 		Bankname: sql.NullString{
 			Valid:  true,
@@ -54,7 +54,7 @@ func createRandomPayment(t *testing.T) Payment {
 
 	require.Equal(t, arg.PaymentCategory, person.PaymentCategory)
 	require.Equal(t, arg.Bankname, person.Bankname)
-	require.Equal(t, arg.CustomerID, person.CustomerID)
+	require.Equal(t, arg.AccountID, person.AccountID)
 	require.Equal(t, arg.IBAN, person.IBAN)
 	require.Equal(t, arg.BIC, person.BIC)
 	require.Equal(t, arg.PaypalAccount, person.PaypalAccount)
@@ -83,7 +83,7 @@ func TestGetPayment(t *testing.T) {
 
 	require.Equal(t, newperson.PaymentCategory, person.PaymentCategory)
 	require.Equal(t, newperson.Bankname, person.Bankname)
-	require.Equal(t, newperson.CustomerID, person.CustomerID)
+	require.Equal(t, newperson.AccountID, person.AccountID)
 	require.Equal(t, newperson.IBAN, person.IBAN)
 	require.Equal(t, newperson.BIC, person.BIC)
 	require.Equal(t, newperson.PaypalAccount, person.PaypalAccount)

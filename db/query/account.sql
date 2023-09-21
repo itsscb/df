@@ -1,9 +1,9 @@
--- name: GetCustomer :one
-SELECT * FROM customers
+-- name: GetAccount :one
+SELECT * FROM accounts
 WHERE "ID" = $1 LIMIT 1;
 
--- name: CreateCustomer :one
-INSERT INTO customers (
+-- name: CreateAccount :one
+INSERT INTO accounts (
     username,
     passwordhash,
     firstname,
@@ -21,14 +21,14 @@ INSERT INTO customers (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
 ) RETURNING *;
 
--- name: ListCustomers :many
-SELECT * FROM customers
+-- name: ListAccounts :many
+SELECT * FROM accounts
 ORDER BY username
 LIMIT $1
 OFFSET $2;
 
--- name: UpdateCustomer :one
-UPDATE customers
+-- name: UpdateAccount :one
+UPDATE accounts
 SET
     username = COALESCE(sqlc.narg(username), username),
     passwordhash = COALESCE(sqlc.narg(passwordhash), passwordhash),
@@ -46,6 +46,6 @@ SET
 WHERE "ID" = $1
 RETURNING *;
 
--- name: DeleteCustomer :exec
-DELETE FROM customers
+-- name: DeleteAccount :exec
+DELETE FROM accounts
 WHERE "ID" = $1;

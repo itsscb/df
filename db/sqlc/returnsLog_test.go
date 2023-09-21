@@ -25,7 +25,6 @@ func createRandomReturnsLog(t *testing.T) ReturnsLog {
 			String: util.RandomString(7),
 		},
 		Creator: creator,
-		Changer: creator,
 	}
 
 	returnsLog, err := testQueries.CreateReturnsLog(context.Background(), arg)
