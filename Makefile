@@ -42,4 +42,7 @@ coverage:
 server:
 	go run main.go
 
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/itsscb/df/db/sqlc Store
+
 .PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server
