@@ -11,20 +11,18 @@ import (
 func Logger(logger *slog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
+		var log []slog.Attr
 
-		// var buf bytes.Buffer
-		// tee := io.TeeReader(c.Request.Body, &buf)
-		// body, _ := io.ReadAll(tee)
-		// c.Request.Body = io.NopCloser(&buf)
 		c.Next()
+
 		duration := time.Since(t).Milliseconds()
 
-		log := []slog.Attr{
+		log = append(log,
+			slog.Int("STATUS", c.Writer.Status()),
 			slog.String("METHOD", c.Request.Method),
 			slog.String("PATH", c.Request.RequestURI),
 			slog.String("DURATION", fmt.Sprintf("%d ms", duration)),
-			// slog.String("BODY", string(body)),
-		}
+		)
 
 		logger.LogAttrs(
 			c,
