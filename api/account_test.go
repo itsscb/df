@@ -45,13 +45,13 @@ func randomAccount() db.Account {
 	return db.Account{
 		ID:           util.RandomInt(1, 1000),
 		Passwordhash: util.RandomString(250),
-		Firstname:    util.RandomUser(),
-		Lastname:     util.RandomUser(),
+		Firstname:    util.RandomName(),
+		Lastname:     util.RandomName(),
 		Email:        util.RandomEmail(),
-		Zip:          util.RandomUser(),
-		Street:       util.RandomUser(),
-		City:         util.RandomUser(),
-		Country:      util.RandomUser(),
+		Zip:          util.RandomName(),
+		Street:       util.RandomName(),
+		City:         util.RandomName(),
+		Country:      util.RandomName(),
 	}
 }
 

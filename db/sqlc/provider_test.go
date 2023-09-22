@@ -12,13 +12,13 @@ import (
 
 func createRandomProvider(t *testing.T) Provider {
 
-	creator := util.RandomUser()
+	creator := util.RandomName()
 
 	arg := CreateProviderParams{
-		Name:        util.RandomUser(),
+		Name:        util.RandomName(),
 		Description: util.RandomString(30),
-		Category:    util.RandomUser(),
-		Email:       util.RandomUser(),
+		Category:    util.RandomName(),
+		Email:       util.RandomName(),
 		Creator:     creator,
 		Changer:     creator,
 	}

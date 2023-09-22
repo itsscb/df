@@ -12,12 +12,12 @@ import (
 
 func createRandomAccount(t *testing.T) Account {
 
-	creator := util.RandomUser()
+	creator := util.RandomName()
 
 	arg := CreateAccountParams{
 		Passwordhash: util.RandomString(30),
-		Firstname:    util.RandomUser(),
-		Lastname:     util.RandomUser(),
+		Firstname:    util.RandomName(),
+		Lastname:     util.RandomName(),
 		Birthday:     time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
 		Email:        util.RandomEmail(),
 		Phone: sql.NullString{

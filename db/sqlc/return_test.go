@@ -15,16 +15,16 @@ func createRandomReturn(t *testing.T) Return {
 	person := createRandomPerson(t)
 	provider := createRandomProvider(t)
 
-	creator := util.RandomUser()
+	creator := util.RandomName()
 
 	arg := CreateReturnParams{
 		Personid:    person.ID,
 		Providerid:  provider.ID,
 		Status:      util.RandomString(7),
-		Name:        util.RandomUser(),
+		Name:        util.RandomName(),
 		Description: util.RandomString(30),
-		Category:    util.RandomUser(),
-		Email:       util.RandomUser(),
+		Category:    util.RandomName(),
+		Email:       util.RandomName(),
 		Creator:     creator,
 		Changer:     creator,
 	}

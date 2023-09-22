@@ -15,7 +15,7 @@ func createRandomReturnsLog(t *testing.T) ReturnsLog {
 	ret := createRandomReturn(t)
 	mail := createRandomMail(t)
 
-	creator := util.RandomUser()
+	creator := util.RandomName()
 
 	arg := CreateReturnsLogParams{
 		Returnid: ret.ID,

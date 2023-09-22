@@ -14,36 +14,36 @@ func createRandomPayment(t *testing.T) Payment {
 	account := createRandomAccount(t)
 	require.NotEmpty(t, account)
 
-	creator := util.RandomUser()
+	creator := util.RandomName()
 
 	arg := CreatePaymentParams{
 		AccountID:       account.ID,
-		PaymentCategory: util.RandomUser(),
+		PaymentCategory: util.RandomName(),
 		Bankname: sql.NullString{
 			Valid:  true,
-			String: util.RandomUser(),
+			String: util.RandomName(),
 		},
 		IBAN: sql.NullString{
 			Valid:  true,
-			String: util.RandomUser(),
+			String: util.RandomName(),
 		},
 		BIC: sql.NullString{
 			Valid:  true,
-			String: util.RandomUser(),
+			String: util.RandomName(),
 		},
 		PaypalAccount: sql.NullString{
 			Valid:  true,
-			String: util.RandomUser(),
+			String: util.RandomName(),
 		},
 		PaypalID: sql.NullString{
 			Valid:  true,
-			String: util.RandomUser(),
+			String: util.RandomName(),
 		},
 		PaymentSystem: sql.NullString{
 			Valid:  true,
-			String: util.RandomUser(),
+			String: util.RandomName(),
 		},
-		Type:    util.RandomUser(),
+		Type:    util.RandomName(),
 		Creator: creator,
 		Changer: creator,
 	}
@@ -113,7 +113,7 @@ func TestUpdatePayment(t *testing.T) {
 	arg := UpdatePaymentParams{
 		ID: person1.ID,
 		Bankname: sql.NullString{
-			String: util.RandomUser(),
+			String: util.RandomName(),
 			Valid:  true,
 		},
 	}

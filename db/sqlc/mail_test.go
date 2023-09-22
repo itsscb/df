@@ -12,7 +12,7 @@ import (
 
 func createRandomMail(t *testing.T) Mail {
 
-	creator := util.RandomUser()
+	creator := util.RandomName()
 
 	arg := CreateMailParams{
 		From:      util.RandomEmail(),

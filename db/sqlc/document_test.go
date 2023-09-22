@@ -14,15 +14,15 @@ func createRandomDocumentUpload(t *testing.T) Document {
 	person := createRandomPerson(t)
 	require.NotEmpty(t, person)
 
-	creator := util.RandomUser()
+	creator := util.RandomName()
 
 	arg := CreateDocumentUploadParams{
 		PersonID: sql.NullInt64{
 			Valid: true,
 			Int64: person.ID,
 		},
-		Name:    util.RandomUser(),
-		Type:    util.RandomUser(),
+		Name:    util.RandomString(20),
+		Type:    util.RandomString(5),
 		Path:    util.RandomString(50),
 		Url:     util.RandomString(60),
 		Creator: creator,
@@ -59,12 +59,12 @@ func TestCreateDocumentMail(t *testing.T) {
 			Valid: true,
 			Int64: mail.ID,
 		},
-		Name:    util.RandomUser(),
-		Type:    util.RandomUser(),
+		Name:    util.RandomString(20),
+		Type:    util.RandomString(5),
 		Path:    util.RandomString(50),
 		Url:     util.RandomString(60),
-		Creator: util.RandomUser(),
-		Changer: util.RandomUser(),
+		Creator: util.RandomName(),
+		Changer: util.RandomName(),
 	}
 
 	document, err := testQueries.CreateDocumentMail(context.Background(), arg)
@@ -166,7 +166,7 @@ func TestListDocuments(t *testing.T) {
 func TestValidateDocument(t *testing.T) {
 	document1 := createRandomDocumentUpload(t)
 
-	validator := util.RandomUser()
+	validator := util.RandomName()
 
 	arg := ValidateDocumentParams{
 		ID: document1.ID,
@@ -191,7 +191,7 @@ func TestValidateDocument(t *testing.T) {
 func TestInvalidateDocument(t *testing.T) {
 	document1 := createRandomDocumentUpload(t)
 
-	validator := util.RandomUser()
+	validator := util.RandomName()
 
 	arg := ValidateDocumentParams{
 		ID: document1.ID,
@@ -205,7 +205,7 @@ func TestInvalidateDocument(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, document2)
 
-	invalidator := util.RandomUser()
+	invalidator := util.RandomName()
 
 	arg2 := InvalidateDocumentParams{
 		ID:      document2.ID,

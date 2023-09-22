@@ -14,12 +14,12 @@ func createRandomPerson(t *testing.T) Person {
 	account := createRandomAccount(t)
 	require.NotEmpty(t, account)
 
-	creator := util.RandomUser()
+	creator := util.RandomName()
 
 	arg := CreatePersonParams{
 		AccountID: account.ID,
-		Firstname: util.RandomUser(),
-		Lastname:  util.RandomUser(),
+		Firstname: util.RandomName(),
+		Lastname:  util.RandomName(),
 		Birthday:  time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
 		City:      util.RandomString(15),
 		Zip:       util.RandomString(5),

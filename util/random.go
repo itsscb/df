@@ -8,10 +8,6 @@ import (
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 const numbers = "0123456789"
 
-// func init() {
-// 	rand.Seed(time.Now().UnixNano())
-// }
-
 // RandomInt generates a random number between min and max
 func RandomInt(min, max int64) int64 {
 	return min + rand.Int63n(max-min+1)
@@ -43,9 +39,10 @@ func RandomPhone() string {
 	return sb.String()
 }
 
-// RandomUser generates a random username
-func RandomUser() string {
-	return RandomString(20)
+// RandomName generates a random name
+func RandomName() string {
+	n := RandomInt(3, 12)
+	return RandomString(int(n))
 }
 
 // RandomEmail generates a random email address
