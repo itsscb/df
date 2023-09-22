@@ -1,6 +1,9 @@
 package api
 
 import (
+	"log/slog"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	db "github.com/itsscb/df/db/sqlc"
 )
@@ -17,7 +20,15 @@ func NewServer(store db.Store) *Server {
 		store: store,
 	}
 
-	router := gin.Default()
+	opts := slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	}
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &opts))
+	router := gin.New()
+
+	router.Use(gin.Recovery())
+
+	router.Use(Logger(logger))
 
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
