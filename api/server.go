@@ -46,6 +46,7 @@ func NewServer(config util.Config, store db.Store) *Server {
 	router.Use(Logger())
 
 	router.POST("/accounts", server.createAccount)
+	router.PUT("/accounts", server.updateAccount)
 	router.GET("/accounts/:id", server.getAccount)
 	router.GET("/accounts", server.listAccounts)
 

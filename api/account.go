@@ -107,3 +107,79 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, accounts)
 }
+
+type updateAccountRequest struct {
+	ID           int64     `binding:"required" json:"ID"`
+	Changer      string    `binding:"required" json:"changer"`
+	Passwordhash string    `json:"passwordhash"`
+	Firstname    string    `json:"firstname"`
+	Lastname     string    `json:"lastname"`
+	Birthday     time.Time `json:"birthday"`
+	Email        string    `json:"email"`
+	Phone        string    `json:"phone"`
+	City         string    `json:"city"`
+	Zip          string    `json:"zip"`
+	Street       string    `json:"street"`
+	Country      string    `json:"country"`
+}
+
+func (server *Server) updateAccount(ctx *gin.Context) {
+	var req updateAccountRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	arg := db.UpdateAccountParams{
+		ID:      req.ID,
+		Changer: req.Changer,
+		Passwordhash: sql.NullString{
+			String: req.Passwordhash,
+			Valid:  req.Passwordhash != "",
+		},
+		Firstname: sql.NullString{
+			String: req.Firstname,
+			Valid:  req.Firstname != "",
+		},
+		Lastname: sql.NullString{
+			String: req.Lastname,
+			Valid:  req.Lastname != "",
+		},
+		Birthday: sql.NullTime{
+			Time:  req.Birthday,
+			Valid: req.Birthday != time.Time{},
+		},
+		Email: sql.NullString{
+			String: req.Email,
+			Valid:  req.Email != "",
+		},
+		City: sql.NullString{
+			String: req.City,
+			Valid:  req.City != "",
+		},
+		Zip: sql.NullString{
+			String: req.Zip,
+			Valid:  req.Zip != "",
+		},
+		Street: sql.NullString{
+			String: req.Street,
+			Valid:  req.Street != "",
+		},
+		Country: sql.NullString{
+			String: req.Country,
+			Valid:  req.Country != "",
+		},
+		Phone: sql.NullString{
+			String: req.Phone,
+			Valid:  req.Phone != "",
+		},
+	}
+
+	account, err := server.store.UpdateAccount(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, account)
+}
