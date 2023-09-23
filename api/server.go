@@ -31,12 +31,19 @@ func NewServer(config util.Config, store db.Store) *Server {
 	opts := slog.HandlerOptions{
 		Level: logLevel,
 	}
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, &opts))
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &opts))
+
+	if config.LogOutput == "json" {
+		logger = slog.New(slog.NewJSONHandler(os.Stdout, &opts))
+	}
+
+	slog.SetDefault(logger)
+
 	router := gin.New()
 
 	router.Use(gin.Recovery())
 
-	router.Use(Logger(logger))
+	router.Use(Logger())
 
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
