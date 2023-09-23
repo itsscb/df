@@ -123,7 +123,7 @@ func TestCreateAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := NewServer(config, store)
 			recorder := httptest.NewRecorder()
 
 			// Marshal body data to JSON
@@ -152,7 +152,7 @@ func TestGetAccountAPI(t *testing.T) {
 		Times(1).
 		Return(account, nil)
 
-	server := NewServer(store)
+	server := NewServer(config, store)
 	recorder := httptest.NewRecorder()
 
 	uri := fmt.Sprintf("/accounts/%d", account.ID)

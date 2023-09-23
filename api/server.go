@@ -6,22 +6,30 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db "github.com/itsscb/df/db/sqlc"
+	"github.com/itsscb/df/util"
 )
 
 // Server serves HTTP requests for df service
 type Server struct {
 	store  db.Store
 	router *gin.Engine
+	config util.Config
 }
 
 // NewServer creates a new HTTP server and sets up routing
-func NewServer(store db.Store) *Server {
+func NewServer(config util.Config, store db.Store) *Server {
 	server := &Server{
-		store: store,
+		store:  store,
+		config: config,
+	}
+
+	logLevel := slog.LevelError
+	if config.Environment == "development" {
+		logLevel = slog.LevelDebug
 	}
 
 	opts := slog.HandlerOptions{
-		Level: slog.LevelDebug,
+		Level: logLevel,
 	}
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &opts))
 	router := gin.New()
