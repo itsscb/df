@@ -58,29 +58,14 @@ func TestCreateAccountAPI(t *testing.T) {
 					Creator:      account.Creator,
 				}
 
-				exp := db.CreateAccountTxResult{
-					Account: account,
-				}
-
 				store.EXPECT().
 					CreateAccountTx(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
-					Return(exp, nil)
+					Return(account, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
-				data, err := io.ReadAll(recorder.Body)
-				require.NoError(t, err)
-
-				var getAccount db.CreateAccountTxResult
-				err = json.Unmarshal(data, &getAccount)
-				require.NoError(t, err)
-				require.Equal(t,
-					db.CreateAccountTxResult{
-						Account: account,
-					},
-					getAccount,
-				)
+				requireBodyMatchAccount(t, recorder.Body, account)
 			},
 		},
 		// {
@@ -130,7 +115,7 @@ func TestCreateAccountAPI(t *testing.T) {
 				store.EXPECT().
 					CreateAccountTx(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.CreateAccountTxResult{}, sql.ErrConnDone)
+					Return(db.Account{}, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
