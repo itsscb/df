@@ -27,7 +27,7 @@ INSERT INTO returns (
 
 -- name: ListReturns :many
 SELECT * FROM returns
-ORDER BY name
+ORDER BY "name"
 LIMIT $1
 OFFSET $2;
 
@@ -41,8 +41,8 @@ SET
     "category" = COALESCE(sqlc.narg(category), "category"),
     "email" = COALESCE(sqlc.narg(email), "email"),
     "status" = COALESCE(sqlc.narg(status), "status"),
-    changer = sqlc.arg(changer),
-    changed = now()
+    "changer" = sqlc.arg(changer),
+    "changed" = now()
 WHERE "ID" = sqlc.arg(ID)
 RETURNING *;
 

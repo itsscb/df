@@ -14,15 +14,15 @@ const createPayment = `-- name: CreatePayment :one
 INSERT INTO payments (
     "accountID",
     "paymentCategory",
-    bankname,
+    "bankname",
     "IBAN",
     "BIC",
     "paypalAccount",
     "paypalID",
     "paymentSystem",
     "type",
-    creator,
-    changer
+    "creator",
+    "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
 ) RETURNING "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed
@@ -168,15 +168,15 @@ UPDATE payments
 SET
     "accountID" = COALESCE($3, "accountID"),
     "paymentCategory" = COALESCE($4, "paymentCategory"),
-    bankname = COALESCE($5, bankname),
+    "bankname" = COALESCE($5, "bankname"),
     "IBAN" = COALESCE($6, "IBAN"),
     "BIC" = COALESCE($7, "BIC"),
     "paypalAccount" = COALESCE($8, "paypalAccount"),
     "paypalID" = COALESCE($9, "paypalID"),
     "paymentSystem" = COALESCE($10, "paymentSystem"),
     "type" = COALESCE($11, "type"),
-    changer = $2,
-    changed = now()
+    "changer" = $2,
+    "changed" = now()
 WHERE "ID" = $1
 RETURNING "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed
 `

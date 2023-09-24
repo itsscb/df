@@ -13,18 +13,18 @@ import (
 
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts (
-    passwordhash,
-    firstname,
-    lastname,
-    birthday,
-    email,
-    phone,
-    city,
-    zip,
-    street,
-    country,
-    creator,
-    changer
+    "passwordhash",
+    "firstname",
+    "lastname",
+    "birthday",
+    "email",
+    "phone",
+    "city",
+    "zip",
+    "street",
+    "country",
+    "creator",
+    "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $11
 ) RETURNING "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
@@ -163,7 +163,7 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, e
 
 const listAccounts = `-- name: ListAccounts :many
 SELECT "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
-ORDER BY lastname, firstname
+ORDER BY "lastname", "firstname"
 LIMIT $1
 OFFSET $2
 `
@@ -220,18 +220,18 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts
 SET
-    passwordhash = COALESCE($3, passwordhash),
-    firstname = COALESCE($4, firstname),
-    lastname = COALESCE($5, lastname),
-    birthday = COALESCE($6, birthday),
-    email = COALESCE($7, email),
-    phone = COALESCE($8, phone),
-    city = COALESCE($9, city),
-    zip = COALESCE($10, zip),
-    street = COALESCE($11, street),
-    country = COALESCE($12, country),
-    changer = $2,
-    changed = now()
+    "passwordhash" = COALESCE($3, "passwordhash"),
+    "firstname" = COALESCE($4, "firstname"),
+    "lastname" = COALESCE($5, "lastname"),
+    "birthday" = COALESCE($6, "birthday"),
+    "email" = COALESCE($7, "email"),
+    "phone" = COALESCE($8, "phone"),
+    "city" = COALESCE($9, "city"),
+    "zip" = COALESCE($10, "zip"),
+    "street" = COALESCE($11, "street"),
+    "country" = COALESCE($12, "country"),
+    "changer" = $2,
+    "changed" = now()
 WHERE "ID" = $1
 RETURNING "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
 `

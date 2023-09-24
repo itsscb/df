@@ -16,12 +16,12 @@ const createMail = `-- name: CreateMail :one
 INSERT INTO mails (
     "from",
     "to",
-    cc,
+    "cc",
     "subject",
-    body,
+    "body",
     "timestamp",
-    creator,
-    changer
+    "creator",
+    "changer"
 ) 
 VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8

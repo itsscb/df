@@ -13,12 +13,12 @@ import (
 const createDocumentMail = `-- name: CreateDocumentMail :one
 INSERT INTO documents (
     "mailID",
-    name,
-    type,
-    path,
-    url,
-    creator,
-    changer
+    "name",
+    "type",
+    "path",
+    "url",
+    "creator",
+    "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7
 ) RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
@@ -67,12 +67,12 @@ func (q *Queries) CreateDocumentMail(ctx context.Context, arg CreateDocumentMail
 const createDocumentUpload = `-- name: CreateDocumentUpload :one
 INSERT INTO documents (
     "personID",
-    name,
-    type,
-    path,
-    url,
-    creator,
-    changer
+    "name",
+    "type",
+    "path",
+    "url",
+    "creator",
+    "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7
 ) RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
@@ -158,11 +158,11 @@ func (q *Queries) GetDocument(ctx context.Context, id int64) (Document, error) {
 const invalidateDocument = `-- name: InvalidateDocument :one
 UPDATE documents
 SET
-    valid = false,
+    "valid" = false,
     "validDate" = NULL,
     "validatedBy" = NULL,    
-    changer = $2,
-    changed = now()
+    "changer" = $2,
+    "changed" = now()
 WHERE "ID" = $1
 RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
 `
@@ -196,7 +196,7 @@ func (q *Queries) InvalidateDocument(ctx context.Context, arg InvalidateDocument
 
 const listDocuments = `-- name: ListDocuments :many
 SELECT "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed FROM documents
-ORDER BY valid, type, name
+ORDER BY "valid", "type", "name"
 LIMIT $1
 OFFSET $2
 `
@@ -248,10 +248,10 @@ const updateDocument = `-- name: UpdateDocument :one
 UPDATE documents
 SET
     "personID" = COALESCE($3, "personID"),
-    name = COALESCE($4, name),
-    type = COALESCE($5, type),
-    path = COALESCE($6, path),
-    url = COALESCE($7, url),
+    "name" = COALESCE($4, "name"),
+    "type" = COALESCE($5, "type"),
+    "path" = COALESCE($6, "path"),
+    "url" = COALESCE($7, "url"),
     changer = $2,
     changed = now()
 WHERE "ID" = $1
@@ -301,11 +301,11 @@ func (q *Queries) UpdateDocument(ctx context.Context, arg UpdateDocumentParams) 
 const validateDocument = `-- name: ValidateDocument :one
 UPDATE documents
 SET
-    valid = true,
+    "valid" = true,
     "validDate" = now(),
     "validatedBy" = $2,    
-    changer = $2,
-    changed = now()
+    "changer" = $2,
+    "changed" = now()
 WHERE "ID" = $1
 RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
 `
