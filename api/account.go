@@ -29,7 +29,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.CreateAccountParams{
+	arg := db.CreateAccountTxParams{
 		Passwordhash: req.Passwordhash,
 		Firstname:    req.Firstname,
 		Lastname:     req.Lastname,
@@ -46,7 +46,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		},
 	}
 
-	account, err := server.store.CreateAccount(ctx, arg)
+	account, err := server.store.CreateAccountTx(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

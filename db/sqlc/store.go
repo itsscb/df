@@ -8,6 +8,7 @@ import (
 
 type Store interface {
 	Querier
+	CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (CreateAccountTxResult, error)
 }
 
 // Store provides all functions to execute db queries and transactions
@@ -17,7 +18,7 @@ type SQLStore struct {
 }
 
 func NewStore(db *sql.DB) Store {
-	return SQLStore{
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}

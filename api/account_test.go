@@ -44,7 +44,7 @@ func TestCreateAccountAPI(t *testing.T) {
 				"creator":      account.Creator,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
-				arg := db.CreateAccountParams{
+				arg := db.CreateAccountTxParams{
 					Passwordhash: account.Passwordhash,
 					Firstname:    account.Firstname,
 					Lastname:     account.Lastname,
@@ -58,14 +58,29 @@ func TestCreateAccountAPI(t *testing.T) {
 					Creator:      account.Creator,
 				}
 
+				exp := db.CreateAccountTxResult{
+					Account: account,
+				}
+
 				store.EXPECT().
-					CreateAccount(gomock.Any(), gomock.Eq(arg)).
+					CreateAccountTx(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
-					Return(account, nil)
+					Return(exp, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
-				requireBodyMatchAccount(t, recorder.Body, account)
+				data, err := io.ReadAll(recorder.Body)
+				require.NoError(t, err)
+
+				var getAccount db.CreateAccountTxResult
+				err = json.Unmarshal(data, &getAccount)
+				require.NoError(t, err)
+				require.Equal(t,
+					db.CreateAccountTxResult{
+						Account: account,
+					},
+					getAccount,
+				)
 			},
 		},
 		// {
@@ -89,9 +104,8 @@ func TestCreateAccountAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					CreateAccount(gomock.Any(), gomock.Any()).
-					Times(0).
-					Return(db.Account{}, sql.ErrConnDone)
+					CreateAccountTx(gomock.Any(), gomock.Any()).
+					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
@@ -114,9 +128,9 @@ func TestCreateAccountAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					CreateAccount(gomock.Any(), gomock.Any()).
+					CreateAccountTx(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.Account{}, sql.ErrConnDone)
+					Return(db.CreateAccountTxResult{}, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
