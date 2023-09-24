@@ -9,6 +9,7 @@ import (
 type Store interface {
 	Querier
 	CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (CreateAccountTxResult, error)
+	UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error)
 }
 
 // Store provides all functions to execute db queries and transactions

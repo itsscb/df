@@ -130,7 +130,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.UpdateAccountParams{
+	arg := db.UpdateAccountTxParams{
 		ID:      req.ID,
 		Changer: req.Changer,
 		Passwordhash: sql.NullString{
@@ -175,7 +175,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		},
 	}
 
-	account, err := server.store.UpdateAccount(ctx, arg)
+	account, err := server.store.UpdateAccountTx(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
