@@ -14,15 +14,15 @@ import (
 const createPerson = `-- name: CreatePerson :one
 INSERT INTO persons (
     "accountID",
-    firstname,
-    lastname,
-    birthday,
-    city,
-    zip,
-    street,
-    country,
-    creator,
-    changer
+    "firstname",
+    "lastname",
+    "birthday",
+    "city",
+    "zip",
+    "street",
+    "country",
+    "creator",
+    "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
 ) RETURNING "ID", "accountID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed
@@ -111,7 +111,7 @@ func (q *Queries) GetPerson(ctx context.Context, id int64) (Person, error) {
 
 const listPersons = `-- name: ListPersons :many
 SELECT "ID", "accountID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed FROM persons
-ORDER BY lastname, firstname
+ORDER BY "lastname", "firstname"
 LIMIT $1
 OFFSET $2
 `
@@ -162,15 +162,15 @@ const updatePerson = `-- name: UpdatePerson :one
 UPDATE persons
 SET
     "accountID" = COALESCE($3, "accountID"),
-    firstname = COALESCE($4, firstname),
-    lastname = COALESCE($5, lastname),
-    birthday = COALESCE($6, birthday),
-    city = COALESCE($7, city),
-    zip = COALESCE($8, zip),
-    street = COALESCE($9, street),
-    country = COALESCE($10, country),
-    changer = $2,
-    changed = now()
+    "firstname" = COALESCE($4, "firstname"),
+    "lastname" = COALESCE($5, "lastname"),
+    "birthday" = COALESCE($6, "birthday"),
+    "city" = COALESCE($7, "city"),
+    "zip" = COALESCE($8, "zip"),
+    "street" = COALESCE($9, "street"),
+    "country" = COALESCE($10, "country"),
+    "changer" = $2,
+    "changed" = now()
 WHERE "ID" = $1
 RETURNING "ID", "accountID", firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed
 `

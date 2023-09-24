@@ -12,12 +12,12 @@ import (
 
 const createProvider = `-- name: CreateProvider :one
 INSERT INTO providers (
-    name,
-    description,
-    category,
-    email,
-    creator,
-    changer
+    "name",
+    "description",
+    "category",
+    "email",
+    "creator",
+    "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6
 ) RETURNING "ID", name, description, category, email, creator, created, changer, changed
@@ -90,7 +90,7 @@ func (q *Queries) GetProvider(ctx context.Context, id int64) (Provider, error) {
 
 const listProviders = `-- name: ListProviders :many
 SELECT "ID", name, description, category, email, creator, created, changer, changed FROM providers
-ORDER BY name
+ORDER BY "name"
 LIMIT $1
 OFFSET $2
 `
@@ -136,12 +136,12 @@ func (q *Queries) ListProviders(ctx context.Context, arg ListProvidersParams) ([
 const updateProvider = `-- name: UpdateProvider :one
 UPDATE providers
 SET
-    name = COALESCE($3, name),
-    description = COALESCE($4, description),
-    category = COALESCE($5, category),
-    email = COALESCE($6, email),
-    changer = $2,
-    changed = now()
+    "name" = COALESCE($3, "name"),
+    "description" = COALESCE($4, "description"),
+    "category" = COALESCE($5, "category"),
+    "email" = COALESCE($6, "email"),
+    "changer" = $2,
+    "changed" = now()
 WHERE "ID" = $1
 RETURNING "ID", name, description, category, email, creator, created, changer, changed
 `

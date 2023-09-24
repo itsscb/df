@@ -19,7 +19,7 @@ INSERT INTO "returnsLog" (
 
 -- name: ListReturnsLogs :many
 SELECT * FROM "returnsLog"
-ORDER BY status
+ORDER BY "status"
 LIMIT $1
 OFFSET $2;
 
@@ -29,8 +29,8 @@ SET
     "returnID" = COALESCE(sqlc.narg(returnID), "returnID"),
     "mailID" = COALESCE(sqlc.narg(mailID), "mailID"),
     "status" = COALESCE(sqlc.narg(status), "status"),
-    changer = $1,
-    changed = now()
+    "changer" = $1,
+    "changed" = now()
 WHERE "ID" = sqlc.arg(ID)
 RETURNING *;
 

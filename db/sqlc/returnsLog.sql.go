@@ -87,7 +87,7 @@ func (q *Queries) GetReturnsLog(ctx context.Context, id int64) (ReturnsLog, erro
 
 const listReturnsLogs = `-- name: ListReturnsLogs :many
 SELECT "ID", "returnID", "mailID", status, creator, created, changer, changed FROM "returnsLog"
-ORDER BY status
+ORDER BY "status"
 LIMIT $1
 OFFSET $2
 `
@@ -135,8 +135,8 @@ SET
     "returnID" = COALESCE($2, "returnID"),
     "mailID" = COALESCE($3, "mailID"),
     "status" = COALESCE($4, "status"),
-    changer = $1,
-    changed = now()
+    "changer" = $1,
+    "changed" = now()
 WHERE "ID" = $5
 RETURNING "ID", "returnID", "mailID", status, creator, created, changer, changed
 `

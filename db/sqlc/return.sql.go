@@ -113,7 +113,7 @@ func (q *Queries) GetReturn(ctx context.Context, id int64) (Return, error) {
 
 const listReturns = `-- name: ListReturns :many
 SELECT "ID", "personID", "providerID", name, description, category, email, status, creator, created, changer, changed FROM returns
-ORDER BY name
+ORDER BY "name"
 LIMIT $1
 OFFSET $2
 `
@@ -169,8 +169,8 @@ SET
     "category" = COALESCE($5, "category"),
     "email" = COALESCE($6, "email"),
     "status" = COALESCE($7, "status"),
-    changer = $8,
-    changed = now()
+    "changer" = $8,
+    "changed" = now()
 WHERE "ID" = $9
 RETURNING "ID", "personID", "providerID", name, description, category, email, status, creator, created, changer, changed
 `
