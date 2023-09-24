@@ -20,6 +20,19 @@ type Querier interface {
 	CreateReturnsLog(ctx context.Context, arg CreateReturnsLogParams) (ReturnsLog, error)
 	DeleteAccount(ctx context.Context, id int64) error
 	DeleteDocument(ctx context.Context, id int64) error
+	// -- name: UpdateMail :one
+	// UPDATE mails
+	// SET
+	//     "from" = COALESCE(sqlc.narg(from), "from"),
+	//     "to" = COALESCE(sqlc.narg(to), "to"),
+	//     cc = COALESCE(sqlc.narg(cc), cc),
+	//     "subject" = COALESCE(sqlc.narg(subject), "subject"),
+	//     body = COALESCE(sqlc.narg(body), body),
+	//     "timestamp" = COALESCE(sqlc.narg(timestamp), "timestamp"),
+	//     changer = $2,
+	//     changed = now()
+	// WHERE "ID" = $1
+	// RETURNING *;
 	DeleteMail(ctx context.Context, id int64) error
 	DeletePayment(ctx context.Context, id int64) error
 	DeletePerson(ctx context.Context, id int64) error
@@ -27,6 +40,7 @@ type Querier interface {
 	DeleteReturn(ctx context.Context, id int64) error
 	DeleteReturnsLog(ctx context.Context, id int64) error
 	GetAccount(ctx context.Context, id int64) (Account, error)
+	GetAccountForUpdate(ctx context.Context, id int64) (Account, error)
 	GetDocument(ctx context.Context, id int64) (Document, error)
 	GetMail(ctx context.Context, id int64) (Mail, error)
 	GetPayment(ctx context.Context, id int64) (Payment, error)

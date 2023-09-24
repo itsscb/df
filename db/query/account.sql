@@ -2,6 +2,11 @@
 SELECT * FROM accounts
 WHERE "ID" = $1 LIMIT 1;
 
+-- name: GetAccountForUpdate :one
+SELECT * FROM accounts
+WHERE "ID" = $1 LIMIT 1
+FOR NO KEY UPDATE;
+
 -- name: CreateAccount :one
 INSERT INTO accounts (
     passwordhash,

@@ -127,6 +127,40 @@ func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
 	return i, err
 }
 
+const getAccountForUpdate = `-- name: GetAccountForUpdate :one
+SELECT "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
+WHERE "ID" = $1 LIMIT 1
+FOR NO KEY UPDATE
+`
+
+func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, error) {
+	row := q.db.QueryRowContext(ctx, getAccountForUpdate, id)
+	var i Account
+	err := row.Scan(
+		&i.ID,
+		&i.Passwordhash,
+		&i.Firstname,
+		&i.Lastname,
+		&i.Birthday,
+		&i.PrivacyAccepted,
+		&i.PrivacyAcceptedDate,
+		&i.Email,
+		&i.Phone,
+		&i.City,
+		&i.Zip,
+		&i.Street,
+		&i.Country,
+		&i.Token,
+		&i.TokenValid,
+		&i.TokenExpiration,
+		&i.Creator,
+		&i.Created,
+		&i.Changer,
+		&i.Changed,
+	)
+	return i, err
+}
+
 const listAccounts = `-- name: ListAccounts :many
 SELECT "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
 ORDER BY lastname, firstname

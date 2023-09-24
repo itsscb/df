@@ -279,7 +279,7 @@ func TestGetAccountAPI(t *testing.T) {
 	}
 }
 
-func TestUpdateAccountAPI(t *testing.T) {
+func TestUpdateAccountTxAPI(t *testing.T) {
 	account := randomAccount()
 	changer := util.RandomName()
 	newPassword := util.RandomString(30)
@@ -302,7 +302,7 @@ func TestUpdateAccountAPI(t *testing.T) {
 				accountTemp := account
 				accountTemp.Passwordhash = newPassword
 				accountTemp.Changer = changer
-				arg := db.UpdateAccountParams{
+				arg := db.UpdateAccountTxParams{
 					ID: account.ID,
 					Passwordhash: sql.NullString{
 						Valid:  true,
@@ -312,7 +312,7 @@ func TestUpdateAccountAPI(t *testing.T) {
 				}
 
 				store.EXPECT().
-					UpdateAccount(gomock.Any(), gomock.Eq(arg)).
+					UpdateAccountTx(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
 					Return(accountTemp, nil)
 			},
@@ -334,7 +334,7 @@ func TestUpdateAccountAPI(t *testing.T) {
 				"changer": changer,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
-				arg := db.UpdateAccountParams{
+				arg := db.UpdateAccountTxParams{
 					ID: account.ID,
 					Email: sql.NullString{
 						Valid:  true,
@@ -344,7 +344,7 @@ func TestUpdateAccountAPI(t *testing.T) {
 				}
 
 				store.EXPECT().
-					UpdateAccount(gomock.Any(), gomock.Eq(arg)).
+					UpdateAccountTx(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
 					Return(account, nil)
 			},
