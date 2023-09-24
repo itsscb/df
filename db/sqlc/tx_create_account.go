@@ -24,7 +24,7 @@ type CreateAccountTxResult struct {
 	Account Account `json:"account"`
 }
 
-func (store *SQLStore) CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (CreateAccountTxResult, error) {
+func (store *SQLStore) CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (Account, error) {
 	var result CreateAccountTxResult
 
 	err := store.execTx(ctx, func(q *Queries) error {
@@ -47,5 +47,5 @@ func (store *SQLStore) CreateAccountTx(ctx context.Context, arg CreateAccountTxP
 		return err
 	})
 
-	return result, err
+	return result.Account, err
 }

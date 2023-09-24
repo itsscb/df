@@ -8,7 +8,7 @@ import (
 
 type Store interface {
 	Querier
-	CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (CreateAccountTxResult, error)
+	CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (Account, error)
 	UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error)
 }
 
