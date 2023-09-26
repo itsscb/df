@@ -10,13 +10,13 @@ import (
 )
 
 type Account struct {
-	ID                  int64          `json:"ID"`
+	ID                  int64          `json:"id"`
 	Passwordhash        string         `json:"passwordhash"`
 	Firstname           string         `json:"firstname"`
 	Lastname            string         `json:"lastname"`
 	Birthday            time.Time      `json:"birthday"`
-	PrivacyAccepted     bool           `json:"privacyAccepted"`
-	PrivacyAcceptedDate sql.NullTime   `json:"privacyAcceptedDate"`
+	PrivacyAccepted     sql.NullBool   `json:"privacy_accepted"`
+	PrivacyAcceptedDate sql.NullTime   `json:"privacy_accepted_date"`
 	Email               string         `json:"email"`
 	Phone               sql.NullString `json:"phone"`
 	City                string         `json:"city"`
@@ -24,8 +24,8 @@ type Account struct {
 	Street              string         `json:"street"`
 	Country             string         `json:"country"`
 	Token               sql.NullString `json:"token"`
-	TokenValid          sql.NullBool   `json:"tokenValid"`
-	TokenExpiration     time.Time      `json:"tokenExpiration"`
+	TokenValid          sql.NullBool   `json:"token_valid"`
+	TokenExpiration     time.Time      `json:"token_expiration"`
 	Creator             string         `json:"creator"`
 	Created             time.Time      `json:"created"`
 	Changer             string         `json:"changer"`
@@ -33,16 +33,16 @@ type Account struct {
 }
 
 type Document struct {
-	ID          int64          `json:"ID"`
-	PersonID    sql.NullInt64  `json:"personID"`
+	ID          int64          `json:"id"`
+	PersonID    sql.NullInt64  `json:"person_id"`
 	Name        string         `json:"name"`
 	Type        string         `json:"type"`
 	Path        string         `json:"path"`
 	Url         string         `json:"url"`
 	Valid       bool           `json:"valid"`
-	ValidDate   sql.NullTime   `json:"validDate"`
-	ValidatedBy sql.NullString `json:"validatedBy"`
-	MailID      sql.NullInt64  `json:"mailID"`
+	ValidDate   sql.NullTime   `json:"valid_date"`
+	ValidatedBy sql.NullString `json:"validated_by"`
+	MailID      sql.NullInt64  `json:"mail_id"`
 	Creator     string         `json:"creator"`
 	Created     time.Time      `json:"created"`
 	Changer     string         `json:"changer"`
@@ -50,7 +50,7 @@ type Document struct {
 }
 
 type Mail struct {
-	ID        int64     `json:"ID"`
+	ID        int64     `json:"id"`
 	From      string    `json:"from"`
 	To        []string  `json:"to"`
 	Cc        []string  `json:"cc"`
@@ -64,15 +64,15 @@ type Mail struct {
 }
 
 type Payment struct {
-	ID              int64          `json:"ID"`
-	AccountID       int64          `json:"accountID"`
-	PaymentCategory string         `json:"paymentCategory"`
+	ID              int64          `json:"id"`
+	AccountID       int64          `json:"account_id"`
+	PaymentCategory string         `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
-	IBAN            sql.NullString `json:"IBAN"`
-	BIC             sql.NullString `json:"BIC"`
-	PaypalAccount   sql.NullString `json:"paypalAccount"`
-	PaypalID        sql.NullString `json:"paypalID"`
-	PaymentSystem   sql.NullString `json:"paymentSystem"`
+	Iban            sql.NullString `json:"iban"`
+	Bic             sql.NullString `json:"bic"`
+	PaypalAccount   sql.NullString `json:"paypal_account"`
+	PaypalID        sql.NullString `json:"paypal_id"`
+	PaymentSystem   sql.NullString `json:"payment_system"`
 	Type            string         `json:"type"`
 	Creator         string         `json:"creator"`
 	Created         time.Time      `json:"created"`
@@ -81,8 +81,8 @@ type Payment struct {
 }
 
 type Person struct {
-	ID        int64     `json:"ID"`
-	AccountID int64     `json:"accountID"`
+	ID        int64     `json:"id"`
+	AccountID int64     `json:"account_id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
 	Birthday  time.Time `json:"birthday"`
@@ -97,7 +97,7 @@ type Person struct {
 }
 
 type Provider struct {
-	ID          int64     `json:"ID"`
+	ID          int64     `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Category    string    `json:"category"`
@@ -109,9 +109,9 @@ type Provider struct {
 }
 
 type Return struct {
-	ID          int64     `json:"ID"`
-	PersonID    int64     `json:"personID"`
-	ProviderID  int64     `json:"providerID"`
+	ID          int64     `json:"id"`
+	PersonID    int64     `json:"person_id"`
+	ProviderID  int64     `json:"provider_id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Category    string    `json:"category"`
@@ -124,9 +124,9 @@ type Return struct {
 }
 
 type ReturnsLog struct {
-	ID       int64          `json:"ID"`
-	ReturnID int64          `json:"returnID"`
-	MailID   int64          `json:"mailID"`
+	ID       int64          `json:"id"`
+	ReturnID int64          `json:"return_id"`
+	MailID   int64          `json:"mail_id"`
 	Status   sql.NullString `json:"status"`
 	Creator  string         `json:"creator"`
 	Created  time.Time      `json:"created"`

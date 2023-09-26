@@ -1,6 +1,6 @@
 -- name: GetProvider :one
 SELECT * FROM providers
-WHERE "ID" = $1 LIMIT 1;
+WHERE "id" = $1 LIMIT 1;
 
 -- name: CreateProvider :one
 INSERT INTO providers (
@@ -29,9 +29,9 @@ SET
     "email" = COALESCE(sqlc.narg(email), "email"),
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
+WHERE "id" = $1
 RETURNING *;
 
 -- name: DeleteProvider :exec
 DELETE FROM providers
-WHERE "ID" = $1;
+WHERE "id" = $1;

@@ -1,17 +1,17 @@
 -- name: GetPayment :one
 SELECT * FROM payments
-WHERE "ID" = $1 LIMIT 1;
+WHERE "id" = $1 LIMIT 1;
 
 -- name: CreatePayment :one
 INSERT INTO payments (
-    "accountID",
-    "paymentCategory",
+    "account_id",
+    "payment_category",
     "bankname",
-    "IBAN",
-    "BIC",
-    "paypalAccount",
-    "paypalID",
-    "paymentSystem",
+    "iban",
+    "bic",
+    "paypal_account",
+    "paypal_id",
+    "payment_system",
     "type",
     "creator",
     "changer"
@@ -21,27 +21,27 @@ INSERT INTO payments (
 
 -- name: ListPayments :many
 SELECT * FROM payments
-ORDER BY "paymentCategory"
+ORDER BY "payment_category"
 LIMIT $1
 OFFSET $2;
 
 -- name: UpdatePayment :one
 UPDATE payments
 SET
-    "accountID" = COALESCE(sqlc.narg(accountID), "accountID"),
-    "paymentCategory" = COALESCE(sqlc.narg(paymentCategory), "paymentCategory"),
+    "account_id" = COALESCE(sqlc.narg(account_id), "account_id"),
+    "payment_category" = COALESCE(sqlc.narg(payment_category), "payment_category"),
     "bankname" = COALESCE(sqlc.narg(bankname), "bankname"),
-    "IBAN" = COALESCE(sqlc.narg(IBAN), "IBAN"),
-    "BIC" = COALESCE(sqlc.narg(BIC), "BIC"),
-    "paypalAccount" = COALESCE(sqlc.narg(paypalAccount), "paypalAccount"),
-    "paypalID" = COALESCE(sqlc.narg(paypalID), "paypalID"),
-    "paymentSystem" = COALESCE(sqlc.narg(paymentSystem), "paymentSystem"),
+    "iban" = COALESCE(sqlc.narg(iban), "iban"),
+    "bic" = COALESCE(sqlc.narg(bic), "bic"),
+    "paypal_account" = COALESCE(sqlc.narg(paypal_account), "paypal_account"),
+    "paypal_id" = COALESCE(sqlc.narg(paypal_id), "paypal_id"),
+    "payment_system" = COALESCE(sqlc.narg(payment_system), "payment_system"),
     "type" = COALESCE(sqlc.narg(type), "type"),
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
+WHERE "id" = $1
 RETURNING *;
 
 -- name: DeletePayment :exec
 DELETE FROM payments
-WHERE "ID" = $1;
+WHERE "id" = $1;

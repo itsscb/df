@@ -1,10 +1,10 @@
 -- name: GetDocument :one
 SELECT * FROM documents
-WHERE "ID" = $1 LIMIT 1;
+WHERE "id" = $1 LIMIT 1;
 
 -- name: CreateDocumentUpload :one
 INSERT INTO documents (
-    "personID",
+    "person_id",
     "name",
     "type",
     "path",
@@ -17,7 +17,7 @@ INSERT INTO documents (
 
 -- name: CreateDocumentMail :one
 INSERT INTO documents (
-    "mailID",
+    "mail_id",
     "name",
     "type",
     "path",
@@ -37,38 +37,38 @@ OFFSET $2;
 -- name: UpdateDocument :one
 UPDATE documents
 SET
-    "personID" = COALESCE(sqlc.narg(personID), "personID"),
+    "person_id" = COALESCE(sqlc.narg(person_id), "person_id"),
     "name" = COALESCE(sqlc.narg(name), "name"),
     "type" = COALESCE(sqlc.narg(type), "type"),
     "path" = COALESCE(sqlc.narg(path), "path"),
     "url" = COALESCE(sqlc.narg(url), "url"),
     changer = $2,
     changed = now()
-WHERE "ID" = $1
+WHERE "id" = $1
 RETURNING *;
 
 -- name: ValidateDocument :one
 UPDATE documents
 SET
     "valid" = true,
-    "validDate" = now(),
-    "validatedBy" = $2,    
+    "valid_date" = now(),
+    "validated_by" = $2,    
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
+WHERE "id" = $1
 RETURNING *;
 
 -- name: InvalidateDocument :one
 UPDATE documents
 SET
     "valid" = false,
-    "validDate" = NULL,
-    "validatedBy" = NULL,    
+    "valid_date" = NULL,
+    "validated_by" = NULL,    
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
+WHERE "id" = $1
 RETURNING *;
 
 -- name: DeleteDocument :exec
 DELETE FROM documents
-WHERE "ID" = $1;
+WHERE "id" = $1;

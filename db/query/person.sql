@@ -1,10 +1,10 @@
 -- name: GetPerson :one
 SELECT * FROM persons
-WHERE "ID" = $1 LIMIT 1;
+WHERE "id" = $1 LIMIT 1;
 
 -- name: CreatePerson :one
 INSERT INTO persons (
-    "accountID",
+    "account_id",
     "firstname",
     "lastname",
     "birthday",
@@ -27,7 +27,7 @@ OFFSET $2;
 -- name: UpdatePerson :one
 UPDATE persons
 SET
-    "accountID" = COALESCE(sqlc.narg(accountID), "accountID"),
+    "account_id" = COALESCE(sqlc.narg(account_id), "account_id"),
     "firstname" = COALESCE(sqlc.narg(firstname), "firstname"),
     "lastname" = COALESCE(sqlc.narg(lastname), "lastname"),
     "birthday" = COALESCE(sqlc.narg(birthday), "birthday"),
@@ -37,9 +37,9 @@ SET
     "country" = COALESCE(sqlc.narg(country), "country"),
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
+WHERE "id" = $1
 RETURNING *;
 
 -- name: DeletePerson :exec
 DELETE FROM persons
-WHERE "ID" = $1;
+WHERE "id" = $1;

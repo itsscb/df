@@ -10,16 +10,17 @@ import (
 )
 
 type createAccountRequest struct {
-	Passwordhash string    `binding:"required" json:"passwordhash"`
-	Firstname    string    `binding:"required" json:"firstname"`
-	Lastname     string    `binding:"required" json:"lastname"`
-	Birthday     time.Time `binding:"required" json:"birthday"`
-	Email        string    `binding:"required" json:"email"`
-	Phone        string    `json:"phone"`
-	City         string    `binding:"required" json:"city"`
-	Zip          string    `binding:"required" json:"zip"`
-	Street       string    `binding:"required" json:"street"`
-	Country      string    `binding:"required" json:"country"`
+	Passwordhash    string    `binding:"required" json:"passwordhash"`
+	PrivacyAccepted bool      `json:"privacy_accepted"`
+	Firstname       string    `binding:"required" json:"firstname"`
+	Lastname        string    `binding:"required" json:"lastname"`
+	Birthday        time.Time `binding:"required" json:"birthday"`
+	Email           string    `binding:"required" json:"email"`
+	Phone           string    `json:"phone"`
+	City            string    `binding:"required" json:"city"`
+	Zip             string    `binding:"required" json:"zip"`
+	Street          string    `binding:"required" json:"street"`
+	Country         string    `binding:"required" json:"country"`
 }
 
 func (server *Server) createAccount(ctx *gin.Context) {
@@ -31,20 +32,31 @@ func (server *Server) createAccount(ctx *gin.Context) {
 
 	arg := db.CreateAccountTxParams{
 		Passwordhash: req.Passwordhash,
-		Firstname:    req.Firstname,
-		Lastname:     req.Lastname,
-		Birthday:     req.Birthday,
-		Email:        req.Email,
-		City:         req.City,
-		Zip:          req.Zip,
-		Street:       req.Street,
-		Country:      req.Country,
-		Creator:      "system",
+		PrivacyAccepted: sql.NullBool{
+			Valid: true,
+			Bool:  req.PrivacyAccepted,
+		},
+		Firstname: req.Firstname,
+		Lastname:  req.Lastname,
+		Birthday:  req.Birthday,
+		Email:     req.Email,
+		City:      req.City,
+		Zip:       req.Zip,
+		Street:    req.Street,
+		Country:   req.Country,
+		Creator:   "system",
 		Phone: sql.NullString{
 			Valid:  req.Phone != "",
 			String: req.Phone,
 		},
 	}
+
+	// if req.PrivacyAccepted {
+	// 	arg.PrivacyAcceptedDate = sql.NullTime{
+	// 		Valid: true,
+	// 		Time:  time.Now(),
+	// 	}
+	// }
 
 	account, err := server.store.CreateAccountTx(ctx, arg)
 	if err != nil {
@@ -109,24 +121,31 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 }
 
 type updateAccountRequest struct {
-	ID           int64     `binding:"required" json:"ID"`
-	Changer      string    `binding:"required" json:"changer"`
-	Passwordhash string    `json:"passwordhash"`
-	Firstname    string    `json:"firstname"`
-	Lastname     string    `json:"lastname"`
-	Birthday     time.Time `json:"birthday"`
-	Email        string    `json:"email"`
-	Phone        string    `json:"phone"`
-	City         string    `json:"city"`
-	Zip          string    `json:"zip"`
-	Street       string    `json:"street"`
-	Country      string    `json:"country"`
+	ID              int64     `binding:"required" json:"ID"`
+	Changer         string    `binding:"required" json:"changer"`
+	PrivacyAccepted bool      `json:"privacy_accepted"`
+	Passwordhash    string    `json:"passwordhash"`
+	Firstname       string    `json:"firstname"`
+	Lastname        string    `json:"lastname"`
+	Birthday        time.Time `json:"birthday"`
+	Email           string    `json:"email"`
+	Phone           string    `json:"phone"`
+	City            string    `json:"city"`
+	Zip             string    `json:"zip"`
+	Street          string    `json:"street"`
+	Country         string    `json:"country"`
 }
 
 func (server *Server) updateAccount(ctx *gin.Context) {
 	var req updateAccountRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	account, err := server.store.GetAccount(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 		return
 	}
 
@@ -173,9 +192,13 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 			String: req.Phone,
 			Valid:  req.Phone != "",
 		},
+		PrivacyAccepted: sql.NullBool{
+			Valid: account.PrivacyAccepted.Bool != req.PrivacyAccepted,
+			Bool:  req.PrivacyAccepted,
+		},
 	}
 
-	account, err := server.store.UpdateAccountTx(ctx, arg)
+	account, err = server.store.UpdateAccountTx(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

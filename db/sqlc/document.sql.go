@@ -12,7 +12,7 @@ import (
 
 const createDocumentMail = `-- name: CreateDocumentMail :one
 INSERT INTO documents (
-    "mailID",
+    "mail_id",
     "name",
     "type",
     "path",
@@ -21,11 +21,11 @@ INSERT INTO documents (
     "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7
-) RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
+) RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed
 `
 
 type CreateDocumentMailParams struct {
-	MailID  sql.NullInt64 `json:"mailID"`
+	MailID  sql.NullInt64 `json:"mail_id"`
 	Name    string        `json:"name"`
 	Type    string        `json:"type"`
 	Path    string        `json:"path"`
@@ -66,7 +66,7 @@ func (q *Queries) CreateDocumentMail(ctx context.Context, arg CreateDocumentMail
 
 const createDocumentUpload = `-- name: CreateDocumentUpload :one
 INSERT INTO documents (
-    "personID",
+    "person_id",
     "name",
     "type",
     "path",
@@ -75,11 +75,11 @@ INSERT INTO documents (
     "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7
-) RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
+) RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed
 `
 
 type CreateDocumentUploadParams struct {
-	PersonID sql.NullInt64 `json:"personID"`
+	PersonID sql.NullInt64 `json:"person_id"`
 	Name     string        `json:"name"`
 	Type     string        `json:"type"`
 	Path     string        `json:"path"`
@@ -120,7 +120,7 @@ func (q *Queries) CreateDocumentUpload(ctx context.Context, arg CreateDocumentUp
 
 const deleteDocument = `-- name: DeleteDocument :exec
 DELETE FROM documents
-WHERE "ID" = $1
+WHERE "id" = $1
 `
 
 func (q *Queries) DeleteDocument(ctx context.Context, id int64) error {
@@ -129,8 +129,8 @@ func (q *Queries) DeleteDocument(ctx context.Context, id int64) error {
 }
 
 const getDocument = `-- name: GetDocument :one
-SELECT "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed FROM documents
-WHERE "ID" = $1 LIMIT 1
+SELECT id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed FROM documents
+WHERE "id" = $1 LIMIT 1
 `
 
 func (q *Queries) GetDocument(ctx context.Context, id int64) (Document, error) {
@@ -159,16 +159,16 @@ const invalidateDocument = `-- name: InvalidateDocument :one
 UPDATE documents
 SET
     "valid" = false,
-    "validDate" = NULL,
-    "validatedBy" = NULL,    
+    "valid_date" = NULL,
+    "validated_by" = NULL,    
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
-RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
+WHERE "id" = $1
+RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed
 `
 
 type InvalidateDocumentParams struct {
-	ID      int64  `json:"ID"`
+	ID      int64  `json:"id"`
 	Changer string `json:"changer"`
 }
 
@@ -195,7 +195,7 @@ func (q *Queries) InvalidateDocument(ctx context.Context, arg InvalidateDocument
 }
 
 const listDocuments = `-- name: ListDocuments :many
-SELECT "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed FROM documents
+SELECT id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed FROM documents
 ORDER BY "valid", "type", "name"
 LIMIT $1
 OFFSET $2
@@ -247,21 +247,21 @@ func (q *Queries) ListDocuments(ctx context.Context, arg ListDocumentsParams) ([
 const updateDocument = `-- name: UpdateDocument :one
 UPDATE documents
 SET
-    "personID" = COALESCE($3, "personID"),
+    "person_id" = COALESCE($3, "person_id"),
     "name" = COALESCE($4, "name"),
     "type" = COALESCE($5, "type"),
     "path" = COALESCE($6, "path"),
     "url" = COALESCE($7, "url"),
     changer = $2,
     changed = now()
-WHERE "ID" = $1
-RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
+WHERE "id" = $1
+RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed
 `
 
 type UpdateDocumentParams struct {
-	ID       int64          `json:"ID"`
+	ID       int64          `json:"id"`
 	Changer  string         `json:"changer"`
-	Personid sql.NullInt64  `json:"personid"`
+	PersonID sql.NullInt64  `json:"person_id"`
 	Name     sql.NullString `json:"name"`
 	Type     sql.NullString `json:"type"`
 	Path     sql.NullString `json:"path"`
@@ -272,7 +272,7 @@ func (q *Queries) UpdateDocument(ctx context.Context, arg UpdateDocumentParams) 
 	row := q.db.QueryRowContext(ctx, updateDocument,
 		arg.ID,
 		arg.Changer,
-		arg.Personid,
+		arg.PersonID,
 		arg.Name,
 		arg.Type,
 		arg.Path,
@@ -302,17 +302,17 @@ const validateDocument = `-- name: ValidateDocument :one
 UPDATE documents
 SET
     "valid" = true,
-    "validDate" = now(),
-    "validatedBy" = $2,    
+    "valid_date" = now(),
+    "validated_by" = $2,    
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
-RETURNING "ID", "personID", name, type, path, url, valid, "validDate", "validatedBy", "mailID", creator, created, changer, changed
+WHERE "id" = $1
+RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed
 `
 
 type ValidateDocumentParams struct {
-	ID          int64          `json:"ID"`
-	ValidatedBy sql.NullString `json:"validatedBy"`
+	ID          int64          `json:"id"`
+	ValidatedBy sql.NullString `json:"validated_by"`
 }
 
 func (q *Queries) ValidateDocument(ctx context.Context, arg ValidateDocumentParams) (Document, error) {

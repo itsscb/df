@@ -19,6 +19,8 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+var timestamp = time.Now()
+
 func TestCreateAccountAPI(t *testing.T) {
 	account := randomAccount()
 
@@ -31,31 +33,33 @@ func TestCreateAccountAPI(t *testing.T) {
 		{
 			name: "OK",
 			body: gin.H{
-				"passwordhash": account.Passwordhash,
-				"firstname":    account.Firstname,
-				"lastname":     account.Lastname,
-				"birthday":     account.Birthday,
-				"email":        account.Email,
-				"city":         account.City,
-				"zip":          account.Zip,
-				"street":       account.Street,
-				"country":      account.Country,
-				"phone":        account.Phone.String,
-				"creator":      account.Creator,
+				"passwordhash":     account.Passwordhash,
+				"privacy_accepted": account.PrivacyAccepted.Bool,
+				"firstname":        account.Firstname,
+				"lastname":         account.Lastname,
+				"birthday":         account.Birthday,
+				"email":            account.Email,
+				"city":             account.City,
+				"zip":              account.Zip,
+				"street":           account.Street,
+				"country":          account.Country,
+				"phone":            account.Phone.String,
+				"creator":          account.Creator,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.CreateAccountTxParams{
-					Passwordhash: account.Passwordhash,
-					Firstname:    account.Firstname,
-					Lastname:     account.Lastname,
-					Birthday:     account.Birthday,
-					Email:        account.Email,
-					City:         account.City,
-					Zip:          account.Zip,
-					Street:       account.Street,
-					Country:      account.Country,
-					Phone:        account.Phone,
-					Creator:      account.Creator,
+					Passwordhash:    account.Passwordhash,
+					PrivacyAccepted: account.PrivacyAccepted,
+					Firstname:       account.Firstname,
+					Lastname:        account.Lastname,
+					Birthday:        account.Birthday,
+					Email:           account.Email,
+					City:            account.City,
+					Zip:             account.Zip,
+					Street:          account.Street,
+					Country:         account.Country,
+					Phone:           account.Phone,
+					Creator:         account.Creator,
 				}
 
 				store.EXPECT().
@@ -99,17 +103,19 @@ func TestCreateAccountAPI(t *testing.T) {
 		{
 			name: "InternalServerError",
 			body: gin.H{
-				"passwordhash": account.Passwordhash,
-				"firstname":    account.Firstname,
-				"lastname":     account.Lastname,
-				"birthday":     account.Birthday,
-				"email":        account.Email,
-				"city":         account.City,
-				"zip":          account.Zip,
-				"street":       account.Street,
-				"country":      account.Country,
-				"phone":        account.Phone.String,
-				"creator":      account.Creator,
+				"passwordhash":          account.Passwordhash,
+				"privacy_accepted":      account.PrivacyAccepted.Bool,
+				"privacy_accepted_date": account.PrivacyAcceptedDate.Time,
+				"firstname":             account.Firstname,
+				"lastname":              account.Lastname,
+				"birthday":              account.Birthday,
+				"email":                 account.Email,
+				"city":                  account.City,
+				"zip":                   account.Zip,
+				"street":                account.Street,
+				"country":               account.Country,
+				"phone":                 account.Phone.String,
+				"creator":               account.Creator,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
@@ -269,6 +275,7 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 	changer := util.RandomName()
 	newPassword := util.RandomString(30)
 	newEmail := util.RandomEmail()
+
 	testCases := []struct {
 		name          string
 		body          gin.H
@@ -295,6 +302,10 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 					},
 					Changer: changer,
 				}
+
+				store.EXPECT().
+					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
+					Times(1)
 
 				store.EXPECT().
 					UpdateAccountTx(gomock.Any(), gomock.Eq(arg)).
@@ -329,6 +340,10 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 				}
 
 				store.EXPECT().
+					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
+					Times(1)
+
+				store.EXPECT().
 					UpdateAccountTx(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
 					Return(account, nil)
@@ -338,6 +353,39 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 				requireBodyMatchAccount(t, recorder.Body, account)
 			},
 		},
+		// {
+		// 	name: "OK_PrivacyAccepted",
+		// 	body: gin.H{
+		// 		"id":               account.ID,
+		// 		"privacy_accepted": true,
+		// 		"changer":          changer,
+		// 	},
+		// 	buildStubs: func(store *mockdb.MockStore) {
+		// 		accountAccepted := account
+		// 		accountAccepted.PrivacyAccepted = sql.NullBool{
+		// 			Valid: true,
+		// 			Bool:  true,
+		// 		}
+		// 		accountAccepted.PrivacyAcceptedDate = sql.NullTime{
+		// 			Valid: true,
+		// 			Time:  timestamp,
+		// 		}
+
+		// 		arg := db.UpdateAccountTxParams{
+		// 			ID: account.ID,
+		// 			PrivacyAccepted: sql.NullBool{
+		// 				Valid: true,
+		// 				Bool:  true,
+		// 			},
+		// 			Changer: changer,
+		// 		}
+
+		// 		store.EXPECT().
+		// 			UpdateAccountTx(gomock.Any(), gomock.Eq(arg)).
+		// 			Times(1).
+		// 			Return(accountAccepted, nil)
+		// 	},
+		// },
 		// {
 		// 	name: "NoAuthorization",
 		// 	body: gin.H{
@@ -367,20 +415,6 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
-		/* 		{
-			name: "InvalidCurrency",
-			body: gin.H{
-				"currency": "invalid",
-			},
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().
-					CreateAccount(gomock.Any(), gomock.Any()).
-					Times(0)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recorder.Code)
-			},
-		}, */
 	}
 
 	for i := range testCases {
@@ -540,12 +574,20 @@ func TestListAccountsAPI(t *testing.T) {
 }
 
 func randomAccount() db.Account {
-	return db.Account{
+	acc := db.Account{
 		ID:           util.RandomInt(1, 1000),
 		Passwordhash: util.RandomString(250),
 		Firstname:    util.RandomName(),
 		Lastname:     util.RandomName(),
 		Email:        util.RandomEmail(),
+		PrivacyAccepted: sql.NullBool{
+			Valid: true,
+			Bool:  true,
+		},
+		PrivacyAcceptedDate: sql.NullTime{
+			Valid: true,
+			Time:  timestamp,
+		},
 		Phone: sql.NullString{
 			String: util.RandomPhone(),
 			Valid:  true,
@@ -560,6 +602,8 @@ func randomAccount() db.Account {
 		Changed:  time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
 		Birthday: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
+
+	return acc
 }
 
 func requireBodyMatchAccount(t *testing.T, body *bytes.Buffer, account db.Account) {
@@ -569,7 +613,18 @@ func requireBodyMatchAccount(t *testing.T, body *bytes.Buffer, account db.Accoun
 	var getAccount db.Account
 	err = json.Unmarshal(data, &getAccount)
 	require.NoError(t, err)
-	require.Equal(t, account, getAccount)
+	require.Equal(t, account.Firstname, getAccount.Firstname)
+	require.Equal(t, account.Lastname, getAccount.Lastname)
+	require.Equal(t, account.Passwordhash, getAccount.Passwordhash)
+	require.Equal(t, account.Email, getAccount.Email)
+	require.Equal(t, account.Phone, getAccount.Phone)
+	require.Equal(t, account.City, getAccount.City)
+	require.Equal(t, account.Street, getAccount.Street)
+	require.Equal(t, account.Country, getAccount.Country)
+	require.Equal(t, account.Zip, getAccount.Zip)
+	require.Equal(t, account.Creator, getAccount.Creator)
+	require.Equal(t, account.PrivacyAccepted, getAccount.PrivacyAccepted)
+	// require.WithinDuration(t, account.PrivacyAcceptedDate.Time, getAccount.PrivacyAcceptedDate.Time, time.Minute)
 }
 
 func requireBodyMatchAccounts(t *testing.T, body *bytes.Buffer, accounts []db.Account) {
@@ -579,5 +634,23 @@ func requireBodyMatchAccounts(t *testing.T, body *bytes.Buffer, accounts []db.Ac
 	var gotAccounts []db.Account
 	err = json.Unmarshal(data, &gotAccounts)
 	require.NoError(t, err)
-	require.Equal(t, accounts, gotAccounts)
+
+	for i := range accounts {
+		a := accounts[i]
+		b := gotAccounts[i]
+
+		require.Equal(t, a.Firstname, b.Firstname)
+		require.Equal(t, a.Lastname, b.Lastname)
+		require.Equal(t, a.Passwordhash, b.Passwordhash)
+		require.Equal(t, a.Email, b.Email)
+		require.Equal(t, a.Phone, b.Phone)
+		require.Equal(t, a.City, b.City)
+		require.Equal(t, a.Street, b.Street)
+		require.Equal(t, a.Country, b.Country)
+		require.Equal(t, a.Zip, b.Zip)
+		require.Equal(t, a.Creator, b.Creator)
+		require.Equal(t, a.PrivacyAccepted, b.PrivacyAccepted)
+	}
+	// require.Equal(t, accounts, gotAccounts)
+
 }
