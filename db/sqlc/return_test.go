@@ -18,8 +18,8 @@ func createRandomReturn(t *testing.T) Return {
 	creator := util.RandomName()
 
 	arg := CreateReturnParams{
-		Personid:    person.ID,
-		Providerid:  provider.ID,
+		PersonID:    person.ID,
+		ProviderID:  provider.ID,
 		Status:      util.RandomString(7),
 		Name:        util.RandomName(),
 		Description: util.RandomString(30),
@@ -34,8 +34,8 @@ func createRandomReturn(t *testing.T) Return {
 	require.NotEmpty(t, ret)
 
 	require.Equal(t, arg.Name, ret.Name)
-	require.Equal(t, arg.Personid, ret.PersonID)
-	require.Equal(t, arg.Providerid, ret.ProviderID)
+	require.Equal(t, arg.PersonID, ret.PersonID)
+	require.Equal(t, arg.ProviderID, ret.ProviderID)
 	require.Equal(t, arg.Description, ret.Description)
 	require.Equal(t, arg.Category, ret.Category)
 	require.Equal(t, arg.Status, ret.Status)

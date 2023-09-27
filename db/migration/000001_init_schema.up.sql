@@ -1,5 +1,5 @@
 CREATE TABLE "mails" (
-  "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "from" varchar NOT NULL,
   "to" varchar[] NOT NULL,
   "cc" varchar[],
@@ -13,13 +13,13 @@ CREATE TABLE "mails" (
 );
 
 CREATE TABLE "accounts" (
-  "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "passwordhash" varchar NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
   "birthday" timestamptz NOT NULL,
-  "privacyAccepted" boolean NOT NULL DEFAULT false,
-  "privacyAcceptedDate" timestamptz,
+  "privacy_accepted" boolean DEFAULT false,
+  "privacy_accepted_date" timestamptz,
   "email" varchar UNIQUE NOT NULL,
   "phone" varchar,
   "city" varchar NOT NULL,
@@ -27,8 +27,8 @@ CREATE TABLE "accounts" (
   "street" varchar NOT NULL,
   "country" varchar NOT NULL,
   "token" varchar,
-  "tokenValid" boolean DEFAULT false,
-  "tokenExpiration" timestamptz NOT NULL DEFAULT (now()),
+  "token_valid" boolean DEFAULT false,
+  "token_expiration" timestamptz NOT NULL DEFAULT (now()),
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
@@ -36,8 +36,8 @@ CREATE TABLE "accounts" (
 );
 
 CREATE TABLE "persons" (
-  "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "accountID" bigint NOT NULL,
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "account_id" bigint NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
   "birthday" timestamptz NOT NULL,
@@ -52,16 +52,16 @@ CREATE TABLE "persons" (
 );
 
 CREATE TABLE "documents" (
-  "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "personID" bigint,
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "person_id" bigint,
   "name" varchar NOT NULL,
   "type" varchar NOT NULL,
   "path" varchar NOT NULL,
   "url" varchar NOT NULL,
   "valid" boolean NOT NULL DEFAULT false,
-  "validDate" timestamptz,
-  "validatedBy" varchar,
-  "mailID" bigint,
+  "valid_date" timestamptz,
+  "validated_by" varchar,
+  "mail_id" bigint,
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
@@ -69,15 +69,15 @@ CREATE TABLE "documents" (
 );
 
 CREATE TABLE "payments" (
-  "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "accountID" bigint NOT NULL,
-  "paymentCategory" varchar NOT NULL,
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "account_id" bigint NOT NULL,
+  "payment_category" varchar NOT NULL,
   "bankname" varchar,
-  "IBAN" varchar,
-  "BIC" varchar,
-  "paypalAccount" varchar,
-  "paypalID" varchar,
-  "paymentSystem" varchar,
+  "iban" varchar,
+  "bic" varchar,
+  "paypal_account" varchar,
+  "paypal_id" varchar,
+  "payment_system" varchar,
   "type" varchar NOT NULL,
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
@@ -86,7 +86,7 @@ CREATE TABLE "payments" (
 );
 
 CREATE TABLE "providers" (
-  "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "name" varchar NOT NULL,
   "description" text NOT NULL,
   "category" varchar NOT NULL,
@@ -98,9 +98,9 @@ CREATE TABLE "providers" (
 );
 
 CREATE TABLE "returns" (
-  "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "personID" bigint NOT NULL,
-  "providerID" bigint NOT NULL,
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "person_id" bigint NOT NULL,
+  "provider_id" bigint NOT NULL,
   "name" varchar NOT NULL,
   "description" text NOT NULL,
   "category" varchar NOT NULL,
@@ -113,9 +113,9 @@ CREATE TABLE "returns" (
 );
 
 CREATE TABLE "returnsLog" (
-  "ID" bigserial UNIQUE PRIMARY KEY NOT NULL,
-  "returnID" bigint NOT NULL,
-  "mailID" bigint NOT NULL,
+  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "return_id" bigint NOT NULL,
+  "mail_id" bigint NOT NULL,
   "status" varchar,
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
@@ -123,18 +123,18 @@ CREATE TABLE "returnsLog" (
   "changed" timestamptz NOT NULL DEFAULT (now())
 );
 
-ALTER TABLE "persons" ADD FOREIGN KEY ("accountID") REFERENCES "accounts" ("ID");
+ALTER TABLE "persons" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
-ALTER TABLE "documents" ADD FOREIGN KEY ("personID") REFERENCES "persons" ("ID");
+ALTER TABLE "documents" ADD FOREIGN KEY ("person_id") REFERENCES "persons" ("id");
 
-ALTER TABLE "documents" ADD FOREIGN KEY ("mailID") REFERENCES "mails" ("ID");
+ALTER TABLE "documents" ADD FOREIGN KEY ("mail_id") REFERENCES "mails" ("id");
 
-ALTER TABLE "payments" ADD FOREIGN KEY ("accountID") REFERENCES "accounts" ("ID");
+ALTER TABLE "payments" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
-ALTER TABLE "returns" ADD FOREIGN KEY ("personID") REFERENCES "persons" ("ID");
+ALTER TABLE "returns" ADD FOREIGN KEY ("person_id") REFERENCES "persons" ("id");
 
-ALTER TABLE "returns" ADD FOREIGN KEY ("providerID") REFERENCES "providers" ("ID");
+ALTER TABLE "returns" ADD FOREIGN KEY ("provider_id") REFERENCES "providers" ("id");
 
-ALTER TABLE "returnsLog" ADD FOREIGN KEY ("returnID") REFERENCES "returns" ("ID");
+ALTER TABLE "returnsLog" ADD FOREIGN KEY ("return_id") REFERENCES "returns" ("id");
 
-ALTER TABLE "returnsLog" ADD FOREIGN KEY ("mailID") REFERENCES "mails" ("ID");
+ALTER TABLE "returnsLog" ADD FOREIGN KEY ("mail_id") REFERENCES "mails" ("id");

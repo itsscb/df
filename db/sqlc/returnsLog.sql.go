@@ -12,8 +12,8 @@ import (
 
 const createReturnsLog = `-- name: CreateReturnsLog :one
 INSERT INTO "returnsLog" (
-    "returnID",
-    "mailID",
+    "return_id",
+    "mail_id",
     "status",
     "creator",
     "changer"
@@ -23,20 +23,20 @@ INSERT INTO "returnsLog" (
     $3,
     $4,
     $4
-) RETURNING "ID", "returnID", "mailID", status, creator, created, changer, changed
+) RETURNING id, return_id, mail_id, status, creator, created, changer, changed
 `
 
 type CreateReturnsLogParams struct {
-	Returnid int64          `json:"returnid"`
-	Mailid   int64          `json:"mailid"`
+	ReturnID int64          `json:"return_id"`
+	MailID   int64          `json:"mail_id"`
 	Status   sql.NullString `json:"status"`
 	Creator  string         `json:"creator"`
 }
 
 func (q *Queries) CreateReturnsLog(ctx context.Context, arg CreateReturnsLogParams) (ReturnsLog, error) {
 	row := q.db.QueryRowContext(ctx, createReturnsLog,
-		arg.Returnid,
-		arg.Mailid,
+		arg.ReturnID,
+		arg.MailID,
 		arg.Status,
 		arg.Creator,
 	)
@@ -56,7 +56,7 @@ func (q *Queries) CreateReturnsLog(ctx context.Context, arg CreateReturnsLogPara
 
 const deleteReturnsLog = `-- name: DeleteReturnsLog :exec
 DELETE FROM "returnsLog"
-WHERE "ID" = $1
+WHERE "id" = $1
 `
 
 func (q *Queries) DeleteReturnsLog(ctx context.Context, id int64) error {
@@ -65,8 +65,8 @@ func (q *Queries) DeleteReturnsLog(ctx context.Context, id int64) error {
 }
 
 const getReturnsLog = `-- name: GetReturnsLog :one
-SELECT "ID", "returnID", "mailID", status, creator, created, changer, changed FROM "returnsLog"
-WHERE "ID" = $1 LIMIT 1
+SELECT id, return_id, mail_id, status, creator, created, changer, changed FROM "returnsLog"
+WHERE "id" = $1 LIMIT 1
 `
 
 func (q *Queries) GetReturnsLog(ctx context.Context, id int64) (ReturnsLog, error) {
@@ -86,7 +86,7 @@ func (q *Queries) GetReturnsLog(ctx context.Context, id int64) (ReturnsLog, erro
 }
 
 const listReturnsLogs = `-- name: ListReturnsLogs :many
-SELECT "ID", "returnID", "mailID", status, creator, created, changer, changed FROM "returnsLog"
+SELECT id, return_id, mail_id, status, creator, created, changer, changed FROM "returnsLog"
 ORDER BY "status"
 LIMIT $1
 OFFSET $2
@@ -132,19 +132,19 @@ func (q *Queries) ListReturnsLogs(ctx context.Context, arg ListReturnsLogsParams
 const updateReturnsLog = `-- name: UpdateReturnsLog :one
 UPDATE "returnsLog"
 SET
-    "returnID" = COALESCE($2, "returnID"),
-    "mailID" = COALESCE($3, "mailID"),
+    "return_id" = COALESCE($2, "return_id"),
+    "mail_id" = COALESCE($3, "mail_id"),
     "status" = COALESCE($4, "status"),
     "changer" = $1,
     "changed" = now()
-WHERE "ID" = $5
-RETURNING "ID", "returnID", "mailID", status, creator, created, changer, changed
+WHERE "id" = $5
+RETURNING id, return_id, mail_id, status, creator, created, changer, changed
 `
 
 type UpdateReturnsLogParams struct {
 	Changer  string         `json:"changer"`
-	Returnid sql.NullInt64  `json:"returnid"`
-	Mailid   sql.NullInt64  `json:"mailid"`
+	ReturnID sql.NullInt64  `json:"return_id"`
+	MailID   sql.NullInt64  `json:"mail_id"`
 	Status   sql.NullString `json:"status"`
 	ID       int64          `json:"id"`
 }
@@ -152,8 +152,8 @@ type UpdateReturnsLogParams struct {
 func (q *Queries) UpdateReturnsLog(ctx context.Context, arg UpdateReturnsLogParams) (ReturnsLog, error) {
 	row := q.db.QueryRowContext(ctx, updateReturnsLog,
 		arg.Changer,
-		arg.Returnid,
-		arg.Mailid,
+		arg.ReturnID,
+		arg.MailID,
 		arg.Status,
 		arg.ID,
 	)

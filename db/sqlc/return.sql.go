@@ -12,8 +12,8 @@ import (
 
 const createReturn = `-- name: CreateReturn :one
 INSERT INTO returns (
-    "personID",
-    "providerID",
+    "person_id",
+    "provider_id",
     "name",
     "description",
     "category",
@@ -31,12 +31,12 @@ INSERT INTO returns (
     $7,
     $8,
     $9
-) RETURNING "ID", "personID", "providerID", name, description, category, email, status, creator, created, changer, changed
+) RETURNING id, person_id, provider_id, name, description, category, email, status, creator, created, changer, changed
 `
 
 type CreateReturnParams struct {
-	Personid    int64  `json:"personid"`
-	Providerid  int64  `json:"providerid"`
+	PersonID    int64  `json:"person_id"`
+	ProviderID  int64  `json:"provider_id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Category    string `json:"category"`
@@ -48,8 +48,8 @@ type CreateReturnParams struct {
 
 func (q *Queries) CreateReturn(ctx context.Context, arg CreateReturnParams) (Return, error) {
 	row := q.db.QueryRowContext(ctx, createReturn,
-		arg.Personid,
-		arg.Providerid,
+		arg.PersonID,
+		arg.ProviderID,
 		arg.Name,
 		arg.Description,
 		arg.Category,
@@ -78,7 +78,7 @@ func (q *Queries) CreateReturn(ctx context.Context, arg CreateReturnParams) (Ret
 
 const deleteReturn = `-- name: DeleteReturn :exec
 DELETE FROM returns
-WHERE "ID" = $1
+WHERE "id" = $1
 `
 
 func (q *Queries) DeleteReturn(ctx context.Context, id int64) error {
@@ -87,8 +87,8 @@ func (q *Queries) DeleteReturn(ctx context.Context, id int64) error {
 }
 
 const getReturn = `-- name: GetReturn :one
-SELECT "ID", "personID", "providerID", name, description, category, email, status, creator, created, changer, changed FROM returns
-WHERE "ID" = $1 LIMIT 1
+SELECT id, person_id, provider_id, name, description, category, email, status, creator, created, changer, changed FROM returns
+WHERE "id" = $1 LIMIT 1
 `
 
 func (q *Queries) GetReturn(ctx context.Context, id int64) (Return, error) {
@@ -112,7 +112,7 @@ func (q *Queries) GetReturn(ctx context.Context, id int64) (Return, error) {
 }
 
 const listReturns = `-- name: ListReturns :many
-SELECT "ID", "personID", "providerID", name, description, category, email, status, creator, created, changer, changed FROM returns
+SELECT id, person_id, provider_id, name, description, category, email, status, creator, created, changer, changed FROM returns
 ORDER BY "name"
 LIMIT $1
 OFFSET $2
@@ -162,8 +162,8 @@ func (q *Queries) ListReturns(ctx context.Context, arg ListReturnsParams) ([]Ret
 const updateReturn = `-- name: UpdateReturn :one
 UPDATE returns
 SET
-    "personID" = COALESCE($1, "personID"),
-    "providerID" = COALESCE($2, "providerID"),
+    "person_id" = COALESCE($1, "person_id"),
+    "provider_id" = COALESCE($2, "provider_id"),
     "name" = COALESCE($3, "name"),
     "description" = COALESCE($4, "description"),
     "category" = COALESCE($5, "category"),
@@ -171,13 +171,13 @@ SET
     "status" = COALESCE($7, "status"),
     "changer" = $8,
     "changed" = now()
-WHERE "ID" = $9
-RETURNING "ID", "personID", "providerID", name, description, category, email, status, creator, created, changer, changed
+WHERE "id" = $9
+RETURNING id, person_id, provider_id, name, description, category, email, status, creator, created, changer, changed
 `
 
 type UpdateReturnParams struct {
-	Personid    sql.NullInt64  `json:"personid"`
-	Providerid  sql.NullInt64  `json:"providerid"`
+	PersonID    sql.NullInt64  `json:"person_id"`
+	ProviderID  sql.NullInt64  `json:"provider_id"`
 	Name        sql.NullString `json:"name"`
 	Description sql.NullString `json:"description"`
 	Category    sql.NullString `json:"category"`
@@ -189,8 +189,8 @@ type UpdateReturnParams struct {
 
 func (q *Queries) UpdateReturn(ctx context.Context, arg UpdateReturnParams) (Return, error) {
 	row := q.db.QueryRowContext(ctx, updateReturn,
-		arg.Personid,
-		arg.Providerid,
+		arg.PersonID,
+		arg.ProviderID,
 		arg.Name,
 		arg.Description,
 		arg.Category,

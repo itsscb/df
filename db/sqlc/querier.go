@@ -31,7 +31,7 @@ type Querier interface {
 	//     "timestamp" = COALESCE(sqlc.narg(timestamp), "timestamp"),
 	//     changer = $2,
 	//     changed = now()
-	// WHERE "ID" = $1
+	// WHERE "id" = $1
 	// RETURNING *;
 	DeleteMail(ctx context.Context, id int64) error
 	DeletePayment(ctx context.Context, id int64) error

@@ -20,7 +20,7 @@ INSERT INTO providers (
     "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6
-) RETURNING "ID", name, description, category, email, creator, created, changer, changed
+) RETURNING id, name, description, category, email, creator, created, changer, changed
 `
 
 type CreateProviderParams struct {
@@ -58,7 +58,7 @@ func (q *Queries) CreateProvider(ctx context.Context, arg CreateProviderParams) 
 
 const deleteProvider = `-- name: DeleteProvider :exec
 DELETE FROM providers
-WHERE "ID" = $1
+WHERE "id" = $1
 `
 
 func (q *Queries) DeleteProvider(ctx context.Context, id int64) error {
@@ -67,8 +67,8 @@ func (q *Queries) DeleteProvider(ctx context.Context, id int64) error {
 }
 
 const getProvider = `-- name: GetProvider :one
-SELECT "ID", name, description, category, email, creator, created, changer, changed FROM providers
-WHERE "ID" = $1 LIMIT 1
+SELECT id, name, description, category, email, creator, created, changer, changed FROM providers
+WHERE "id" = $1 LIMIT 1
 `
 
 func (q *Queries) GetProvider(ctx context.Context, id int64) (Provider, error) {
@@ -89,7 +89,7 @@ func (q *Queries) GetProvider(ctx context.Context, id int64) (Provider, error) {
 }
 
 const listProviders = `-- name: ListProviders :many
-SELECT "ID", name, description, category, email, creator, created, changer, changed FROM providers
+SELECT id, name, description, category, email, creator, created, changer, changed FROM providers
 ORDER BY "name"
 LIMIT $1
 OFFSET $2
@@ -142,12 +142,12 @@ SET
     "email" = COALESCE($6, "email"),
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
-RETURNING "ID", name, description, category, email, creator, created, changer, changed
+WHERE "id" = $1
+RETURNING id, name, description, category, email, creator, created, changer, changed
 `
 
 type UpdateProviderParams struct {
-	ID          int64          `json:"ID"`
+	ID          int64          `json:"id"`
 	Changer     string         `json:"changer"`
 	Name        sql.NullString `json:"name"`
 	Description sql.NullString `json:"description"`

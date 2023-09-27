@@ -18,8 +18,8 @@ func createRandomReturnsLog(t *testing.T) ReturnsLog {
 	creator := util.RandomName()
 
 	arg := CreateReturnsLogParams{
-		Returnid: ret.ID,
-		Mailid:   mail.ID,
+		ReturnID: ret.ID,
+		MailID:   mail.ID,
 		Status: sql.NullString{
 			Valid:  true,
 			String: util.RandomString(7),
@@ -31,8 +31,8 @@ func createRandomReturnsLog(t *testing.T) ReturnsLog {
 	require.NoError(t, err)
 	require.NotEmpty(t, returnsLog)
 
-	require.Equal(t, arg.Returnid, returnsLog.ReturnID)
-	require.Equal(t, arg.Mailid, returnsLog.MailID)
+	require.Equal(t, arg.ReturnID, returnsLog.ReturnID)
+	require.Equal(t, arg.MailID, returnsLog.MailID)
 	require.Equal(t, arg.Status, returnsLog.Status)
 	require.Equal(t, arg.Creator, returnsLog.Creator)
 

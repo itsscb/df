@@ -1,6 +1,6 @@
 -- name: GetMail :one
 SELECT * FROM mails
-WHERE "ID" = $1 LIMIT 1;
+WHERE "id" = $1 LIMIT 1;
 
 -- name: CreateMail :one
 INSERT INTO mails (
@@ -35,9 +35,9 @@ OFFSET $2;
 --     "timestamp" = COALESCE(sqlc.narg(timestamp), "timestamp"),
 --     changer = $2,
 --     changed = now()
--- WHERE "ID" = $1
+-- WHERE "id" = $1
 -- RETURNING *;
 
 -- name: DeleteMail :exec
 DELETE FROM mails
-WHERE "ID" = $1;
+WHERE "id" = $1;

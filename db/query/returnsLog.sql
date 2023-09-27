@@ -1,17 +1,17 @@
 -- name: GetReturnsLog :one
 SELECT * FROM "returnsLog"
-WHERE "ID" = sqlc.arg(ID) LIMIT 1;
+WHERE "id" = sqlc.arg(id) LIMIT 1;
 
 -- name: CreateReturnsLog :one
 INSERT INTO "returnsLog" (
-    "returnID",
-    "mailID",
+    "return_id",
+    "mail_id",
     "status",
     "creator",
     "changer"
 ) VALUES (
-    sqlc.arg(returnID),
-    sqlc.arg(mailID),
+    sqlc.arg(return_id),
+    sqlc.arg(mail_id),
     sqlc.arg(status),
     sqlc.arg(creator),
     sqlc.arg(creator)
@@ -26,14 +26,14 @@ OFFSET $2;
 -- name: UpdateReturnsLog :one
 UPDATE "returnsLog"
 SET
-    "returnID" = COALESCE(sqlc.narg(returnID), "returnID"),
-    "mailID" = COALESCE(sqlc.narg(mailID), "mailID"),
+    "return_id" = COALESCE(sqlc.narg(return_id), "return_id"),
+    "mail_id" = COALESCE(sqlc.narg(mail_id), "mail_id"),
     "status" = COALESCE(sqlc.narg(status), "status"),
     "changer" = $1,
     "changed" = now()
-WHERE "ID" = sqlc.arg(ID)
+WHERE "id" = sqlc.arg(id)
 RETURNING *;
 
 -- name: DeleteReturnsLog :exec
 DELETE FROM "returnsLog"
-WHERE "ID" = sqlc.arg(ID);
+WHERE "id" = sqlc.arg(id);

@@ -24,6 +24,10 @@ func createRandomAccount(t *testing.T) Account {
 			Valid:  true,
 			String: util.RandomPhone(),
 		},
+		PrivacyAccepted: sql.NullBool{
+			Valid: true,
+			Bool:  true,
+		},
 		City:    util.RandomString(15),
 		Zip:     util.RandomString(5),
 		Street:  util.RandomString(20),

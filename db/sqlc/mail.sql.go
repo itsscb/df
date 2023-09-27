@@ -26,7 +26,7 @@ INSERT INTO mails (
 VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8
 ) 
-RETURNING "ID", "from", "to", cc, timestamp, subject, body, creator, created, changer, changed
+RETURNING id, "from", "to", cc, timestamp, subject, body, creator, created, changer, changed
 `
 
 type CreateMailParams struct {
@@ -71,7 +71,7 @@ func (q *Queries) CreateMail(ctx context.Context, arg CreateMailParams) (Mail, e
 const deleteMail = `-- name: DeleteMail :exec
 
 DELETE FROM mails
-WHERE "ID" = $1
+WHERE "id" = $1
 `
 
 // -- name: UpdateMail :one
@@ -87,7 +87,7 @@ WHERE "ID" = $1
 //	changer = $2,
 //	changed = now()
 //
-// WHERE "ID" = $1
+// WHERE "id" = $1
 // RETURNING *;
 func (q *Queries) DeleteMail(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteMail, id)
@@ -95,8 +95,8 @@ func (q *Queries) DeleteMail(ctx context.Context, id int64) error {
 }
 
 const getMail = `-- name: GetMail :one
-SELECT "ID", "from", "to", cc, timestamp, subject, body, creator, created, changer, changed FROM mails
-WHERE "ID" = $1 LIMIT 1
+SELECT id, "from", "to", cc, timestamp, subject, body, creator, created, changer, changed FROM mails
+WHERE "id" = $1 LIMIT 1
 `
 
 func (q *Queries) GetMail(ctx context.Context, id int64) (Mail, error) {
@@ -119,7 +119,7 @@ func (q *Queries) GetMail(ctx context.Context, id int64) (Mail, error) {
 }
 
 const listMails = `-- name: ListMails :many
-SELECT "ID", "from", "to", cc, timestamp, subject, body, creator, created, changer, changed FROM mails
+SELECT id, "from", "to", cc, timestamp, subject, body, creator, created, changer, changed FROM mails
 ORDER BY "timestamp", "from"
 LIMIT $1
 OFFSET $2

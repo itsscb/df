@@ -1,11 +1,11 @@
 -- name: GetReturn :one
 SELECT * FROM returns
-WHERE "ID" = sqlc.arg(ID) LIMIT 1;
+WHERE "id" = sqlc.arg(id) LIMIT 1;
 
 -- name: CreateReturn :one
 INSERT INTO returns (
-    "personID",
-    "providerID",
+    "person_id",
+    "provider_id",
     "name",
     "description",
     "category",
@@ -14,8 +14,8 @@ INSERT INTO returns (
     "creator",
     "changer"
 ) VALUES (
-    sqlc.arg(personID),
-    sqlc.arg(providerID),
+    sqlc.arg(person_id),
+    sqlc.arg(provider_id),
     sqlc.arg(name),
     sqlc.arg(description),
     sqlc.arg(category),
@@ -34,8 +34,8 @@ OFFSET $2;
 -- name: UpdateReturn :one
 UPDATE returns
 SET
-    "personID" = COALESCE(sqlc.narg(personID), "personID"),
-    "providerID" = COALESCE(sqlc.narg(providerID), "providerID"),
+    "person_id" = COALESCE(sqlc.narg(person_id), "person_id"),
+    "provider_id" = COALESCE(sqlc.narg(provider_id), "provider_id"),
     "name" = COALESCE(sqlc.narg(name), "name"),
     "description" = COALESCE(sqlc.narg(description), "description"),
     "category" = COALESCE(sqlc.narg(category), "category"),
@@ -43,9 +43,9 @@ SET
     "status" = COALESCE(sqlc.narg(status), "status"),
     "changer" = sqlc.arg(changer),
     "changed" = now()
-WHERE "ID" = sqlc.arg(ID)
+WHERE "id" = sqlc.arg(id)
 RETURNING *;
 
 -- name: DeleteReturn :exec
 DELETE FROM returns
-WHERE "ID" = sqlc.arg(ID);
+WHERE "id" = sqlc.arg(id);

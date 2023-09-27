@@ -14,6 +14,8 @@ import (
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts (
     "passwordhash",
+    "privacy_accepted",
+    "privacy_accepted_date",
     "firstname",
     "lastname",
     "birthday",
@@ -26,27 +28,44 @@ INSERT INTO accounts (
     "creator",
     "changer"
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $11
-) RETURNING "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6,
+    $7,
+    $8,
+    $9,
+    $10,
+    $11,
+    $12,
+    $13,
+    $13
+) RETURNING id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed
 `
 
 type CreateAccountParams struct {
-	Passwordhash string         `json:"passwordhash"`
-	Firstname    string         `json:"firstname"`
-	Lastname     string         `json:"lastname"`
-	Birthday     time.Time      `json:"birthday"`
-	Email        string         `json:"email"`
-	Phone        sql.NullString `json:"phone"`
-	City         string         `json:"city"`
-	Zip          string         `json:"zip"`
-	Street       string         `json:"street"`
-	Country      string         `json:"country"`
-	Creator      string         `json:"creator"`
+	Passwordhash        string         `json:"passwordhash"`
+	PrivacyAccepted     sql.NullBool   `json:"privacy_accepted"`
+	PrivacyAcceptedDate sql.NullTime   `json:"privacy_accepted_date"`
+	Firstname           string         `json:"firstname"`
+	Lastname            string         `json:"lastname"`
+	Birthday            time.Time      `json:"birthday"`
+	Email               string         `json:"email"`
+	Phone               sql.NullString `json:"phone"`
+	City                string         `json:"city"`
+	Zip                 string         `json:"zip"`
+	Street              string         `json:"street"`
+	Country             string         `json:"country"`
+	Creator             string         `json:"creator"`
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
 	row := q.db.QueryRowContext(ctx, createAccount,
 		arg.Passwordhash,
+		arg.PrivacyAccepted,
+		arg.PrivacyAcceptedDate,
 		arg.Firstname,
 		arg.Lastname,
 		arg.Birthday,
@@ -86,7 +105,7 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 
 const deleteAccount = `-- name: DeleteAccount :exec
 DELETE FROM accounts
-WHERE "ID" = $1
+WHERE "id" = $1
 `
 
 func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {
@@ -95,8 +114,8 @@ func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
-WHERE "ID" = $1 LIMIT 1
+SELECT id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed FROM accounts
+WHERE "id" = $1 LIMIT 1
 `
 
 func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
@@ -128,8 +147,8 @@ func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
 }
 
 const getAccountForUpdate = `-- name: GetAccountForUpdate :one
-SELECT "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
-WHERE "ID" = $1 LIMIT 1
+SELECT id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed FROM accounts
+WHERE "id" = $1 LIMIT 1
 FOR NO KEY UPDATE
 `
 
@@ -162,7 +181,7 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, e
 }
 
 const listAccounts = `-- name: ListAccounts :many
-SELECT "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed FROM accounts
+SELECT id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed FROM accounts
 ORDER BY "lastname", "firstname"
 LIMIT $1
 OFFSET $2
@@ -221,34 +240,38 @@ const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts
 SET
     "passwordhash" = COALESCE($3, "passwordhash"),
-    "firstname" = COALESCE($4, "firstname"),
-    "lastname" = COALESCE($5, "lastname"),
-    "birthday" = COALESCE($6, "birthday"),
-    "email" = COALESCE($7, "email"),
-    "phone" = COALESCE($8, "phone"),
-    "city" = COALESCE($9, "city"),
-    "zip" = COALESCE($10, "zip"),
-    "street" = COALESCE($11, "street"),
-    "country" = COALESCE($12, "country"),
+    "privacy_accepted" = COALESCE($4, "privacy_accepted"),
+    "privacy_accepted_date" = COALESCE($5, "privacy_accepted_date"),
+    "firstname" = COALESCE($6, "firstname"),
+    "lastname" = COALESCE($7, "lastname"),
+    "birthday" = COALESCE($8, "birthday"),
+    "email" = COALESCE($9, "email"),
+    "phone" = COALESCE($10, "phone"),
+    "city" = COALESCE($11, "city"),
+    "zip" = COALESCE($12, "zip"),
+    "street" = COALESCE($13, "street"),
+    "country" = COALESCE($14, "country"),
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
-RETURNING "ID", passwordhash, firstname, lastname, birthday, "privacyAccepted", "privacyAcceptedDate", email, phone, city, zip, street, country, token, "tokenValid", "tokenExpiration", creator, created, changer, changed
+WHERE "id" = $1
+RETURNING id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed
 `
 
 type UpdateAccountParams struct {
-	ID           int64          `json:"ID"`
-	Changer      string         `json:"changer"`
-	Passwordhash sql.NullString `json:"passwordhash"`
-	Firstname    sql.NullString `json:"firstname"`
-	Lastname     sql.NullString `json:"lastname"`
-	Birthday     sql.NullTime   `json:"birthday"`
-	Email        sql.NullString `json:"email"`
-	Phone        sql.NullString `json:"phone"`
-	City         sql.NullString `json:"city"`
-	Zip          sql.NullString `json:"zip"`
-	Street       sql.NullString `json:"street"`
-	Country      sql.NullString `json:"country"`
+	ID                  int64          `json:"id"`
+	Changer             string         `json:"changer"`
+	Passwordhash        sql.NullString `json:"passwordhash"`
+	PrivacyAccepted     sql.NullBool   `json:"privacy_accepted"`
+	PrivacyAcceptedDate sql.NullTime   `json:"privacy_accepted_date"`
+	Firstname           sql.NullString `json:"firstname"`
+	Lastname            sql.NullString `json:"lastname"`
+	Birthday            sql.NullTime   `json:"birthday"`
+	Email               sql.NullString `json:"email"`
+	Phone               sql.NullString `json:"phone"`
+	City                sql.NullString `json:"city"`
+	Zip                 sql.NullString `json:"zip"`
+	Street              sql.NullString `json:"street"`
+	Country             sql.NullString `json:"country"`
 }
 
 func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {
@@ -256,6 +279,8 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		arg.ID,
 		arg.Changer,
 		arg.Passwordhash,
+		arg.PrivacyAccepted,
+		arg.PrivacyAcceptedDate,
 		arg.Firstname,
 		arg.Lastname,
 		arg.Birthday,

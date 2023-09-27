@@ -12,31 +12,31 @@ import (
 
 const createPayment = `-- name: CreatePayment :one
 INSERT INTO payments (
-    "accountID",
-    "paymentCategory",
+    "account_id",
+    "payment_category",
     "bankname",
-    "IBAN",
-    "BIC",
-    "paypalAccount",
-    "paypalID",
-    "paymentSystem",
+    "iban",
+    "bic",
+    "paypal_account",
+    "paypal_id",
+    "payment_system",
     "type",
     "creator",
     "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
-) RETURNING "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed
+) RETURNING id, account_id, payment_category, bankname, iban, bic, paypal_account, paypal_id, payment_system, type, creator, created, changer, changed
 `
 
 type CreatePaymentParams struct {
-	AccountID       int64          `json:"accountID"`
-	PaymentCategory string         `json:"paymentCategory"`
+	AccountID       int64          `json:"account_id"`
+	PaymentCategory string         `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
-	IBAN            sql.NullString `json:"IBAN"`
-	BIC             sql.NullString `json:"BIC"`
-	PaypalAccount   sql.NullString `json:"paypalAccount"`
-	PaypalID        sql.NullString `json:"paypalID"`
-	PaymentSystem   sql.NullString `json:"paymentSystem"`
+	Iban            sql.NullString `json:"iban"`
+	Bic             sql.NullString `json:"bic"`
+	PaypalAccount   sql.NullString `json:"paypal_account"`
+	PaypalID        sql.NullString `json:"paypal_id"`
+	PaymentSystem   sql.NullString `json:"payment_system"`
 	Type            string         `json:"type"`
 	Creator         string         `json:"creator"`
 	Changer         string         `json:"changer"`
@@ -47,8 +47,8 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (P
 		arg.AccountID,
 		arg.PaymentCategory,
 		arg.Bankname,
-		arg.IBAN,
-		arg.BIC,
+		arg.Iban,
+		arg.Bic,
 		arg.PaypalAccount,
 		arg.PaypalID,
 		arg.PaymentSystem,
@@ -62,8 +62,8 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (P
 		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
-		&i.IBAN,
-		&i.BIC,
+		&i.Iban,
+		&i.Bic,
 		&i.PaypalAccount,
 		&i.PaypalID,
 		&i.PaymentSystem,
@@ -78,7 +78,7 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (P
 
 const deletePayment = `-- name: DeletePayment :exec
 DELETE FROM payments
-WHERE "ID" = $1
+WHERE "id" = $1
 `
 
 func (q *Queries) DeletePayment(ctx context.Context, id int64) error {
@@ -87,8 +87,8 @@ func (q *Queries) DeletePayment(ctx context.Context, id int64) error {
 }
 
 const getPayment = `-- name: GetPayment :one
-SELECT "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed FROM payments
-WHERE "ID" = $1 LIMIT 1
+SELECT id, account_id, payment_category, bankname, iban, bic, paypal_account, paypal_id, payment_system, type, creator, created, changer, changed FROM payments
+WHERE "id" = $1 LIMIT 1
 `
 
 func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
@@ -99,8 +99,8 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
 		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
-		&i.IBAN,
-		&i.BIC,
+		&i.Iban,
+		&i.Bic,
 		&i.PaypalAccount,
 		&i.PaypalID,
 		&i.PaymentSystem,
@@ -114,8 +114,8 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
 }
 
 const listPayments = `-- name: ListPayments :many
-SELECT "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed FROM payments
-ORDER BY "paymentCategory"
+SELECT id, account_id, payment_category, bankname, iban, bic, paypal_account, paypal_id, payment_system, type, creator, created, changer, changed FROM payments
+ORDER BY "payment_category"
 LIMIT $1
 OFFSET $2
 `
@@ -139,8 +139,8 @@ func (q *Queries) ListPayments(ctx context.Context, arg ListPaymentsParams) ([]P
 			&i.AccountID,
 			&i.PaymentCategory,
 			&i.Bankname,
-			&i.IBAN,
-			&i.BIC,
+			&i.Iban,
+			&i.Bic,
 			&i.PaypalAccount,
 			&i.PaypalID,
 			&i.PaymentSystem,
@@ -166,32 +166,32 @@ func (q *Queries) ListPayments(ctx context.Context, arg ListPaymentsParams) ([]P
 const updatePayment = `-- name: UpdatePayment :one
 UPDATE payments
 SET
-    "accountID" = COALESCE($3, "accountID"),
-    "paymentCategory" = COALESCE($4, "paymentCategory"),
+    "account_id" = COALESCE($3, "account_id"),
+    "payment_category" = COALESCE($4, "payment_category"),
     "bankname" = COALESCE($5, "bankname"),
-    "IBAN" = COALESCE($6, "IBAN"),
-    "BIC" = COALESCE($7, "BIC"),
-    "paypalAccount" = COALESCE($8, "paypalAccount"),
-    "paypalID" = COALESCE($9, "paypalID"),
-    "paymentSystem" = COALESCE($10, "paymentSystem"),
+    "iban" = COALESCE($6, "iban"),
+    "bic" = COALESCE($7, "bic"),
+    "paypal_account" = COALESCE($8, "paypal_account"),
+    "paypal_id" = COALESCE($9, "paypal_id"),
+    "payment_system" = COALESCE($10, "payment_system"),
     "type" = COALESCE($11, "type"),
     "changer" = $2,
     "changed" = now()
-WHERE "ID" = $1
-RETURNING "ID", "accountID", "paymentCategory", bankname, "IBAN", "BIC", "paypalAccount", "paypalID", "paymentSystem", type, creator, created, changer, changed
+WHERE "id" = $1
+RETURNING id, account_id, payment_category, bankname, iban, bic, paypal_account, paypal_id, payment_system, type, creator, created, changer, changed
 `
 
 type UpdatePaymentParams struct {
-	ID              int64          `json:"ID"`
+	ID              int64          `json:"id"`
 	Changer         string         `json:"changer"`
-	Accountid       sql.NullInt64  `json:"accountid"`
-	Paymentcategory sql.NullString `json:"paymentcategory"`
+	AccountID       sql.NullInt64  `json:"account_id"`
+	PaymentCategory sql.NullString `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
 	Iban            sql.NullString `json:"iban"`
 	Bic             sql.NullString `json:"bic"`
-	Paypalaccount   sql.NullString `json:"paypalaccount"`
-	Paypalid        sql.NullString `json:"paypalid"`
-	Paymentsystem   sql.NullString `json:"paymentsystem"`
+	PaypalAccount   sql.NullString `json:"paypal_account"`
+	PaypalID        sql.NullString `json:"paypal_id"`
+	PaymentSystem   sql.NullString `json:"payment_system"`
 	Type            sql.NullString `json:"type"`
 }
 
@@ -199,14 +199,14 @@ func (q *Queries) UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (P
 	row := q.db.QueryRowContext(ctx, updatePayment,
 		arg.ID,
 		arg.Changer,
-		arg.Accountid,
-		arg.Paymentcategory,
+		arg.AccountID,
+		arg.PaymentCategory,
 		arg.Bankname,
 		arg.Iban,
 		arg.Bic,
-		arg.Paypalaccount,
-		arg.Paypalid,
-		arg.Paymentsystem,
+		arg.PaypalAccount,
+		arg.PaypalID,
+		arg.PaymentSystem,
 		arg.Type,
 	)
 	var i Payment
@@ -215,8 +215,8 @@ func (q *Queries) UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (P
 		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
-		&i.IBAN,
-		&i.BIC,
+		&i.Iban,
+		&i.Bic,
 		&i.PaypalAccount,
 		&i.PaypalID,
 		&i.PaymentSystem,
