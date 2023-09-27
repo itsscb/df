@@ -50,8 +50,6 @@ OFFSET $2;
 UPDATE accounts
 SET
     "passwordhash" = COALESCE(sqlc.narg(passwordhash), "passwordhash"),
-    "privacy_accepted" = COALESCE(sqlc.narg(privacy_accepted), "privacy_accepted"),
-    "privacy_accepted_date" = COALESCE(sqlc.narg(privacy_accepted_date), "privacy_accepted_date"),
     "firstname" = COALESCE(sqlc.narg(firstname), "firstname"),
     "lastname" = COALESCE(sqlc.narg(lastname), "lastname"),
     "birthday" = COALESCE(sqlc.narg(birthday), "birthday"),
@@ -64,6 +62,16 @@ SET
     "changer" = $2,
     "changed" = now()
 WHERE "id" = $1
+RETURNING *;
+
+-- name: UpdateAccountPrivacy :one
+UPDATE accounts
+SET
+    "privacy_accepted" = sqlc.arg(privacy_accepted),
+    "privacy_accepted_date" = sqlc.arg(privacy_accepted_date),
+    "changer" = sqlc.arg(changer),
+    "changed" = now()
+WHERE "id" = sqlc.arg(id)
 RETURNING *;
 
 -- name: DeleteAccount :exec

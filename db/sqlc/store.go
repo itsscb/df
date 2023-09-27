@@ -10,6 +10,7 @@ type Store interface {
 	Querier
 	CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (Account, error)
 	UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error)
+	UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAccountPrivacyTxParams) (Account, error)
 }
 
 // Store provides all functions to execute db queries and transactions

@@ -47,6 +47,7 @@ func NewServer(config util.Config, store db.Store) *Server {
 
 	router.POST("/accounts", server.createAccount)
 	router.PUT("/accounts", server.updateAccount)
+	router.PUT("/accounts/privacy", server.updateAccountPrivacy)
 	router.GET("/accounts/:id", server.getAccount)
 	router.GET("/accounts", server.listAccounts)
 

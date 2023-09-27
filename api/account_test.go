@@ -304,10 +304,6 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 				}
 
 				store.EXPECT().
-					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
-					Times(1)
-
-				store.EXPECT().
 					UpdateAccountTx(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
 					Return(accountTemp, nil)
@@ -338,10 +334,6 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 					},
 					Changer: changer,
 				}
-
-				store.EXPECT().
-					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
-					Times(1)
 
 				store.EXPECT().
 					UpdateAccountTx(gomock.Any(), gomock.Eq(arg)).
@@ -566,6 +558,139 @@ func TestListAccountsAPI(t *testing.T) {
 			q.Add("pageid", fmt.Sprintf("%d", tc.query.pageID))
 			q.Add("pagesize", fmt.Sprintf("%d", tc.query.pageSize))
 			request.URL.RawQuery = q.Encode()
+
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(recorder)
+		})
+	}
+}
+
+func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
+	account := randomAccount()
+	changer := util.RandomName()
+
+	testCases := []struct {
+		name          string
+		body          gin.H
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(recoder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK",
+			body: gin.H{
+				"id":               account.ID,
+				"changer":          changer,
+				"privacy_accepted": true,
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				arg := db.UpdateAccountPrivacyTxParams{
+					ID:              account.ID,
+					PrivacyAccepted: true,
+					Changer:         changer,
+				}
+
+				account2 := account
+				account2.PrivacyAccepted.Valid = true
+				account2.PrivacyAccepted.Bool = true
+				account2.Changer = changer
+
+				store.EXPECT().
+					UpdateAccountPrivacyTx(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(account2, nil)
+			},
+			checkResponse: func(recoder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recoder.Code)
+				data, err := io.ReadAll(recoder.Body)
+				require.NoError(t, err)
+
+				var getAccount db.Account
+				err = json.Unmarshal(data, &getAccount)
+				require.NoError(t, err)
+
+				require.Equal(t, account.ID, getAccount.ID)
+				require.Equal(t, true, getAccount.PrivacyAccepted.Bool)
+				require.Equal(t, true, getAccount.PrivacyAccepted.Valid)
+				require.WithinDuration(t, timestamp, getAccount.PrivacyAcceptedDate.Time, time.Second)
+			},
+		},
+		{
+			name: "Revoked",
+			body: gin.H{
+				"id":               account.ID,
+				"changer":          changer,
+				"privacy_accepted": false,
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				arg := db.UpdateAccountPrivacyTxParams{
+					ID:              account.ID,
+					PrivacyAccepted: false,
+					Changer:         changer,
+				}
+
+				account2 := account
+				account2.PrivacyAccepted.Valid = true
+				account2.PrivacyAccepted.Bool = false
+				account2.PrivacyAcceptedDate.Valid = true
+				account2.PrivacyAcceptedDate.Time = time.Time{}
+				account2.Changer = changer
+
+				store.EXPECT().
+					UpdateAccountPrivacyTx(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(account2, nil)
+			},
+			checkResponse: func(recoder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recoder.Code)
+				data, err := io.ReadAll(recoder.Body)
+				require.NoError(t, err)
+
+				var getAccount db.Account
+				err = json.Unmarshal(data, &getAccount)
+				require.NoError(t, err)
+
+				require.Equal(t, account.ID, getAccount.ID)
+				require.Equal(t, false, getAccount.PrivacyAccepted.Bool)
+				require.Equal(t, true, getAccount.PrivacyAccepted.Valid)
+				require.Equal(t, time.Time{}, getAccount.PrivacyAcceptedDate.Time)
+
+			},
+		}, {
+			name: "OK",
+			body: gin.H{
+				"id": account.ID,
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					UpdateAccountPrivacyTx(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(recoder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recoder.Code)
+			},
+		},
+	}
+
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			server := NewServer(config, store)
+			recorder := httptest.NewRecorder()
+
+			// Marshal body data to JSON
+			data, err := json.Marshal(tc.body)
+			require.NoError(t, err)
+
+			url := "/accounts/privacy"
+			request, err := http.NewRequest(http.MethodPut, url, bytes.NewReader(data))
+			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(recorder)
