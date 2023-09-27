@@ -1,26 +1,35 @@
 package api
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/itsscb/df/db/sqlc"
+	"github.com/itsscb/df/token"
 	"github.com/itsscb/df/util"
 )
 
 // Server serves HTTP requests for df service
 type Server struct {
-	store  db.Store
-	router *gin.Engine
-	config util.Config
+	store      db.Store
+	router     *gin.Engine
+	config     util.Config
+	tokenMaker token.Maker
 }
 
 // NewServer creates a new HTTP server and sets up routing
-func NewServer(config util.Config, store db.Store) *Server {
+func NewServer(config util.Config, store db.Store) (*Server, error) {
+	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create token maker: %w", err)
+	}
+
 	server := &Server{
-		store:  store,
-		config: config,
+		store:      store,
+		config:     config,
+		tokenMaker: tokenMaker,
 	}
 
 	logLevel := slog.LevelError
@@ -45,14 +54,18 @@ func NewServer(config util.Config, store db.Store) *Server {
 
 	router.Use(Logger())
 
+	router.POST("/accounts/login", server.loginAccount)
+	router.POST("/tokens/renew_access", server.renewAccessToken)
 	router.POST("/accounts", server.createAccount)
-	router.PUT("/accounts", server.updateAccount)
-	router.PUT("/accounts/privacy", server.updateAccountPrivacy)
-	router.GET("/accounts/:id", server.getAccount)
-	router.GET("/accounts", server.listAccounts)
+
+	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
+	authRoutes.PUT("/accounts", server.updateAccount)
+	authRoutes.PUT("/accounts/privacy", server.updateAccountPrivacy)
+	authRoutes.GET("/accounts/:id", server.getAccount)
+	authRoutes.GET("/accounts", server.listAccounts)
 
 	server.router = router
-	return server
+	return server, nil
 }
 
 func (server *Server) Start(address string) error {

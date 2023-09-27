@@ -3,6 +3,8 @@ package db
 import (
 	"context"
 	"database/sql"
+
+	"github.com/itsscb/df/util"
 )
 
 type UpdateAccountTxParams struct {
@@ -26,8 +28,16 @@ type UpdateAccountTxResult struct {
 
 func (store *SQLStore) UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error) {
 	var result UpdateAccountTxResult
+	var err error
 
-	err := store.execTx(ctx, func(q *Queries) error {
+	if arg.Passwordhash.Valid {
+		arg.Passwordhash.String, err = util.HashPassword(arg.Passwordhash.String)
+		if err != nil {
+			return Account{}, nil
+		}
+	}
+
+	err = store.execTx(ctx, func(q *Queries) error {
 		var err error
 		result.Account, err = q.UpdateAccount(ctx, UpdateAccountParams(arg))
 		return err

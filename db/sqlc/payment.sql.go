@@ -15,8 +15,8 @@ INSERT INTO payments (
     "account_id",
     "payment_category",
     "bankname",
-    "iban",
-    "bic",
+    "IBAN",
+    "BIC",
     "paypal_account",
     "paypal_id",
     "payment_system",
@@ -25,15 +25,15 @@ INSERT INTO payments (
     "changer"
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
-) RETURNING id, account_id, payment_category, bankname, iban, bic, paypal_account, paypal_id, payment_system, type, creator, created, changer, changed
+) RETURNING id, account_id, payment_category, bankname, "IBAN", "BIC", paypal_account, paypal_id, payment_system, type, creator, created, changer, changed
 `
 
 type CreatePaymentParams struct {
 	AccountID       int64          `json:"account_id"`
 	PaymentCategory string         `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
-	Iban            sql.NullString `json:"iban"`
-	Bic             sql.NullString `json:"bic"`
+	IBAN            sql.NullString `json:"IBAN"`
+	BIC             sql.NullString `json:"BIC"`
 	PaypalAccount   sql.NullString `json:"paypal_account"`
 	PaypalID        sql.NullString `json:"paypal_id"`
 	PaymentSystem   sql.NullString `json:"payment_system"`
@@ -47,8 +47,8 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (P
 		arg.AccountID,
 		arg.PaymentCategory,
 		arg.Bankname,
-		arg.Iban,
-		arg.Bic,
+		arg.IBAN,
+		arg.BIC,
 		arg.PaypalAccount,
 		arg.PaypalID,
 		arg.PaymentSystem,
@@ -62,8 +62,8 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (P
 		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
-		&i.Iban,
-		&i.Bic,
+		&i.IBAN,
+		&i.BIC,
 		&i.PaypalAccount,
 		&i.PaypalID,
 		&i.PaymentSystem,
@@ -87,7 +87,7 @@ func (q *Queries) DeletePayment(ctx context.Context, id int64) error {
 }
 
 const getPayment = `-- name: GetPayment :one
-SELECT id, account_id, payment_category, bankname, iban, bic, paypal_account, paypal_id, payment_system, type, creator, created, changer, changed FROM payments
+SELECT id, account_id, payment_category, bankname, "IBAN", "BIC", paypal_account, paypal_id, payment_system, type, creator, created, changer, changed FROM payments
 WHERE "id" = $1 LIMIT 1
 `
 
@@ -99,8 +99,8 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
 		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
-		&i.Iban,
-		&i.Bic,
+		&i.IBAN,
+		&i.BIC,
 		&i.PaypalAccount,
 		&i.PaypalID,
 		&i.PaymentSystem,
@@ -114,7 +114,7 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
 }
 
 const listPayments = `-- name: ListPayments :many
-SELECT id, account_id, payment_category, bankname, iban, bic, paypal_account, paypal_id, payment_system, type, creator, created, changer, changed FROM payments
+SELECT id, account_id, payment_category, bankname, "IBAN", "BIC", paypal_account, paypal_id, payment_system, type, creator, created, changer, changed FROM payments
 ORDER BY "payment_category"
 LIMIT $1
 OFFSET $2
@@ -139,8 +139,8 @@ func (q *Queries) ListPayments(ctx context.Context, arg ListPaymentsParams) ([]P
 			&i.AccountID,
 			&i.PaymentCategory,
 			&i.Bankname,
-			&i.Iban,
-			&i.Bic,
+			&i.IBAN,
+			&i.BIC,
 			&i.PaypalAccount,
 			&i.PaypalID,
 			&i.PaymentSystem,
@@ -169,8 +169,8 @@ SET
     "account_id" = COALESCE($3, "account_id"),
     "payment_category" = COALESCE($4, "payment_category"),
     "bankname" = COALESCE($5, "bankname"),
-    "iban" = COALESCE($6, "iban"),
-    "bic" = COALESCE($7, "bic"),
+    "IBAN" = COALESCE($6, "IBAN"),
+    "BIC" = COALESCE($7, "BIC"),
     "paypal_account" = COALESCE($8, "paypal_account"),
     "paypal_id" = COALESCE($9, "paypal_id"),
     "payment_system" = COALESCE($10, "payment_system"),
@@ -178,7 +178,7 @@ SET
     "changer" = $2,
     "changed" = now()
 WHERE "id" = $1
-RETURNING id, account_id, payment_category, bankname, iban, bic, paypal_account, paypal_id, payment_system, type, creator, created, changer, changed
+RETURNING id, account_id, payment_category, bankname, "IBAN", "BIC", paypal_account, paypal_id, payment_system, type, creator, created, changer, changed
 `
 
 type UpdatePaymentParams struct {
@@ -215,8 +215,8 @@ func (q *Queries) UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (P
 		&i.AccountID,
 		&i.PaymentCategory,
 		&i.Bankname,
-		&i.Iban,
-		&i.Bic,
+		&i.IBAN,
+		&i.BIC,
 		&i.PaypalAccount,
 		&i.PaypalID,
 		&i.PaymentSystem,

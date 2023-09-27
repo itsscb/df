@@ -42,7 +42,7 @@ INSERT INTO accounts (
     $12,
     $13,
     $13
-) RETURNING id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed
+) RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed
 `
 
 type CreateAccountParams struct {
@@ -80,6 +80,7 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 	var i Account
 	err := row.Scan(
 		&i.ID,
+		&i.PermissionLevel,
 		&i.Passwordhash,
 		&i.Firstname,
 		&i.Lastname,
@@ -92,9 +93,6 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		&i.Zip,
 		&i.Street,
 		&i.Country,
-		&i.Token,
-		&i.TokenValid,
-		&i.TokenExpiration,
 		&i.Creator,
 		&i.Created,
 		&i.Changer,
@@ -114,7 +112,7 @@ func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed FROM accounts
+SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
 WHERE "id" = $1 LIMIT 1
 `
 
@@ -123,6 +121,7 @@ func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
 	var i Account
 	err := row.Scan(
 		&i.ID,
+		&i.PermissionLevel,
 		&i.Passwordhash,
 		&i.Firstname,
 		&i.Lastname,
@@ -135,9 +134,37 @@ func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
 		&i.Zip,
 		&i.Street,
 		&i.Country,
-		&i.Token,
-		&i.TokenValid,
-		&i.TokenExpiration,
+		&i.Creator,
+		&i.Created,
+		&i.Changer,
+		&i.Changed,
+	)
+	return i, err
+}
+
+const getAccountByEmail = `-- name: GetAccountByEmail :one
+SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
+WHERE "email" = $1 LIMIT 1
+`
+
+func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (Account, error) {
+	row := q.db.QueryRowContext(ctx, getAccountByEmail, email)
+	var i Account
+	err := row.Scan(
+		&i.ID,
+		&i.PermissionLevel,
+		&i.Passwordhash,
+		&i.Firstname,
+		&i.Lastname,
+		&i.Birthday,
+		&i.PrivacyAccepted,
+		&i.PrivacyAcceptedDate,
+		&i.Email,
+		&i.Phone,
+		&i.City,
+		&i.Zip,
+		&i.Street,
+		&i.Country,
 		&i.Creator,
 		&i.Created,
 		&i.Changer,
@@ -147,7 +174,7 @@ func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
 }
 
 const getAccountForUpdate = `-- name: GetAccountForUpdate :one
-SELECT id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed FROM accounts
+SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
 WHERE "id" = $1 LIMIT 1
 FOR NO KEY UPDATE
 `
@@ -157,6 +184,7 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, e
 	var i Account
 	err := row.Scan(
 		&i.ID,
+		&i.PermissionLevel,
 		&i.Passwordhash,
 		&i.Firstname,
 		&i.Lastname,
@@ -169,9 +197,6 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, e
 		&i.Zip,
 		&i.Street,
 		&i.Country,
-		&i.Token,
-		&i.TokenValid,
-		&i.TokenExpiration,
 		&i.Creator,
 		&i.Created,
 		&i.Changer,
@@ -181,7 +206,7 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, e
 }
 
 const listAccounts = `-- name: ListAccounts :many
-SELECT id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed FROM accounts
+SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
 ORDER BY "lastname", "firstname"
 LIMIT $1
 OFFSET $2
@@ -203,6 +228,7 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 		var i Account
 		if err := rows.Scan(
 			&i.ID,
+			&i.PermissionLevel,
 			&i.Passwordhash,
 			&i.Firstname,
 			&i.Lastname,
@@ -215,9 +241,6 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 			&i.Zip,
 			&i.Street,
 			&i.Country,
-			&i.Token,
-			&i.TokenValid,
-			&i.TokenExpiration,
 			&i.Creator,
 			&i.Created,
 			&i.Changer,
@@ -252,7 +275,7 @@ SET
     "changer" = $2,
     "changed" = now()
 WHERE "id" = $1
-RETURNING id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed
+RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed
 `
 
 type UpdateAccountParams struct {
@@ -288,6 +311,7 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 	var i Account
 	err := row.Scan(
 		&i.ID,
+		&i.PermissionLevel,
 		&i.Passwordhash,
 		&i.Firstname,
 		&i.Lastname,
@@ -300,9 +324,6 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		&i.Zip,
 		&i.Street,
 		&i.Country,
-		&i.Token,
-		&i.TokenValid,
-		&i.TokenExpiration,
 		&i.Creator,
 		&i.Created,
 		&i.Changer,
@@ -319,7 +340,7 @@ SET
     "changer" = $3,
     "changed" = now()
 WHERE "id" = $4
-RETURNING id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed
+RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed
 `
 
 type UpdateAccountPrivacyParams struct {
@@ -339,6 +360,7 @@ func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPri
 	var i Account
 	err := row.Scan(
 		&i.ID,
+		&i.PermissionLevel,
 		&i.Passwordhash,
 		&i.Firstname,
 		&i.Lastname,
@@ -351,9 +373,6 @@ func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPri
 		&i.Zip,
 		&i.Street,
 		&i.Country,
-		&i.Token,
-		&i.TokenValid,
-		&i.TokenExpiration,
 		&i.Creator,
 		&i.Created,
 		&i.Changer,

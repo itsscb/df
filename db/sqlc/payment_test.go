@@ -23,11 +23,11 @@ func createRandomPayment(t *testing.T) Payment {
 			Valid:  true,
 			String: util.RandomName(),
 		},
-		Iban: sql.NullString{
+		IBAN: sql.NullString{
 			Valid:  true,
 			String: util.RandomName(),
 		},
-		Bic: sql.NullString{
+		BIC: sql.NullString{
 			Valid:  true,
 			String: util.RandomName(),
 		},
@@ -55,8 +55,8 @@ func createRandomPayment(t *testing.T) Payment {
 	require.Equal(t, arg.PaymentCategory, person.PaymentCategory)
 	require.Equal(t, arg.Bankname, person.Bankname)
 	require.Equal(t, arg.AccountID, person.AccountID)
-	require.Equal(t, arg.Iban, person.Iban)
-	require.Equal(t, arg.Bic, person.Bic)
+	require.Equal(t, arg.IBAN, person.IBAN)
+	require.Equal(t, arg.BIC, person.BIC)
 	require.Equal(t, arg.PaypalAccount, person.PaypalAccount)
 	require.Equal(t, arg.PaymentSystem, person.PaymentSystem)
 	require.Equal(t, arg.PaypalID, person.PaypalID)
@@ -84,8 +84,8 @@ func TestGetPayment(t *testing.T) {
 	require.Equal(t, newperson.PaymentCategory, person.PaymentCategory)
 	require.Equal(t, newperson.Bankname, person.Bankname)
 	require.Equal(t, newperson.AccountID, person.AccountID)
-	require.Equal(t, newperson.Iban, person.Iban)
-	require.Equal(t, newperson.Bic, person.Bic)
+	require.Equal(t, newperson.IBAN, person.IBAN)
+	require.Equal(t, newperson.BIC, person.BIC)
 	require.Equal(t, newperson.PaypalAccount, person.PaypalAccount)
 	require.Equal(t, newperson.PaymentSystem, person.PaymentSystem)
 	require.Equal(t, newperson.PaypalID, person.PaypalID)

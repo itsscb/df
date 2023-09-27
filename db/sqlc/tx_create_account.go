@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/itsscb/df/util"
 )
 
 type CreateAccountTxParams struct {
@@ -28,6 +30,7 @@ type CreateAccountTxResult struct {
 
 func (store *SQLStore) CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (Account, error) {
 	var result CreateAccountTxResult
+	var err error
 
 	if arg.PrivacyAccepted.Bool && arg.PrivacyAccepted.Valid && !arg.PrivacyAcceptedDate.Valid {
 		arg.PrivacyAcceptedDate = sql.NullTime{
@@ -36,7 +39,12 @@ func (store *SQLStore) CreateAccountTx(ctx context.Context, arg CreateAccountTxP
 		}
 	}
 
-	err := store.execTx(ctx, func(q *Queries) error {
+	arg.Passwordhash, err = util.HashPassword(arg.Passwordhash)
+	if err != nil {
+		return Account{}, nil
+	}
+
+	err = store.execTx(ctx, func(q *Queries) error {
 		var err error
 
 		result.Account, err = q.CreateAccount(ctx, CreateAccountParams(arg))
