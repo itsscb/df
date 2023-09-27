@@ -586,6 +586,36 @@ func (mr *MockStoreMockRecorder) UpdateAccount(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockStore)(nil).UpdateAccount), arg0, arg1)
 }
 
+// UpdateAccountPrivacy mocks base method.
+func (m *MockStore) UpdateAccountPrivacy(arg0 context.Context, arg1 db.UpdateAccountPrivacyParams) (db.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAccountPrivacy", arg0, arg1)
+	ret0, _ := ret[0].(db.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateAccountPrivacy indicates an expected call of UpdateAccountPrivacy.
+func (mr *MockStoreMockRecorder) UpdateAccountPrivacy(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccountPrivacy", reflect.TypeOf((*MockStore)(nil).UpdateAccountPrivacy), arg0, arg1)
+}
+
+// UpdateAccountPrivacyTx mocks base method.
+func (m *MockStore) UpdateAccountPrivacyTx(arg0 context.Context, arg1 db.UpdateAccountPrivacyTxParams) (db.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAccountPrivacyTx", arg0, arg1)
+	ret0, _ := ret[0].(db.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateAccountPrivacyTx indicates an expected call of UpdateAccountPrivacyTx.
+func (mr *MockStoreMockRecorder) UpdateAccountPrivacyTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccountPrivacyTx", reflect.TypeOf((*MockStore)(nil).UpdateAccountPrivacyTx), arg0, arg1)
+}
+
 // UpdateAccountTx mocks base method.
 func (m *MockStore) UpdateAccountTx(arg0 context.Context, arg1 db.UpdateAccountTxParams) (db.Account, error) {
 	m.ctrl.T.Helper()

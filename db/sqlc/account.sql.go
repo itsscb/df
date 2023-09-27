@@ -240,17 +240,15 @@ const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts
 SET
     "passwordhash" = COALESCE($3, "passwordhash"),
-    "privacy_accepted" = COALESCE($4, "privacy_accepted"),
-    "privacy_accepted_date" = COALESCE($5, "privacy_accepted_date"),
-    "firstname" = COALESCE($6, "firstname"),
-    "lastname" = COALESCE($7, "lastname"),
-    "birthday" = COALESCE($8, "birthday"),
-    "email" = COALESCE($9, "email"),
-    "phone" = COALESCE($10, "phone"),
-    "city" = COALESCE($11, "city"),
-    "zip" = COALESCE($12, "zip"),
-    "street" = COALESCE($13, "street"),
-    "country" = COALESCE($14, "country"),
+    "firstname" = COALESCE($4, "firstname"),
+    "lastname" = COALESCE($5, "lastname"),
+    "birthday" = COALESCE($6, "birthday"),
+    "email" = COALESCE($7, "email"),
+    "phone" = COALESCE($8, "phone"),
+    "city" = COALESCE($9, "city"),
+    "zip" = COALESCE($10, "zip"),
+    "street" = COALESCE($11, "street"),
+    "country" = COALESCE($12, "country"),
     "changer" = $2,
     "changed" = now()
 WHERE "id" = $1
@@ -258,20 +256,18 @@ RETURNING id, passwordhash, firstname, lastname, birthday, privacy_accepted, pri
 `
 
 type UpdateAccountParams struct {
-	ID                  int64          `json:"id"`
-	Changer             string         `json:"changer"`
-	Passwordhash        sql.NullString `json:"passwordhash"`
-	PrivacyAccepted     sql.NullBool   `json:"privacy_accepted"`
-	PrivacyAcceptedDate sql.NullTime   `json:"privacy_accepted_date"`
-	Firstname           sql.NullString `json:"firstname"`
-	Lastname            sql.NullString `json:"lastname"`
-	Birthday            sql.NullTime   `json:"birthday"`
-	Email               sql.NullString `json:"email"`
-	Phone               sql.NullString `json:"phone"`
-	City                sql.NullString `json:"city"`
-	Zip                 sql.NullString `json:"zip"`
-	Street              sql.NullString `json:"street"`
-	Country             sql.NullString `json:"country"`
+	ID           int64          `json:"id"`
+	Changer      string         `json:"changer"`
+	Passwordhash sql.NullString `json:"passwordhash"`
+	Firstname    sql.NullString `json:"firstname"`
+	Lastname     sql.NullString `json:"lastname"`
+	Birthday     sql.NullTime   `json:"birthday"`
+	Email        sql.NullString `json:"email"`
+	Phone        sql.NullString `json:"phone"`
+	City         sql.NullString `json:"city"`
+	Zip          sql.NullString `json:"zip"`
+	Street       sql.NullString `json:"street"`
+	Country      sql.NullString `json:"country"`
 }
 
 func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {
@@ -279,8 +275,6 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		arg.ID,
 		arg.Changer,
 		arg.Passwordhash,
-		arg.PrivacyAccepted,
-		arg.PrivacyAcceptedDate,
 		arg.Firstname,
 		arg.Lastname,
 		arg.Birthday,
@@ -290,6 +284,57 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		arg.Zip,
 		arg.Street,
 		arg.Country,
+	)
+	var i Account
+	err := row.Scan(
+		&i.ID,
+		&i.Passwordhash,
+		&i.Firstname,
+		&i.Lastname,
+		&i.Birthday,
+		&i.PrivacyAccepted,
+		&i.PrivacyAcceptedDate,
+		&i.Email,
+		&i.Phone,
+		&i.City,
+		&i.Zip,
+		&i.Street,
+		&i.Country,
+		&i.Token,
+		&i.TokenValid,
+		&i.TokenExpiration,
+		&i.Creator,
+		&i.Created,
+		&i.Changer,
+		&i.Changed,
+	)
+	return i, err
+}
+
+const updateAccountPrivacy = `-- name: UpdateAccountPrivacy :one
+UPDATE accounts
+SET
+    "privacy_accepted" = $1,
+    "privacy_accepted_date" = $2,
+    "changer" = $3,
+    "changed" = now()
+WHERE "id" = $4
+RETURNING id, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, token, token_valid, token_expiration, creator, created, changer, changed
+`
+
+type UpdateAccountPrivacyParams struct {
+	PrivacyAccepted     sql.NullBool `json:"privacy_accepted"`
+	PrivacyAcceptedDate sql.NullTime `json:"privacy_accepted_date"`
+	Changer             string       `json:"changer"`
+	ID                  int64        `json:"id"`
+}
+
+func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPrivacyParams) (Account, error) {
+	row := q.db.QueryRowContext(ctx, updateAccountPrivacy,
+		arg.PrivacyAccepted,
+		arg.PrivacyAcceptedDate,
+		arg.Changer,
+		arg.ID,
 	)
 	var i Account
 	err := row.Scan(

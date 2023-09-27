@@ -10,6 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var timestamp = time.Now()
+
 func createRandomAccount(t *testing.T) Account {
 
 	creator := util.RandomName()
@@ -27,6 +29,10 @@ func createRandomAccount(t *testing.T) Account {
 		PrivacyAccepted: sql.NullBool{
 			Valid: true,
 			Bool:  true,
+		},
+		PrivacyAcceptedDate: sql.NullTime{
+			Valid: true,
+			Time:  timestamp,
 		},
 		City:    util.RandomString(15),
 		Zip:     util.RandomString(5),
@@ -117,6 +123,56 @@ func TestUpdateAccount(t *testing.T) {
 	require.Equal(t, account1.Lastname, account2.Lastname)
 	require.NotEqual(t, account1.Phone, account2.Phone)
 	require.NotEqual(t, account1.Changer, account2.Changer)
+}
+
+func TestUpdateAccountPrivacy(t *testing.T) {
+	account1 := createRandomAccount(t)
+	require.NotEmpty(t, account1)
+
+	changer1 := util.RandomName()
+
+	arg := UpdateAccountPrivacyParams{
+		ID: account1.ID,
+		PrivacyAccepted: sql.NullBool{
+			Valid: true,
+			Bool:  false,
+		},
+		PrivacyAcceptedDate: sql.NullTime{
+			Valid: true,
+			Time:  time.Time{},
+		},
+		Changer: changer1,
+	}
+
+	account2, err := testQueries.UpdateAccountPrivacy(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, account2)
+
+	require.Equal(t, account1.ID, account2.ID)
+	require.Equal(t, account1.Lastname, account2.Lastname)
+	require.WithinDuration(t, time.Time{}, account2.PrivacyAcceptedDate.Time, time.Second)
+	require.NotEqual(t, account1.PrivacyAccepted.Bool, account2.PrivacyAccepted.Bool)
+	require.NotEqual(t, account1.PrivacyAcceptedDate.Time, account2.PrivacyAcceptedDate.Time)
+
+	arg.PrivacyAccepted = sql.NullBool{
+		Valid: true,
+		Bool:  true,
+	}
+
+	arg.PrivacyAcceptedDate = sql.NullTime{
+		Valid: true,
+		Time:  timestamp.UTC(),
+	}
+
+	account1, err = testQueries.UpdateAccountPrivacy(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, account2)
+
+	require.Equal(t, account1.ID, account2.ID)
+	require.Equal(t, account1.Lastname, account2.Lastname)
+	require.WithinDuration(t, timestamp.UTC(), account1.PrivacyAcceptedDate.Time, time.Second)
+	require.NotEqual(t, account1.PrivacyAccepted.Bool, account2.PrivacyAccepted.Bool)
+	require.NotEqual(t, account1.PrivacyAcceptedDate.Time, account2.PrivacyAcceptedDate.Time)
 }
 
 func TestListAccounts(t *testing.T) {
