@@ -2,11 +2,15 @@ package api
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/itsscb/df/db/sqlc"
+	"github.com/itsscb/df/token"
+	"golang.org/x/exp/slog"
 )
 
 type createAccountRequest struct {
@@ -51,13 +55,6 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		},
 	}
 
-	// if req.PrivacyAccepted {
-	// 	arg.PrivacyAcceptedDate = sql.NullTime{
-	// 		Valid: true,
-	// 		Time:  time.Now(),
-	// 	}
-	// }
-
 	account, err := server.store.CreateAccountTx(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -90,12 +87,19 @@ func (server *Server) getAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if account.Email != authPayload.Email {
+		err := errors.New("account doesn't belong to the authenticated user")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
+
 	ctx.JSON(http.StatusOK, account)
 }
 
 type listAccountRequest struct {
-	PageID   int32 `form:"pageid" binding:"required,min=1"`
-	PageSize int32 `form:"pagesize" binding:"required,min=5,max=50"`
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=50"`
 }
 
 func (server *Server) listAccounts(ctx *gin.Context) {
@@ -103,6 +107,26 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	slog.Error("auth", "payload", fmt.Sprintf("%#v", authPayload))
+
+	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	if account.PermissionLevel < 1 {
+		err := errors.New("only for admin users")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
 	}
 
@@ -133,7 +157,20 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 		return
 	}
 
-	account, err := server.store.UpdateAccountPrivacyTx(ctx, db.UpdateAccountPrivacyTxParams(req))
+	account, err := server.store.GetAccount(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+		return
+	}
+
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if account.Email != authPayload.Email {
+		err := errors.New("account doesn't belong to the authenticated user")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
+
+	account, err = server.store.UpdateAccountPrivacyTx(ctx, db.UpdateAccountPrivacyTxParams(req))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
@@ -161,6 +198,19 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 	var req updateAccountRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	account, err := server.store.GetAccount(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+		return
+	}
+
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if account.Email != authPayload.Email {
+		err := errors.New("account doesn't belong to the authenticated user")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
 	}
 
@@ -209,7 +259,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		},
 	}
 
-	account, err := server.store.UpdateAccountTx(ctx, arg)
+	account, err = server.store.UpdateAccountTx(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

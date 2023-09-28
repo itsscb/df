@@ -12,6 +12,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	uuid "github.com/google/uuid"
 	db "github.com/itsscb/df/db/sqlc"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -189,6 +190,21 @@ func (mr *MockStoreMockRecorder) CreateReturnsLog(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateReturnsLog", reflect.TypeOf((*MockStore)(nil).CreateReturnsLog), arg0, arg1)
 }
 
+// CreateSession mocks base method.
+func (m *MockStore) CreateSession(arg0 context.Context, arg1 db.CreateSessionParams) (db.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSession", arg0, arg1)
+	ret0, _ := ret[0].(db.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateSession indicates an expected call of CreateSession.
+func (mr *MockStoreMockRecorder) CreateSession(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSession", reflect.TypeOf((*MockStore)(nil).CreateSession), arg0, arg1)
+}
+
 // DeleteAccount mocks base method.
 func (m *MockStore) DeleteAccount(arg0 context.Context, arg1 int64) error {
 	m.ctrl.T.Helper()
@@ -316,6 +332,21 @@ func (mr *MockStoreMockRecorder) GetAccount(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccount", reflect.TypeOf((*MockStore)(nil).GetAccount), arg0, arg1)
 }
 
+// GetAccountByEmail mocks base method.
+func (m *MockStore) GetAccountByEmail(arg0 context.Context, arg1 string) (db.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccountByEmail", arg0, arg1)
+	ret0, _ := ret[0].(db.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccountByEmail indicates an expected call of GetAccountByEmail.
+func (mr *MockStoreMockRecorder) GetAccountByEmail(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByEmail", reflect.TypeOf((*MockStore)(nil).GetAccountByEmail), arg0, arg1)
+}
+
 // GetAccountForUpdate mocks base method.
 func (m *MockStore) GetAccountForUpdate(arg0 context.Context, arg1 int64) (db.Account, error) {
 	m.ctrl.T.Helper()
@@ -434,6 +465,21 @@ func (m *MockStore) GetReturnsLog(arg0 context.Context, arg1 int64) (db.ReturnsL
 func (mr *MockStoreMockRecorder) GetReturnsLog(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReturnsLog", reflect.TypeOf((*MockStore)(nil).GetReturnsLog), arg0, arg1)
+}
+
+// GetSession mocks base method.
+func (m *MockStore) GetSession(arg0 context.Context, arg1 uuid.UUID) (db.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSession", arg0, arg1)
+	ret0, _ := ret[0].(db.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSession indicates an expected call of GetSession.
+func (mr *MockStoreMockRecorder) GetSession(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSession", reflect.TypeOf((*MockStore)(nil).GetSession), arg0, arg1)
 }
 
 // InvalidateDocument mocks base method.

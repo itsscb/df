@@ -7,10 +7,13 @@ package db
 import (
 	"database/sql"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Account struct {
 	ID                  int64          `json:"id"`
+	PermissionLevel     int32          `json:"permission_level"`
 	Passwordhash        string         `json:"passwordhash"`
 	Firstname           string         `json:"firstname"`
 	Lastname            string         `json:"lastname"`
@@ -23,9 +26,6 @@ type Account struct {
 	Zip                 string         `json:"zip"`
 	Street              string         `json:"street"`
 	Country             string         `json:"country"`
-	Token               sql.NullString `json:"token"`
-	TokenValid          sql.NullBool   `json:"token_valid"`
-	TokenExpiration     time.Time      `json:"token_expiration"`
 	Creator             string         `json:"creator"`
 	Created             time.Time      `json:"created"`
 	Changer             string         `json:"changer"`
@@ -68,8 +68,8 @@ type Payment struct {
 	AccountID       int64          `json:"account_id"`
 	PaymentCategory string         `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
-	Iban            sql.NullString `json:"iban"`
-	Bic             sql.NullString `json:"bic"`
+	IBAN            sql.NullString `json:"IBAN"`
+	BIC             sql.NullString `json:"BIC"`
 	PaypalAccount   sql.NullString `json:"paypal_account"`
 	PaypalID        sql.NullString `json:"paypal_id"`
 	PaymentSystem   sql.NullString `json:"payment_system"`
@@ -132,4 +132,15 @@ type ReturnsLog struct {
 	Created  time.Time      `json:"created"`
 	Changer  string         `json:"changer"`
 	Changed  time.Time      `json:"changed"`
+}
+
+type Session struct {
+	ID           uuid.UUID `json:"id"`
+	Email        string    `json:"email"`
+	UserAgent    string    `json:"user_agent"`
+	ClientIp     string    `json:"client_ip"`
+	RefreshToken string    `json:"refresh_token"`
+	IsBlocked    bool      `json:"is_blocked"`
+	ExpiresAt    time.Time `json:"expires_at"`
+	CreatedAt    time.Time `json:"created_at"`
 }

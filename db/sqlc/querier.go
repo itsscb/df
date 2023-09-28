@@ -6,6 +6,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
@@ -18,6 +20,7 @@ type Querier interface {
 	CreateProvider(ctx context.Context, arg CreateProviderParams) (Provider, error)
 	CreateReturn(ctx context.Context, arg CreateReturnParams) (Return, error)
 	CreateReturnsLog(ctx context.Context, arg CreateReturnsLogParams) (ReturnsLog, error)
+	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	DeleteAccount(ctx context.Context, id int64) error
 	DeleteDocument(ctx context.Context, id int64) error
 	// -- name: UpdateMail :one
@@ -40,6 +43,7 @@ type Querier interface {
 	DeleteReturn(ctx context.Context, id int64) error
 	DeleteReturnsLog(ctx context.Context, id int64) error
 	GetAccount(ctx context.Context, id int64) (Account, error)
+	GetAccountByEmail(ctx context.Context, email string) (Account, error)
 	GetAccountForUpdate(ctx context.Context, id int64) (Account, error)
 	GetDocument(ctx context.Context, id int64) (Document, error)
 	GetMail(ctx context.Context, id int64) (Mail, error)
@@ -48,6 +52,7 @@ type Querier interface {
 	GetProvider(ctx context.Context, id int64) (Provider, error)
 	GetReturn(ctx context.Context, id int64) (Return, error)
 	GetReturnsLog(ctx context.Context, id int64) (ReturnsLog, error)
+	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	InvalidateDocument(ctx context.Context, arg InvalidateDocumentParams) (Document, error)
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
 	ListDocuments(ctx context.Context, arg ListDocumentsParams) ([]Document, error)

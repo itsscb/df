@@ -14,6 +14,7 @@ CREATE TABLE "mails" (
 
 CREATE TABLE "accounts" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "permission_level" int NOT NULL DEFAULT 0,
   "passwordhash" varchar NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
@@ -26,13 +27,21 @@ CREATE TABLE "accounts" (
   "zip" varchar NOT NULL,
   "street" varchar NOT NULL,
   "country" varchar NOT NULL,
-  "token" varchar,
-  "token_valid" boolean DEFAULT false,
-  "token_expiration" timestamptz NOT NULL DEFAULT (now()),
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
   "changed" timestamptz NOT NULL DEFAULT (now())
+);
+
+CREATE TABLE "sessions" (
+  "id" uuid UNIQUE PRIMARY KEY NOT NULL,
+  "email" varchar NOT NULL,
+  "user_agent" varchar NOT NULL,
+  "client_ip" varchar NOT NULL,
+  "refresh_token" varchar NOT NULL,
+  "is_blocked" boolean NOT NULL DEFAULT false,
+  "expires_at" timestamptz NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "persons" (
@@ -73,8 +82,8 @@ CREATE TABLE "payments" (
   "account_id" bigint NOT NULL,
   "payment_category" varchar NOT NULL,
   "bankname" varchar,
-  "iban" varchar,
-  "bic" varchar,
+  "IBAN" varchar,
+  "BIC" varchar,
   "paypal_account" varchar,
   "paypal_id" varchar,
   "payment_system" varchar,
@@ -122,6 +131,8 @@ CREATE TABLE "returnsLog" (
   "changer" varchar NOT NULL,
   "changed" timestamptz NOT NULL DEFAULT (now())
 );
+
+ALTER TABLE "sessions" ADD FOREIGN KEY ("email") REFERENCES "accounts" ("email");
 
 ALTER TABLE "persons" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
