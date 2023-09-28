@@ -12,7 +12,7 @@ type Config struct {
 	ServerAddress        string        `mapstructure:"SERVER_ADDRESS"`
 	Environment          string        `mapstructure:"ENVIRONMENT"`
 	LogOutput            string        `mapstructure:"LOG_OUTPUT"`
-	TokenSymmetricKey    string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
+	TokenPrivateKeyHex   string        `mapstructure:"TOKEN_PRIVATEKEY_HEX"`
 	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
 }
