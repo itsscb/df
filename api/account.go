@@ -48,7 +48,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		Zip:       req.Zip,
 		Street:    req.Street,
 		Country:   req.Country,
-		Creator:   "system",
+		Creator:   req.Email,
 		Phone: sql.NullString{
 			Valid:  req.Phone != "",
 			String: req.Phone,
@@ -145,9 +145,8 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 }
 
 type updateAccountPrivacyRequest struct {
-	ID              int64  `binding:"required" json:"ID"`
-	Changer         string `binding:"required" json:"changer"`
-	PrivacyAccepted bool   `json:"privacy_accepted"`
+	ID              int64 `binding:"required" json:"ID"`
+	PrivacyAccepted *bool `binding:"required" json:"privacy_accepted"`
 }
 
 func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
@@ -170,7 +169,11 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 		return
 	}
 
-	account, err = server.store.UpdateAccountPrivacyTx(ctx, db.UpdateAccountPrivacyTxParams(req))
+	account, err = server.store.UpdateAccountPrivacyTx(ctx, db.UpdateAccountPrivacyTxParams{
+		ID:              req.ID,
+		Changer:         authPayload.Email,
+		PrivacyAccepted: *req.PrivacyAccepted,
+	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
@@ -181,7 +184,6 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 
 type updateAccountRequest struct {
 	ID           int64     `binding:"required" json:"ID"`
-	Changer      string    `binding:"required" json:"changer"`
 	Passwordhash string    `json:"passwordhash"`
 	Firstname    string    `json:"firstname"`
 	Lastname     string    `json:"lastname"`
@@ -216,7 +218,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 
 	arg := db.UpdateAccountTxParams{
 		ID:      req.ID,
-		Changer: req.Changer,
+		Changer: authPayload.Email,
 		Passwordhash: sql.NullString{
 			String: req.Passwordhash,
 			Valid:  req.Passwordhash != "",
