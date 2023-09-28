@@ -30,7 +30,7 @@ func TestCreateAccountAPI(t *testing.T) {
 		body          gin.H
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
-		checkResponse func(recoder *httptest.ResponseRecorder)
+		checkResponse func(recorder *httptest.ResponseRecorder)
 	}{
 		{
 			name: "OK",
@@ -46,7 +46,7 @@ func TestCreateAccountAPI(t *testing.T) {
 				"street":           account.Street,
 				"country":          account.Country,
 				"phone":            account.Phone.String,
-				"creator":          account.Creator,
+				"creator":          account.Email,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, account.Email, time.Minute)
@@ -64,7 +64,7 @@ func TestCreateAccountAPI(t *testing.T) {
 					Street:          account.Street,
 					Country:         account.Country,
 					Phone:           account.Phone,
-					Creator:         account.Creator,
+					Creator:         account.Email,
 				}
 
 				store.EXPECT().
@@ -91,7 +91,7 @@ func TestCreateAccountAPI(t *testing.T) {
 		// 		"street":           account.Street,
 		// 		"country":          account.Country,
 		// 		"phone":            account.Phone.String,
-		// 		"creator":          account.Creator,
+		// 		"creator":          account.Email,
 		// 	},
 		// 	setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 		// 	},
@@ -136,7 +136,7 @@ func TestCreateAccountAPI(t *testing.T) {
 				"street":                account.Street,
 				"country":               account.Country,
 				"phone":                 account.Phone.String,
-				"creator":               account.Creator,
+				"creator":               account.Email,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, account.Email, time.Minute)
@@ -191,7 +191,7 @@ func TestGetAccountAPI(t *testing.T) {
 		accountID     int64
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
-		checkResponse func(t *testing.T, recoder *httptest.ResponseRecorder)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
 		{
 			name:      "OK",
@@ -316,8 +316,6 @@ func TestGetAccountAPI(t *testing.T) {
 
 func TestUpdateAccountTxAPI(t *testing.T) {
 	account := randomAccount()
-	changer := util.RandomName()
-	// newPassword := util.RandomString(30)
 	newLastname := util.RandomName()
 
 	testCases := []struct {
@@ -326,7 +324,7 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 		accountID     string
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
-		checkResponse func(recoder *httptest.ResponseRecorder)
+		checkResponse func(recorder *httptest.ResponseRecorder)
 	}{
 		// {
 		// 	name: "OK_PasswordHash",
@@ -373,7 +371,6 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 			body: gin.H{
 				"id":       account.ID,
 				"lastname": newLastname,
-				"changer":  changer,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, account.Email, time.Minute)
@@ -385,7 +382,7 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 						Valid:  true,
 						String: newLastname,
 					},
-					Changer: changer,
+					Changer: account.Email,
 				}
 
 				store.EXPECT().
@@ -408,7 +405,6 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 			body: gin.H{
 				"id":       account.ID,
 				"lastname": newLastname,
-				"changer":  changer,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 			},
@@ -490,7 +486,7 @@ func TestListAccountsAPI(t *testing.T) {
 		query         Query
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
-		checkResponse func(recoder *httptest.ResponseRecorder)
+		checkResponse func(recorder *httptest.ResponseRecorder)
 	}{
 		{
 			name: "OK",
@@ -629,20 +625,18 @@ func TestListAccountsAPI(t *testing.T) {
 
 func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 	account := randomAccount()
-	changer := util.RandomName()
 
 	testCases := []struct {
 		name          string
 		body          gin.H
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
-		checkResponse func(recoder *httptest.ResponseRecorder)
+		checkResponse func(recorder *httptest.ResponseRecorder)
 	}{
 		{
 			name: "OK",
 			body: gin.H{
 				"id":               account.ID,
-				"changer":          changer,
 				"privacy_accepted": true,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -652,13 +646,13 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 				arg := db.UpdateAccountPrivacyTxParams{
 					ID:              account.ID,
 					PrivacyAccepted: true,
-					Changer:         changer,
+					Changer:         account.Email,
 				}
 
 				account2 := account
 				account2.PrivacyAccepted.Valid = true
 				account2.PrivacyAccepted.Bool = true
-				account2.Changer = changer
+				account2.Changer = account.Email
 
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
@@ -670,9 +664,55 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 					Times(1).
 					Return(account2, nil)
 			},
-			checkResponse: func(recoder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusOK, recoder.Code)
-				data, err := io.ReadAll(recoder.Body)
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				data, err := io.ReadAll(recorder.Body)
+				require.NoError(t, err)
+
+				var getAccount db.Account
+				err = json.Unmarshal(data, &getAccount)
+				require.NoError(t, err)
+
+				require.Equal(t, account.ID, getAccount.ID)
+				require.Equal(t, true, getAccount.PrivacyAccepted.Bool)
+				require.Equal(t, true, getAccount.PrivacyAccepted.Valid)
+				require.WithinDuration(t, timestamp, getAccount.PrivacyAcceptedDate.Time, time.Second)
+			},
+		},
+		{
+			name: "OK",
+			body: gin.H{
+				"id":               account.ID,
+				"privacy_accepted": true,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, account.Email, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				arg := db.UpdateAccountPrivacyTxParams{
+					ID:              account.ID,
+					PrivacyAccepted: true,
+					Changer:         account.Email,
+				}
+
+				account2 := account
+				account2.PrivacyAccepted.Valid = true
+				account2.PrivacyAccepted.Bool = true
+				account2.Changer = account.Email
+
+				store.EXPECT().
+					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
+					Times(1).
+					Return(account, nil)
+
+				store.EXPECT().
+					UpdateAccountPrivacyTx(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(account2, nil)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				data, err := io.ReadAll(recorder.Body)
 				require.NoError(t, err)
 
 				var getAccount db.Account
@@ -689,7 +729,6 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 			name: "Revoked",
 			body: gin.H{
 				"id":               account.ID,
-				"changer":          changer,
 				"privacy_accepted": false,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -699,7 +738,7 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 				arg := db.UpdateAccountPrivacyTxParams{
 					ID:              account.ID,
 					PrivacyAccepted: false,
-					Changer:         changer,
+					Changer:         account.Email,
 				}
 
 				account2 := account
@@ -707,7 +746,7 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 				account2.PrivacyAccepted.Bool = false
 				account2.PrivacyAcceptedDate.Valid = true
 				account2.PrivacyAcceptedDate.Time = time.Time{}
-				account2.Changer = changer
+				account2.Changer = account.Email
 
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
@@ -719,9 +758,9 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 					Times(1).
 					Return(account2, nil)
 			},
-			checkResponse: func(recoder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusOK, recoder.Code)
-				data, err := io.ReadAll(recoder.Body)
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				data, err := io.ReadAll(recorder.Body)
 				require.NoError(t, err)
 
 				var getAccount db.Account
@@ -744,15 +783,15 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetAccount(gomock.Any(), gomock.Any()).
+					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
 					Times(0)
 
 				store.EXPECT().
 					UpdateAccountPrivacyTx(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
-			checkResponse: func(recoder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recoder.Code)
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
 	}
@@ -775,6 +814,7 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 			// Marshal body data to JSON
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
+			fmt.Println("privacy revoked", "body", string(data))
 
 			url := "/accounts/privacy"
 			request, err := http.NewRequest(http.MethodPut, url, bytes.NewReader(data))
@@ -791,12 +831,13 @@ func randomAccount() db.Account {
 	password := util.RandomString(6)
 	hashedPassword, _ := util.HashPassword(password)
 
+	email := util.RandomEmail()
 	acc := db.Account{
 		ID:           util.RandomInt(1, 1000),
 		Passwordhash: hashedPassword,
 		Firstname:    util.RandomName(),
 		Lastname:     util.RandomName(),
-		Email:        util.RandomEmail(),
+		Email:        email,
 		PrivacyAccepted: sql.NullBool{
 			Valid: true,
 			Bool:  true,
@@ -813,8 +854,8 @@ func randomAccount() db.Account {
 		Street:   util.RandomName(),
 		City:     util.RandomName(),
 		Country:  util.RandomName(),
-		Creator:  "system",
-		Changer:  util.RandomName(),
+		Creator:  email,
+		Changer:  email,
 		Created:  time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
 		Changed:  time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
 		Birthday: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -839,7 +880,7 @@ func requireBodyMatchAccount(t *testing.T, body *bytes.Buffer, account db.Accoun
 	require.Equal(t, account.Street, getAccount.Street)
 	require.Equal(t, account.Country, getAccount.Country)
 	require.Equal(t, account.Zip, getAccount.Zip)
-	require.Equal(t, account.Creator, getAccount.Creator)
+	require.Equal(t, account.Email, getAccount.Creator)
 	require.Equal(t, account.PrivacyAccepted, getAccount.PrivacyAccepted)
 	// require.WithinDuration(t, account.PrivacyAcceptedDate.Time, getAccount.PrivacyAcceptedDate.Time, time.Minute)
 }
