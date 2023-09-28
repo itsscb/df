@@ -1,28 +1,30 @@
 package token
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/aead/chacha20poly1305"
-	"github.com/o1egl/paseto"
+	"aidanwoods.dev/go-paseto"
+	"github.com/google/uuid"
 )
 
 // PasetoMaker is a PASETO token maker
 type PasetoMaker struct {
-	paseto       *paseto.V2
-	symmetricKey []byte
+	privateKey paseto.V4AsymmetricSecretKey
+	publicKey  paseto.V4AsymmetricPublicKey
+	parser     paseto.Parser
 }
 
 // NewPasetoMaker creates a new PasetoMaker
-func NewPasetoMaker(symmetricKey string) (Maker, error) {
-	if len(symmetricKey) != chacha20poly1305.KeySize {
-		return nil, fmt.Errorf("invalid key size: must be exactly %d characters", chacha20poly1305.KeySize)
+func NewPasetoMaker(privateKeyHex string) (Maker, error) {
+	privateKey, err := paseto.NewV4AsymmetricSecretKeyFromHex(privateKeyHex)
+	if err != nil {
+		return nil, err
 	}
 
 	maker := &PasetoMaker{
-		paseto:       paseto.NewV2(),
-		symmetricKey: []byte(symmetricKey),
+		privateKey: privateKey,
+		publicKey:  privateKey.Public(),
+		parser:     paseto.NewParser(),
 	}
 
 	return maker, nil
@@ -35,19 +37,47 @@ func (maker *PasetoMaker) CreateToken(email string, duration time.Duration) (str
 		return "", payload, err
 	}
 
-	token, err := maker.paseto.Encrypt(maker.symmetricKey, payload, nil)
-	return token, payload, err
+	token := paseto.NewToken()
+	token.SetNotBefore(time.Now())
+	token.SetIssuedAt(payload.IssuedAt)
+	token.SetExpiration(payload.ExpiredAt)
+	token.SetString("id", payload.ID.String())
+	token.SetString("email", payload.Email)
+
+	signed := token.V4Sign(maker.privateKey, nil)
+	return signed, payload, err
 }
 
 // VerifyToken checks if the token is valid or not
 func (maker *PasetoMaker) VerifyToken(token string) (*Payload, error) {
 	payload := &Payload{}
 
-	err := maker.paseto.Decrypt(token, maker.symmetricKey, payload, nil)
+	t, err := maker.parser.ParseV4Public(maker.publicKey, token, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	payload.ExpiredAt, err = t.GetExpiration()
 	if err != nil {
 		return nil, ErrInvalidToken
 	}
 
+	payload.IssuedAt, err = t.GetIssuedAt()
+	if err != nil {
+		return nil, ErrInvalidToken
+	}
+
+	payload.Email, err = t.GetString("email")
+	if err != nil {
+		return nil, ErrInvalidToken
+	}
+
+	uid, err := t.GetString("id")
+	if err != nil {
+		return nil, ErrInvalidToken
+	}
+
+	payload.ID = uuid.MustParse(uid)
 	err = payload.Valid()
 	if err != nil {
 		return nil, err
