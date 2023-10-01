@@ -54,7 +54,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 	router.Use(Logger())
 
-	router.POST("/accounts/login", server.loginAccount)
+	router.POST("/login", server.loginAccount)
 	router.POST("/tokens/renew_access", server.renewAccessToken)
 	router.POST("/accounts", server.createAccount)
 
