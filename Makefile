@@ -1,16 +1,10 @@
 DB_URL=postgresql://root:secret@localhost:5432/df?sslmode=disable
 
-ifeq ($(shell command -v podman 2> /dev/null),)
-    CMD=docker
-else
-    CMD=podman
-endif
-
 network:
-	$(CMD) network create df-network
+	docker network create df-network
 
 postgres:
-	$(CMD) start postgres || $(CMD) run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine
+	docker start postgres || docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine
 
 migratenew:
 	migrate create -ext sql -dir db/migration -seq init_schema
@@ -22,10 +16,10 @@ migratedown:
 	migrate -path db/migration -database $(DB_URL) -verbose down
 
 createdb:
-	$(CMD) exec -it postgres createdb --username=root --owner=root df
+	docker exec -it postgres createdb --username=root --owner=root df
 
 dropdb:
-	$(CMD) exec -it postgres dropdb df
+	docker exec -it postgres dropdb df
 
 sqlc:
 	sqlc generate
