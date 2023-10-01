@@ -183,17 +183,17 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 }
 
 type updateAccountRequest struct {
-	ID           int64     `binding:"required" json:"ID"`
-	Passwordhash string    `json:"passwordhash"`
-	Firstname    string    `json:"firstname"`
-	Lastname     string    `json:"lastname"`
-	Birthday     time.Time `json:"birthday"`
-	Email        string    `json:"email"`
-	Phone        string    `json:"phone"`
-	City         string    `json:"city"`
-	Zip          string    `json:"zip"`
-	Street       string    `json:"street"`
-	Country      string    `json:"country"`
+	ID          int64     `binding:"required" json:"ID"`
+	NewPassword string    `json:"new_password"`
+	Firstname   string    `json:"firstname"`
+	Lastname    string    `json:"lastname"`
+	Birthday    time.Time `json:"birthday"`
+	Email       string    `json:"email"`
+	Phone       string    `json:"phone"`
+	City        string    `json:"city"`
+	Zip         string    `json:"zip"`
+	Street      string    `json:"street"`
+	Country     string    `json:"country"`
 }
 
 func (server *Server) updateAccount(ctx *gin.Context) {
@@ -220,8 +220,8 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		ID:      req.ID,
 		Changer: authPayload.Email,
 		Passwordhash: sql.NullString{
-			String: req.Passwordhash,
-			Valid:  req.Passwordhash != "",
+			String: req.NewPassword,
+			Valid:  req.NewPassword != "",
 		},
 		Firstname: sql.NullString{
 			String: req.Firstname,
