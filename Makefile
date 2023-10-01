@@ -1,5 +1,9 @@
 DB_URL=postgresql://root:secret@localhost:5432/df?sslmode=disable
 
+
+initialize:
+	go mod tidy && docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine && sleep 5 && make network && make createdb && make migrateup && make test
+
 network:
 	docker network create df-network
 
@@ -39,4 +43,4 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/itsscb/df/db/sqlc Store
 
-.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server
+.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server, initialize
