@@ -1,6 +1,12 @@
 # df
 
-To first run the application in your local environment you can use ```make initialize``` or run the commands listed in ```Makefile``` unter `initialize` ***manually*** with your terminal in the repository directory.
+To first run the application in your local environment you can use 
+
+```
+make initialize
+``` 
+
+or run the commands listed in ```Makefile``` under `initialize` ***manually*** with your terminal in the repository root directory.
 
 # Prerequisites
 
@@ -16,7 +22,9 @@ If you wish to use the `Makefile` you need [`make`](https://www.gnu.org/software
 
 However if you are on *Windows* you could use [`GnuWin32.Make`](https://gnuwin32.sourceforge.net/install.html) which can be installed on *Windows 11* using:
 
-```winget install GnuWin32.Make```
+```
+winget install GnuWin32.Make
+```
 
 #### Database
 
