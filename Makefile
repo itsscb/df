@@ -11,13 +11,13 @@ postgres:
 	docker start postgres || docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine
 
 migratenew:
-	migrate create -ext sql -dir db/migration -seq init_schema
+	migrate create -ext sql -dir db/bff/migration -seq init_schema
 
 migrateup:
-	migrate -path db/migration -database $(DB_URL) -verbose up
+	migrate -path db/bff/migration -database $(DB_URL) -verbose up
 
 migratedown:
-	migrate -path db/migration -database $(DB_URL) -verbose down
+	migrate -path db/bff/migration -database $(DB_URL) -verbose down
 
 createdb:
 	docker exec -it postgres createdb --username=root --owner=root df
