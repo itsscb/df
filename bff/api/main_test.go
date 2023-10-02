@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/itsscb/df/util"
+	"github.com/itsscb/df/bff/util"
 )
 
 var config util.Config

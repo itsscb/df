@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	db "github.com/itsscb/df/db/sqlc"
-	"github.com/itsscb/df/token"
+	db "github.com/itsscb/df/bff/db/sqlc"
+	"github.com/itsscb/df/bff/token"
 	"golang.org/x/exp/slog"
 )
 

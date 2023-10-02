@@ -4,14 +4,14 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/itsscb/df/api"
-	db "github.com/itsscb/df/db/sqlc"
-	"github.com/itsscb/df/util"
+	"github.com/itsscb/df/bff/api"
+	db "github.com/itsscb/df/bff/db/sqlc"
+	"github.com/itsscb/df/bff/util"
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	config, err := util.LoadConfig(".")
+	config, err := util.LoadConfig("./..")
 	if err != nil {
 		log.Fatal("cannot load config:", err)
 	}

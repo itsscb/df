@@ -11,13 +11,13 @@ postgres:
 	docker start postgres || docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine
 
 migratenew:
-	migrate create -ext sql -dir db/migration -seq init_schema
+	migrate create -ext sql -dir bff/db/migration -seq init_schema
 
 migrateup:
-	migrate -path db/migration -database $(DB_URL) -verbose up
+	migrate -path bff/db/migration -database $(DB_URL) -verbose up
 
 migratedown:
-	migrate -path db/migration -database $(DB_URL) -verbose down
+	migrate -path bff/db/migration -database $(DB_URL) -verbose down
 
 createdb:
 	docker exec -it postgres createdb --username=root --owner=root df
@@ -32,15 +32,15 @@ sqlcinit:
 	sqlc init
 
 test:
-	go test -v -cover -short -count=1 ./...
+	cd bff && go test -v -cover -short -count=1 ./... && cd ..
 
 coverage:
-	go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
+	cd bff && go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out && cd ..
 
 server:
-	go run main.go
+	cd bff && go run main.go && cd ..
 
 mock:
-	mockgen -package mockdb -destination db/mock/store.go github.com/itsscb/df/db/sqlc Store
+	mockgen -package mockdb -destination db/mock/store.go github.com/itsscb/df/bff/db/sqlc Store
 
 .PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server, initialize

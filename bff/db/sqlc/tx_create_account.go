@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/itsscb/df/util"
+	"github.com/itsscb/df/bff/util"
 )
 
 type CreateAccountTxParams struct {

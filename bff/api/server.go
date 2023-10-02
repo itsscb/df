@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	db "github.com/itsscb/df/db/sqlc"
-	"github.com/itsscb/df/token"
-	"github.com/itsscb/df/util"
+	db "github.com/itsscb/df/bff/db/sqlc"
+	"github.com/itsscb/df/bff/token"
+	"github.com/itsscb/df/bff/util"
 )
 
 // Server serves HTTP requests for df service
