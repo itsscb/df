@@ -41,6 +41,6 @@ server:
 	cd bff && go run main.go && cd ..
 
 mock:
-	mockgen -package mockdb -destination db/mock/store.go github.com/itsscb/df/bff/db/sqlc Store
+	mockgen -package mockdb -destination bff/db/mock/store.go github.com/itsscb/df/bff/db/sqlc Store
 
 .PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server, initialize

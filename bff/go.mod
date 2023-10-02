@@ -1,4 +1,4 @@
-module github.com/itsscb/df
+module github.com/itsscb/df/bff
 
 go 1.21
 
