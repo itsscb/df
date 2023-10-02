@@ -3,15 +3,15 @@
 To first run the application in your local environment you can use 
 
 ```
-make network
-make postgres
-make backend_build_image
-make backend_run
+# to (re-)build the app image including migration
+make backend_build
+
+# to run the db and the app as docker images
+make backend
 ``` 
 
 or run those commands, listed in ```Makefile```, ***manually*** with your terminal in the repository root directory.
 
-***IMPORTANT***: You've got to have *golang-migrate* installed to run the backend.
 
 # Prerequisites
 
