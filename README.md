@@ -3,10 +3,15 @@
 To first run the application in your local environment you can use 
 
 ```
-make initialize
+make network
+make postgres
+make createdb
+make migrateup
+make backend_build_image
+make backend_run
 ``` 
 
-or run the commands listed in ```Makefile``` under `initialize` ***manually*** with your terminal in the repository root directory.
+or run those commands, listed in ```Makefile```, ***manually*** with your terminal in the repository root directory.
 
 # Prerequisites
 

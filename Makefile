@@ -1,14 +1,17 @@
 DB_URL=postgresql://root:secret@localhost:5432/df?sslmode=disable
 
 
-initialize:
-	go mod tidy && docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine && sleep 5 && make network && make createdb && make migrateup && make test
+backend_build_image:
+	docker build -t df:latest -f bff/Dockerfile
+
+backend_run:
+	make network && make postgres && docker start df || docker run --name df -p 8080:8080 --network df-network -d df:latest
 
 network:
 	docker network create df-network
 
 postgres:
-	docker start postgres || docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine
+	docker start postgres || docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret --network df-network -d postgres:15-alpine
 
 migratenew:
 	migrate create -ext sql -dir bff/db/migration -seq init_schema
