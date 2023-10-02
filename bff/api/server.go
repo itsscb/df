@@ -63,6 +63,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	authRoutes.PUT("/accounts/privacy", server.updateAccountPrivacy)
 	authRoutes.GET("/accounts/:id", server.getAccount)
 	authRoutes.GET("/accounts", server.listAccounts)
+	authRoutes.POST("/sessions", server.blockSession)
 
 	server.router = router
 	return server, nil

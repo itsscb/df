@@ -11,6 +11,7 @@ import (
 )
 
 type Querier interface {
+	BlockSession(ctx context.Context, id uuid.UUID) error
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
 	CreateDocumentMail(ctx context.Context, arg CreateDocumentMailParams) (Document, error)
 	CreateDocumentUpload(ctx context.Context, arg CreateDocumentUploadParams) (Document, error)

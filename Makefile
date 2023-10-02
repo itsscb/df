@@ -41,7 +41,7 @@ dropdb:
 	docker exec -it postgres dropdb df
 
 sqlc:
-	sqlc generate
+	cd bff && sqlc generate && cd ..
 
 sqlcinit:
 	sqlc init
@@ -56,6 +56,6 @@ server:
 	cd bff && go run main.go && cd ..
 
 mock:
-	mockgen -package mockdb -destination bff/db/mock/store.go github.com/itsscb/df/bff/db/sqlc Store
+	cd bff && mockgen -package mockdb -destination db/mock/store.go github.com/itsscb/df/bff/db/sqlc Store && cd ..
 
 .PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server backend_build backend backend-stop reset_docker
