@@ -18,9 +18,6 @@ postgres:
 migratenew:
 	migrate create -ext sql -dir bff/db/migration -seq init_schema
 
-migrate_build_image:
-	docker build -t migrate:latest -f bff/Dockerfile_golang-migrate
-
 migrateup:
 	migrate -path bff/db/migration -database $(DB_URL) -verbose up
 
