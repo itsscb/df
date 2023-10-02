@@ -1,11 +1,13 @@
 DB_URL=postgresql://root:secret@localhost:5432/df?sslmode=disable
 
+reset_docker:
+	docker rm -vf df; docker rmi -f df; docker rm -vf postgres; docker rmi -f postgres
 
 backend_build_image:
 	docker build -t df:latest -f bff/Dockerfile
 
 backend_run:
-	make network && make postgres && docker start df || docker run --name df -p 8080:8080 --network df-network -d df:latest
+	make createdb; make migrateup; docker rm -vf df; docker run --name df --rmi -p 8080:8080 --network df-network -d df:latest
 
 network:
 	docker network create df-network
@@ -15,6 +17,9 @@ postgres:
 
 migratenew:
 	migrate create -ext sql -dir bff/db/migration -seq init_schema
+
+migrate_build_image:
+	docker build -t migrate:latest -f bff/Dockerfile_golang-migrate
 
 migrateup:
 	migrate -path bff/db/migration -database $(DB_URL) -verbose up
@@ -46,4 +51,4 @@ server:
 mock:
 	mockgen -package mockdb -destination bff/db/mock/store.go github.com/itsscb/df/bff/db/sqlc Store
 
-.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server, initialize
+.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server initialize backend_build_image backend_run reset_docker

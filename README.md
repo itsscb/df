@@ -5,13 +5,13 @@ To first run the application in your local environment you can use
 ```
 make network
 make postgres
-make createdb
-make migrateup
 make backend_build_image
 make backend_run
 ``` 
 
 or run those commands, listed in ```Makefile```, ***manually*** with your terminal in the repository root directory.
+
+***IMPORTANT***: You've got to have *golang-migrate* installed to run the backend.
 
 # Prerequisites
 
@@ -58,9 +58,6 @@ You can install it as described [here](https://github.com/golang-migrate/migrate
 
 Furthermore the binary should be in your `PATH` environment variable.
 
-The two most used commands are in the `Makefile`:
-- migrateup
-- migratedown
 
 #### Server
 
