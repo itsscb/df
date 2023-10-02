@@ -6,7 +6,7 @@ To first run the application in your local environment you can use
 # to (re-)build the app image including migration
 make backend_build
 
-# to run the db and the app as docker images
+# to run the db and the app as docker containers
 make backend
 ``` 
 
