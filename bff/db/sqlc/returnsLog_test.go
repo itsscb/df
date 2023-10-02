@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/itsscb/df/util"
+	"github.com/itsscb/df/bff/util"
 	"github.com/stretchr/testify/require"
 )
 

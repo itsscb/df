@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/itsscb/df/util"
+	"github.com/itsscb/df/bff/util"
 	_ "github.com/lib/pq"
 )
 

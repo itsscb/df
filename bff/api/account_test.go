@@ -12,10 +12,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	mockdb "github.com/itsscb/df/db/mock"
-	db "github.com/itsscb/df/db/sqlc"
-	"github.com/itsscb/df/token"
-	"github.com/itsscb/df/util"
+	mockdb "github.com/itsscb/df/bff/db/mock"
+	db "github.com/itsscb/df/bff/db/sqlc"
+	"github.com/itsscb/df/bff/token"
+	"github.com/itsscb/df/bff/util"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )

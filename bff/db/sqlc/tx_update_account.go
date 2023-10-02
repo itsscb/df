@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/itsscb/df/util"
+	"github.com/itsscb/df/bff/util"
 )
 
 type UpdateAccountTxParams struct {

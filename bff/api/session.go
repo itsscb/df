@@ -8,8 +8,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	db "github.com/itsscb/df/db/sqlc"
-	"github.com/itsscb/df/util"
+	db "github.com/itsscb/df/bff/db/sqlc"
+	"github.com/itsscb/df/bff/util"
 )
 
 type loginAccountRequest struct {
