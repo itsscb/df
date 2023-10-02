@@ -1,4 +1,5 @@
 DB_URL=postgresql://root:secret@localhost:5432/df?sslmode=disable
+count=-all
 
 reset_docker:
 	docker rm -vf df; docker rmi -f df; docker rm -vf postgres; docker rmi -f postgres; docker rm -vf migrate
@@ -19,7 +20,6 @@ backend:
 backend-stop:
 	docker stop postgres; docker stop df
 
-
 network:
 	docker network create df-network
 
@@ -27,13 +27,13 @@ postgres:
 	docker start postgres || docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret --network df-network -d postgres:15-alpine
 
 migratenew:
-	migrate create -ext sql -dir bff/db/migration -seq init_schema
+	docker run --name migratenew --privileged=true --rm -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ create -ext sql -dir migrations -seq $(name)
 
 migrateup:
-	docker run --name migrateup --privileged=true --rm -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) up
+	docker run --name migrateup --privileged=true --rm -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) up $(count)
 
 migratedown:
-	docker run --name migratedown --privileged=true --rm -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) down -all
+	docker run --name migratedown --privileged=true --rm -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) down $(count)
 
 createdb:
 	docker exec -it postgres createdb --username=root --owner=root df
