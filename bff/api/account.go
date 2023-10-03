@@ -93,7 +93,7 @@ func (server *Server) getAccount(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
 	}
-	//v4.public.eyJlbWFpbCI6ImFAYi5jZSIsImV4cCI6IjIwMjMtMTAtMDRUMDA6NDY6NDYrMDI6MDAiLCJpYXQiOiIyMDIzLTEwLTA0VDAwOjMxOjQ2KzAyOjAwIiwiaWQiOiJhZWU0MGE0NC0yMGIwLTQ3YmYtYmI5Yy04M2Y3ZmI5ZTU0MTEiLCJuYmYiOiIyMDIzLTEwLTA0VDAwOjMxOjQ2KzAyOjAwIn2ZcKWD7cA7y_aHnfUtYOnaR6iCYFaFOY5BbUQkyTpu-ZK9xyaHO1_j9GqAZ6GbntmtWktojWRBkLpoWEntMuQM
+
 	ctx.JSON(http.StatusOK, account)
 }
 
