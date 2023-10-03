@@ -1,0 +1,561 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "df API",
+    "version": "1.0",
+    "contact": {
+      "name": "itsscb",
+      "url": "https://github.com/itsscb/df",
+      "email": "dev@itsscb.de"
+    }
+  },
+  "tags": [
+    {
+      "name": "df"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/accounts/{id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get account",
+        "description": "Use this API to get a new account",
+        "operationId": "df_GetAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/GetAccountResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetAccountRequest"
+            }
+          }
+      ],
+        "tags": [
+          "df"
+        ]
+      }
+    },
+    "/accounts": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/definitions/CreateAccountRequest"
+              }
+            }
+          }
+        },
+        "summary": "Create new account",
+        "description": "Use this API to create a new account",
+        "operationId": "df_CreateAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/CreateAccountResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+              "schema": {
+              "$ref": "#/definitions/CreateAccountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ]
+      },
+      "put": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/definitions/UpdateAccountRequest"
+              }
+            }
+          }
+        },
+        "security": [
+            {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update account",
+        "description": "Use this API to update account",
+        "operationId": "df_UpdateAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+              "$ref": "#/definitions/UpdateAccountResponse"
+              }
+            }
+          }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+              "schema": {
+              "$ref": "#/definitions/UpdateAccountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ]
+      }
+    },
+    "/accounts/privacy": {
+      "put": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/definitions/UpdateAccountPrivacyRequest"
+              }
+            }
+          }
+        },
+        "security": [
+            {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update account privacy settings",
+        "description": "Use this API to update account privacy settings",
+        "operationId": "df_UpdateAccountPrivacy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+              "schema": {
+              "$ref": "#/definitions/UpdateAccountPrivacyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ]
+      }
+    },
+    "/login": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/definitions/LoginAccountRequest"
+              }
+            }
+          }
+        },
+        "summary": "Login account",
+        "description": "Use this API to login account and get access token \u0026 refresh token",
+        "operationId": "df_LoginAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LoginAccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+              "schema": {
+              "$ref": "#/definitions/LoginAccountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ]
+      }
+    }
+  },
+  "security": {
+    "bearerAuth": []
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "paseto",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "passwordhash": {
+            "type": "string",
+            "format": "password"
+          },
+          "permission_level": {
+            "type": "integer"
+          },
+          "privacy_accepted": {
+            "type": "object",
+            "properties": {
+              "Bool": {
+                "type": "boolean"
+              },
+              "Valid": {
+                "type": "boolean"
+              }
+            }
+          },
+          "privacy_accepted_date": {
+            "type": "object",
+            "properties": {
+              "Time": {
+                "type":"string",
+                "format": "date-time"
+              },
+              "Valid": {
+                "type": "boolean"
+              }
+            }
+          },
+          "phone": {
+            "type": "object",
+            "properties": {
+              "String": {
+                "type": "string"
+              },
+              "Valid": {
+                "type": "boolean"
+              }
+            }
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "birthday": {
+            "type":"string",
+            "format": "date-time"
+          },
+          "street": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "zip": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "creator": {
+            "type": "string"
+          },
+          "created": {
+            "type":"string",
+            "format": "date-time"
+          },
+          "changer": {
+            "type": "string"
+          },
+          "changed": {
+            "type":"string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateAccountRequest": {
+      "required": [
+        "firstname",
+        "lastname",
+        "city",
+        "zip",
+        "street",
+        "country",
+        "email",
+        "password",
+        "birthday"
+      ],
+      "type": "object",
+      "properties": {
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "birthday": {
+          "type":"string",
+          "format": "date-time"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "format": "password"
+        }
+      }
+    },
+    "CreateAccountResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/components/schemas/Account"
+        }
+      }
+    },
+    "GetAccountRequest": {
+      "required": [
+        "id"
+      ],
+      "type": "integer",
+      "format": "int64"
+    },
+    "GetAccountResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/components/schemas/Account"
+        }
+      }
+    },
+    "LoginAccountRequest": {
+      "required": [
+        "email",
+        "password"
+      ],
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "format": "password"
+        }
+      }
+    },
+    "UpdateAccountPrivacyRequest": {
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "privacy_accepted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "UpdateAccountPrivacyResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/components/schemas/Account"
+        }
+      }
+    },
+    "UpdateAccountRequest": {
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "new_password": {
+          "type": "string",
+          "format": "password"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "UpdateAccountResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/components/schemas/Account"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

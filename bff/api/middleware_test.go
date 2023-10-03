@@ -91,7 +91,7 @@ func TestAuthMiddleware(t *testing.T) {
 
 			store := mockdb.NewMockStore(ctrl)
 
-			server, err := NewServer(config, store)
+			server, err := NewServer(config, store, nil)
 			require.NoError(t, err)
 			authPath := "/auth"
 			server.router.GET(
