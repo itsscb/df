@@ -9,7 +9,7 @@ import (
 type UpdateAccountPrivacyTxParams struct {
 	ID              int64  `json:"ID"`
 	Changer         string `json:"changer"`
-	PrivacyAccepted bool   `json:"privacy_accepted"`
+	PrivacyAccepted *bool  `json:"privacy_accepted"`
 }
 
 type UpdateAccountPrivacyTxResult struct {
@@ -17,19 +17,16 @@ type UpdateAccountPrivacyTxResult struct {
 }
 
 func (store *SQLStore) UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAccountPrivacyTxParams) (Account, error) {
-	var result UpdateAccountPrivacyTxResult
-	param := UpdateAccountPrivacyParams{
-		ID:      arg.ID,
-		Changer: arg.Changer,
-	}
+	var date sql.NullTime
+	var account Account
 
-	if arg.PrivacyAccepted {
-		param.PrivacyAcceptedDate = sql.NullTime{
+	if *arg.PrivacyAccepted {
+		date = sql.NullTime{
 			Valid: true,
 			Time:  time.Now(),
 		}
 	} else {
-		param.PrivacyAcceptedDate = sql.NullTime{
+		date = sql.NullTime{
 			Valid: true,
 			Time:  time.Time{},
 		}
@@ -38,9 +35,17 @@ func (store *SQLStore) UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAcc
 
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
-		result.Account, err = q.UpdateAccountPrivacy(ctx, param)
+		account, err = q.UpdateAccountPrivacy(ctx, UpdateAccountPrivacyParams{
+			PrivacyAccepted: sql.NullBool{
+				Bool:  *arg.PrivacyAccepted,
+				Valid: true,
+			},
+			PrivacyAcceptedDate: date,
+			ID:                  arg.ID,
+			Changer:             arg.Changer,
+		})
 		return err
 	})
 
-	return result.Account, err
+	return account, err
 }

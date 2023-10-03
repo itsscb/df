@@ -163,7 +163,7 @@ func TestCreateAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server, err := NewServer(config, store)
+			server, err := NewServer(config, store, nil)
 			require.NoError(t, err)
 
 			recorder := httptest.NewRecorder()
@@ -299,7 +299,7 @@ func TestGetAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server, err := NewServer(config, store)
+			server, err := NewServer(config, store, nil)
 			require.NoError(t, err)
 			recorder := httptest.NewRecorder()
 
@@ -447,7 +447,7 @@ func TestUpdateAccountTxAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server, err := NewServer(config, store)
+			server, err := NewServer(config, store, nil)
 			require.NoError(t, err)
 
 			recorder := httptest.NewRecorder()
@@ -601,7 +601,7 @@ func TestListAccountsAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server, err := NewServer(config, store)
+			server, err := NewServer(config, store, nil)
 			require.NoError(t, err)
 
 			recorder := httptest.NewRecorder()
@@ -643,9 +643,10 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, account.Email, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
+				trueBool := true
 				arg := db.UpdateAccountPrivacyTxParams{
 					ID:              account.ID,
-					PrivacyAccepted: true,
+					PrivacyAccepted: &trueBool,
 					Changer:         account.Email,
 				}
 
@@ -689,9 +690,11 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, account.Email, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
+				trueBool := true
+
 				arg := db.UpdateAccountPrivacyTxParams{
 					ID:              account.ID,
-					PrivacyAccepted: true,
+					PrivacyAccepted: &trueBool,
 					Changer:         account.Email,
 				}
 
@@ -735,9 +738,11 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, account.Email, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
+				falseBool := false
+
 				arg := db.UpdateAccountPrivacyTxParams{
 					ID:              account.ID,
-					PrivacyAccepted: false,
+					PrivacyAccepted: &falseBool,
 					Changer:         account.Email,
 				}
 
@@ -806,7 +811,7 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server, err := NewServer(config, store)
+			server, err := NewServer(config, store, nil)
 			require.NoError(t, err)
 
 			recorder := httptest.NewRecorder()

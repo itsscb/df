@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"log/slog"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -13,28 +14,38 @@ import (
 
 // Server serves HTTP requests for df service
 type Server struct {
-	store      db.Store
-	router     *gin.Engine
-	config     util.Config
-	tokenMaker token.Maker
+	store        db.Store
+	router       *gin.Engine
+	config       util.Config
+	tokenMaker   token.Maker
+	swaggerFiles http.FileSystem
 }
 
 // NewServer creates a new HTTP server and sets up routing
-func NewServer(config util.Config, store db.Store) (*Server, error) {
+func NewServer(config util.Config, store db.Store, swaggerFS http.FileSystem) (*Server, error) {
 	tokenMaker, err := token.NewPasetoMaker(config.TokenPrivateKeyHex)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
 	}
 
 	server := &Server{
-		store:      store,
-		config:     config,
-		tokenMaker: tokenMaker,
+		store:        store,
+		config:       config,
+		tokenMaker:   tokenMaker,
+		swaggerFiles: swaggerFS,
 	}
+	router := gin.New()
+
+	router.Use(gin.Recovery())
 
 	logLevel := slog.LevelError
 	if config.Environment == "development" {
 		logLevel = slog.LevelDebug
+		// router.Static("/swagger/", "./doc/swagger/")
+	}
+
+	if swaggerFS != nil {
+		router.StaticFS("/swagger/", swaggerFS)
 	}
 
 	opts := slog.HandlerOptions{
@@ -47,10 +58,6 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	}
 
 	slog.SetDefault(logger)
-
-	router := gin.New()
-
-	router.Use(gin.Recovery())
 
 	router.Use(Logger())
 
