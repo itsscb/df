@@ -41,7 +41,6 @@ func NewServer(config util.Config, store db.Store, swaggerFS http.FileSystem) (*
 	logLevel := slog.LevelError
 	if config.Environment == "development" {
 		logLevel = slog.LevelDebug
-		// router.Static("/swagger/", "./doc/swagger/")
 	}
 
 	if swaggerFS != nil {

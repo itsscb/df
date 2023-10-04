@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "account.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message UpdateAccountPrivacyRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Update Account Privacy Consent";
+          description: "Update the Privacy Consent of an Account";
+          required: [
+            "id",
+            "privacy_accepted"
+          ];
+        };
+        example: "{\"id\": 185, \"privacy_accepted\": true }"
+    };
+    int64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        example: "185",
+        format: "int64"
+      }];
+    optional bool privacy_accepted = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        example: "false"
+    }];
+}
+
+message UpdateAccountPrivacyResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Update Account Privacy Response";
+        };
+    };
+    Account account = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title: "Updated Account"
+    }];
+}

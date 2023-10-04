@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message LoginRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Login";
+          description: "Login an Account";
+          required: [
+            "email",
+            "password"
+          ];
+        };
+        example: "{\"email\": \"john.doe@example.com\", \"password\": \"MayTheForceBeWithYou!\"}";
+    };
+    string email = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        // title: "Email Address",
+        format: "email",
+        example: "\"john.doe@example.com\""
+      }];
+    string password = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        // title: "Password",
+        format: "password",
+        example: "\"MayTheForceBeWithYou!\""
+      }];
+}
+
+message LoginResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Login Response";
+        };
+        // example: "{\"email\": \"john.doe@example.com\", \"password\": \"MayTheForceBeWithYou!\"}";
+    };
+    string session_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        // title: "Session ID",
+        format: "uuid",
+        example: "\"5e1d67da-7c9b-4365-a4d5-3cc0a051241e\""
+      }];
+    string access_token = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        // title: "Access Token",
+        example: "\"v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA1VDAxOjE3OjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiZjlhMjE2OWQtMWYxYS00YThiLTgzZWEtNzkxMzY5YjY3ZmYxIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9Ah0bVbx9S1LR-pf8hLWVRQPUfK9zrHZvA7ApJ5aZXwhA7H1j-kHhccBjOAGYXZQT-ts7Jq3SJlzo5vtUjGBtDg\""
+      }];
+    google.protobuf.Timestamp access_token_expires_at = 3;
+    string refresh_token = 4 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        // title: "Refresh Token",
+        example: "\"v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw\""
+      }];
+    google.protobuf.Timestamp refresh_token_expires_at = 5;
+    string email = 6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        // title: "Email Address",
+        format: "email",
+        example: "\"john.doe@example.com\""
+      }];
+}

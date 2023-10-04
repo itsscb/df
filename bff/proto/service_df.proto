@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "rpc_create_account.proto";
+import "rpc_update_account.proto";
+import "rpc_block_session.proto";
+import "rpc_update_account_privacy.proto";
+import "rpc_login.proto";
+import "rpc_refresh_token.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "df API";
+        version: "1.0";
+        contact: {
+            name: "itsscb";
+            url: "https://github.com/itsscb/df";
+            email: "dev@itsscb.de";
+        };
+    };
+    schemes: HTTP;
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+    security_definitions: {
+        security: {
+            key: "BearerAuth";
+            value: {type: TYPE_API_KEY}
+        }
+    }
+};
+
+service Sessions {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+      description: "Sessions"
+    };
+    rpc Login (LoginRequest) returns (LoginResponse) {
+        option (google.api.http) = {
+            post: "/v1/login"
+            body: "*"
+        };
+    };
+    rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {
+        option (google.api.http) = {
+            post: "/v1/refresh_token"
+            body: "*"
+        };
+    };
+    rpc BlockSession (BlockSessionRequest) returns (BlockSessionResponse) {
+        option (google.api.http) = {
+            post: "/v1/block_session"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+}
+
+service Accounts {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+      description: "Account"
+    };
+    rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse) {
+        option (google.api.http) = {
+            post: "/v1/create_account"
+            body: "*"
+        };
+    };
+    rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
+        option (google.api.http) = {
+            post: "/v1/update_account"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc UpdateAccountPrivacy (UpdateAccountPrivacyRequest) returns (UpdateAccountPrivacyResponse) {
+        option (google.api.http) = {
+            post: "/v1/update_account_privacy"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+};

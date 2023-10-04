@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.0",
+  "swagger": "2.0",
   "info": {
     "title": "df API",
     "version": "1.0",
@@ -11,8 +11,17 @@
   },
   "tags": [
     {
-      "name": "df"
+      "name": "Sessions",
+      "description": "Sessions"
+    },
+    {
+      "name": "Accounts",
+      "description": "Account"
     }
+  ],
+  "schemes": [
+    "http",
+    "https"
   ],
   "consumes": [
     "application/json"
@@ -21,25 +30,14 @@
     "application/json"
   ],
   "paths": {
-    "/accounts/{id}": {
-      "get": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "Get account",
-        "description": "Use this API to get a new account",
-        "operationId": "df_GetAccount",
+    "/v1/block_session": {
+      "post": {
+        "operationId": "Sessions_BlockSession",
         "responses": {
           "200": {
             "description": "A successful response.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/definitions/GetAccountResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/pbBlockSessionResponse"
             }
           },
           "default": {
@@ -51,192 +49,33 @@
         },
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
+            "name": "body",
+            "description": "Block a Session",
+            "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetAccountRequest"
-            }
-          }
-      ],
-        "tags": [
-          "df"
-        ]
-      }
-    },
-    "/accounts": {
-      "post": {
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/definitions/CreateAccountRequest"
-              }
-            }
-          }
-        },
-        "summary": "Create new account",
-        "description": "Use this API to create a new account",
-        "operationId": "df_CreateAccount",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/definitions/CreateAccountResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-              "schema": {
-              "$ref": "#/definitions/CreateAccountRequest"
+              "$ref": "#/definitions/pbBlockSessionRequest"
             }
           }
         ],
         "tags": [
-          "df"
-        ]
-      },
-      "put": {
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/definitions/UpdateAccountRequest"
-              }
-            }
-          }
-        },
+          "Sessions"
+        ],
         "security": [
-            {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "Update account",
-        "description": "Use this API to update account",
-        "operationId": "df_UpdateAccount",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "content": {
-              "application/json": {
-                "schema": {
-              "$ref": "#/definitions/UpdateAccountResponse"
-              }
-            }
-          }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
           {
-            "name": "body",
-            "in": "body",
-              "schema": {
-              "$ref": "#/definitions/UpdateAccountRequest"
-            }
+            "BearerAuth": []
           }
-        ],
-        "tags": [
-          "df"
         ]
       }
     },
-    "/accounts/privacy": {
-      "put": {
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/definitions/UpdateAccountPrivacyRequest"
-              }
-            }
-          }
-        },
-        "security": [
-            {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "Update account privacy settings",
-        "description": "Use this API to update account privacy settings",
-        "operationId": "df_UpdateAccountPrivacy",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Account"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-              "schema": {
-              "$ref": "#/definitions/UpdateAccountPrivacyRequest"
-            }
-          }
-        ],
-        "tags": [
-          "df"
-        ]
-      }
-    },
-    "/login": {
+    "/v1/create_account": {
       "post": {
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/definitions/LoginAccountRequest"
-              }
-            }
-          }
-        },
-        "summary": "Login account",
-        "description": "Use this API to login account and get access token \u0026 refresh token",
-        "operationId": "df_LoginAccount",
+        "operationId": "Accounts_CreateAccount",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/LoginAccountResponse"
+              "$ref": "#/definitions/pbCreateAccountResponse"
             }
           },
           "default": {
@@ -249,141 +88,198 @@
         "parameters": [
           {
             "name": "body",
+            "description": "Create an Account",
             "in": "body",
-              "schema": {
-              "$ref": "#/definitions/LoginAccountRequest"
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateAccountRequest"
             }
           }
         ],
         "tags": [
-          "df"
+          "Accounts"
         ]
       }
-    }
-  },
-  "security": {
-    "bearerAuth": []
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "paseto",
-        "in": "header"
+    },
+    "/v1/login": {
+      "post": {
+        "operationId": "Sessions_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbLoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Login an Account",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Sessions"
+        ]
       }
     },
-    "schemas": {
-      "Account": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "email": {
-            "type": "string"
-          },
-          "passwordhash": {
-            "type": "string",
-            "format": "password"
-          },
-          "permission_level": {
-            "type": "integer"
-          },
-          "privacy_accepted": {
-            "type": "object",
-            "properties": {
-              "Bool": {
-                "type": "boolean"
-              },
-              "Valid": {
-                "type": "boolean"
-              }
+    "/v1/refresh_token": {
+      "post": {
+        "operationId": "Sessions_RefreshToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbRefreshTokenResponse"
             }
           },
-          "privacy_accepted_date": {
-            "type": "object",
-            "properties": {
-              "Time": {
-                "type":"string",
-                "format": "date-time"
-              },
-              "Valid": {
-                "type": "boolean"
-              }
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
             }
-          },
-          "phone": {
-            "type": "object",
-            "properties": {
-              "String": {
-                "type": "string"
-              },
-              "Valid": {
-                "type": "boolean"
-              }
-            }
-          },
-          "firstname": {
-            "type": "string"
-          },
-          "lastname": {
-            "type": "string"
-          },
-          "birthday": {
-            "type":"string",
-            "format": "date-time"
-          },
-          "street": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "zip": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "creator": {
-            "type": "string"
-          },
-          "created": {
-            "type":"string",
-            "format": "date-time"
-          },
-          "changer": {
-            "type": "string"
-          },
-          "changed": {
-            "type":"string",
-            "format": "date-time"
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Get a new Access Token by submitting the Refresh Token",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbRefreshTokenRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Sessions"
+        ]
+      }
+    },
+    "/v1/update_account": {
+      "post": {
+        "operationId": "Accounts_UpdateAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Update an Account",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/update_account_privacy": {
+      "post": {
+        "operationId": "Accounts_UpdateAccountPrivacy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountPrivacyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Update the Privacy Consent of an Account",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountPrivacyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     }
   },
   "definitions": {
-    "CreateAccountRequest": {
-      "required": [
-        "firstname",
-        "lastname",
-        "city",
-        "zip",
-        "street",
-        "country",
-        "email",
-        "password",
-        "birthday"
-      ],
+    "pbAccount": {
       "type": "object",
+      "example": {
+        "id": 185,
+        "email": "john.doe@example.com",
+        "firstname": "John",
+        "lastname": "Doe",
+        "phone": "",
+        "street": "Death Star 2",
+        "zip": "0815",
+        "city": "New York",
+        "country": "USA",
+        "birthday": "1990-10-05T00:00:0Z",
+        "privacy_accepted": false,
+        "privacy_accepted_date": "0001-01-01T00:00:00Z",
+        "creator": "john.doe@example.com",
+        "created": "2023-10-05T02:30:53Z",
+        "changer": "john.doe@example.com",
+        "changed": "2023-10-05T02:30:53Z"
+      },
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "email": {
+          "type": "string"
+        },
         "firstname": {
           "type": "string"
         },
         "lastname": {
+          "type": "string"
+        },
+        "street": {
           "type": "string"
         },
         "city": {
@@ -395,105 +291,293 @@
         "country": {
           "type": "string"
         },
-        "street": {
-          "type": "string"
-        },
         "birthday": {
-          "type":"string",
+          "type": "string",
           "format": "date-time"
         },
         "phone": {
           "type": "string"
         },
+        "privacyAccepted": {
+          "type": "boolean"
+        },
+        "privacyAcceptedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "permissionLevel": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "changer": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "Account"
+    },
+    "pbBlockSessionRequest": {
+      "type": "object",
+      "example": {
+        "session_id": "5e1d67da-7c9b-4365-a4d5-3cc0a051241e"
+      },
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "format": "uuid",
+          "example": "5e1d67da-7c9b-4365-a4d5-3cc0a051241e"
+        }
+      },
+      "description": "Block a Session",
+      "title": "Block Session",
+      "required": [
+        "sessionId"
+      ]
+    },
+    "pbBlockSessionResponse": {
+      "type": "object",
+      "example": {
+        "session_id": "5e1d67da-7c9b-4365-a4d5-3cc0a051241e",
+        "blocked": true
+      },
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "format": "uuid",
+          "example": "5e1d67da-7c9b-4365-a4d5-3cc0a051241e"
+        },
+        "blocked": {
+          "type": "boolean",
+          "example": true
+        }
+      },
+      "title": "Blocked Session"
+    },
+    "pbCreateAccountRequest": {
+      "type": "object",
+      "example": {
+        "email": "john.doe@example.com",
+        "password": "MayTheForceBeWithYou!",
+        "firstname": "John",
+        "lastname": "Doe",
+        "street": "Main Street 1",
+        "zip": "0815",
+        "city": "New York",
+        "country": "USA",
+        "birthday": "1990-10-05T00:00:0Z"
+      },
+      "properties": {
         "email": {
           "type": "string"
         },
         "password": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "birthday": {
           "type": "string",
-          "format": "password"
+          "format": "date-time",
+          "example": "1990-10-05T00:00:0Z"
+        },
+        "privacyAccepted": {
+          "type": "boolean",
+          "example": true
         }
-      }
-    },
-    "CreateAccountResponse": {
-      "type": "object",
-      "properties": {
-        "account": {
-          "$ref": "#/components/schemas/Account"
-        }
-      }
-    },
-    "GetAccountRequest": {
+      },
+      "description": "Create an Account",
+      "title": "Create Account",
       "required": [
-        "id"
-      ],
-      "type": "integer",
-      "format": "int64"
+        "email",
+        "password",
+        "firstname",
+        "lastname",
+        "street",
+        "city",
+        "zip",
+        "country",
+        "birthday"
+      ]
     },
-    "GetAccountResponse": {
+    "pbCreateAccountResponse": {
       "type": "object",
       "properties": {
         "account": {
-          "$ref": "#/components/schemas/Account"
+          "$ref": "#/definitions/pbAccount"
         }
-      }
+      },
+      "description": "Returns the created Account",
+      "title": "Created Account"
     },
-    "LoginAccountRequest": {
+    "pbLoginRequest": {
+      "type": "object",
+      "example": {
+        "email": "john.doe@example.com",
+        "password": "MayTheForceBeWithYou!"
+      },
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "example": "john.doe@example.com"
+        },
+        "password": {
+          "type": "string",
+          "format": "password",
+          "example": "MayTheForceBeWithYou!"
+        }
+      },
+      "description": "Login an Account",
+      "title": "Login",
       "required": [
         "email",
         "password"
-      ],
+      ]
+    },
+    "pbLoginResponse": {
       "type": "object",
       "properties": {
+        "sessionId": {
+          "type": "string",
+          "format": "uuid",
+          "example": "5e1d67da-7c9b-4365-a4d5-3cc0a051241e"
+        },
+        "accessToken": {
+          "type": "string",
+          "example": "v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA1VDAxOjE3OjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiZjlhMjE2OWQtMWYxYS00YThiLTgzZWEtNzkxMzY5YjY3ZmYxIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9Ah0bVbx9S1LR-pf8hLWVRQPUfK9zrHZvA7ApJ5aZXwhA7H1j-kHhccBjOAGYXZQT-ts7Jq3SJlzo5vtUjGBtDg"
+        },
+        "accessTokenExpiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "refreshToken": {
+          "type": "string",
+          "example": "v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw"
+        },
+        "refreshTokenExpiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
         "email": {
           "type": "string",
-          "format": "email"
-        },
-        "password": {
-          "type": "string",
-          "format": "password"
+          "format": "email",
+          "example": "john.doe@example.com"
         }
-      }
+      },
+      "title": "Login Response"
     },
-    "UpdateAccountPrivacyRequest": {
+    "pbRefreshTokenRequest": {
+      "type": "object",
+      "example": {
+        "refresh_token": "v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw"
+      },
+      "properties": {
+        "refreshToken": {
+          "type": "string",
+          "example": "v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw",
+          "title": "Refresh Token"
+        }
+      },
+      "description": "Get a new Access Token by submitting the Refresh Token",
+      "title": "Refresh Token Request",
       "required": [
-        "id"
-      ],
+        "refreshToken"
+      ]
+    },
+    "pbRefreshTokenResponse": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
+        "accessToken": {
+          "type": "string",
+          "example": "v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA1VDAxOjE3OjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiZjlhMjE2OWQtMWYxYS00YThiLTgzZWEtNzkxMzY5YjY3ZmYxIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9Ah0bVbx9S1LR-pf8hLWVRQPUfK9zrHZvA7ApJ5aZXwhA7H1j-kHhccBjOAGYXZQT-ts7Jq3SJlzo5vtUjGBtDg",
+          "title": "Access Token"
         },
-        "privacy_accepted": {
-          "type": "boolean"
+        "accessTokenExpiresAt": {
+          "type": "string",
+          "format": "date-time"
         }
-      }
+      },
+      "title": "Refresh Token Response"
     },
-    "UpdateAccountPrivacyResponse": {
+    "pbUpdateAccountPrivacyRequest": {
+      "type": "object",
+      "example": {
+        "id": 185,
+        "privacy_accepted": true
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "example": 185
+        },
+        "privacyAccepted": {
+          "type": "boolean",
+          "example": true
+        }
+      },
+      "description": "Update the Privacy Consent of an Account",
+      "title": "Update Account Privacy Consent",
+      "required": [
+        "id",
+        "privacyAccepted"
+      ]
+    },
+    "pbUpdateAccountPrivacyResponse": {
       "type": "object",
       "properties": {
         "account": {
-          "$ref": "#/components/schemas/Account"
+          "$ref": "#/definitions/pbAccount",
+          "title": "Updated Account"
         }
-      }
+      },
+      "title": "Update Account Privacy Response"
     },
-    "UpdateAccountRequest": {
-      "required": [
-        "id"
-      ],
+    "pbUpdateAccountRequest": {
       "type": "object",
+      "example": {
+        "id": 195,
+        "street": "Death Star 2"
+      },
       "properties": {
         "id": {
-          "type": "integer",
+          "type": "string",
           "format": "int64"
         },
-        "new_password": {
-          "type": "string",
-          "format": "password"
-        },
         "email": {
-          "type": "string",
-          "format": "email"
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
         },
         "firstname": {
           "type": "string"
@@ -501,7 +585,7 @@
         "lastname": {
           "type": "string"
         },
-        "phone": {
+        "street": {
           "type": "string"
         },
         "city": {
@@ -510,25 +594,33 @@
         "zip": {
           "type": "string"
         },
-        "street": {
+        "country": {
           "type": "string"
         },
-        "country": {
+        "phone": {
           "type": "string"
         },
         "birthday": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "example": "1990-10-05T00:00:0Z"
         }
-      }
+      },
+      "description": "Update an Account",
+      "title": "Update Account",
+      "required": [
+        "id"
+      ]
     },
-    "UpdateAccountResponse": {
+    "pbUpdateAccountResponse": {
       "type": "object",
       "properties": {
         "account": {
-          "$ref": "#/components/schemas/Account"
+          "$ref": "#/definitions/pbAccount"
         }
-      }
+      },
+      "description": "Returns the updated Account",
+      "title": "Updated Account"
     },
     "protobufAny": {
       "type": "object",
@@ -552,10 +644,16 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey"
     }
   }
 }
