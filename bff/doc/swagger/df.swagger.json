@@ -97,6 +97,85 @@
         ]
       }
     },
+    "/v1/get_account": {
+      "get": {
+        "operationId": "df_GetAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetAccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/list_accounts": {
+      "get": {
+        "operationId": "df_ListAccounts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListAccountsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageId",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/login": {
       "post": {
         "operationId": "df_Login",
@@ -434,6 +513,30 @@
       "description": "Returns the created Account",
       "title": "Created Account"
     },
+    "pbGetAccountResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/pbAccount"
+        }
+      },
+      "description": "Returns the Account",
+      "title": "GetAccount Response"
+    },
+    "pbListAccountsResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbAccount"
+          }
+        }
+      },
+      "description": "Returns the Account",
+      "title": "ListAccounts Response"
+    },
     "pbLoginRequest": {
       "type": "object",
       "example": {
@@ -599,7 +702,7 @@
         "birthday": {
           "type": "string",
           "format": "date-time",
-          "example": "1990-10-05T00:00:0Z"
+          "example": "1990-10-05T00:00:00Z"
         }
       },
       "description": "Update an Account",
@@ -649,7 +752,9 @@
   },
   "securityDefinitions": {
     "BearerAuth": {
-      "type": "apiKey"
+      "type": "apiKey",
+      "name": "Authorization Bearer",
+      "in": "header"
     }
   }
 }
