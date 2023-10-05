@@ -10,6 +10,41 @@ import (
 	"database/sql"
 )
 
+const cloneProviders = `-- name: CloneProviders :exec
+INSERT INTO returns (
+    "provider_id",
+    "name",
+    "description",
+    "category",
+    "email",
+    "status",
+    "creator",
+    "changer",
+    "person_id"
+)
+SELECT 
+    "id",
+    "name",
+    "description",
+    "category",
+    "email",
+    'new',
+    $1,
+    $1,
+    $2
+FROM providers
+`
+
+type CloneProvidersParams struct {
+	Creator  string `json:"creator"`
+	PersonID int64  `json:"person_id"`
+}
+
+func (q *Queries) CloneProviders(ctx context.Context, arg CloneProvidersParams) error {
+	_, err := q.db.ExecContext(ctx, cloneProviders, arg.Creator, arg.PersonID)
+	return err
+}
+
 const createReturn = `-- name: CreateReturn :one
 INSERT INTO returns (
     "person_id",

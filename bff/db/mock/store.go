@@ -54,6 +54,20 @@ func (mr *MockStoreMockRecorder) BlockSession(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockSession", reflect.TypeOf((*MockStore)(nil).BlockSession), arg0, arg1)
 }
 
+// CloneProviders mocks base method.
+func (m *MockStore) CloneProviders(arg0 context.Context, arg1 db.CloneProvidersParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CloneProviders", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CloneProviders indicates an expected call of CloneProviders.
+func (mr *MockStoreMockRecorder) CloneProviders(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloneProviders", reflect.TypeOf((*MockStore)(nil).CloneProviders), arg0, arg1)
+}
+
 // CreateAccount mocks base method.
 func (m *MockStore) CreateAccount(arg0 context.Context, arg1 db.CreateAccountParams) (db.Account, error) {
 	m.ctrl.T.Helper()
@@ -479,6 +493,21 @@ func (m *MockStore) GetReturn(arg0 context.Context, arg1 int64) (db.Return, erro
 func (mr *MockStoreMockRecorder) GetReturn(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReturn", reflect.TypeOf((*MockStore)(nil).GetReturn), arg0, arg1)
+}
+
+// GetReturns mocks base method.
+func (m *MockStore) GetReturns(arg0 context.Context, arg1 int64) ([]db.Return, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetReturns", arg0, arg1)
+	ret0, _ := ret[0].([]db.Return)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetReturns indicates an expected call of GetReturns.
+func (mr *MockStoreMockRecorder) GetReturns(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReturns", reflect.TypeOf((*MockStore)(nil).GetReturns), arg0, arg1)
 }
 
 // GetReturnsLog mocks base method.

@@ -109,6 +109,47 @@ func (q *Queries) GetPerson(ctx context.Context, id int64) (Person, error) {
 	return i, err
 }
 
+const getReturns = `-- name: GetReturns :many
+SELECT id, person_id, provider_id, name, description, category, email, status, creator, created, changer, changed FROM returns
+WHERE "person_id" = $1
+`
+
+func (q *Queries) GetReturns(ctx context.Context, id int64) ([]Return, error) {
+	rows, err := q.db.QueryContext(ctx, getReturns, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Return{}
+	for rows.Next() {
+		var i Return
+		if err := rows.Scan(
+			&i.ID,
+			&i.PersonID,
+			&i.ProviderID,
+			&i.Name,
+			&i.Description,
+			&i.Category,
+			&i.Email,
+			&i.Status,
+			&i.Creator,
+			&i.Created,
+			&i.Changer,
+			&i.Changed,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listPersons = `-- name: ListPersons :many
 SELECT id, account_id, firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed FROM persons
 ORDER BY "lastname", "firstname"
