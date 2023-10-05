@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "account.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message UpdateAccountRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Update Account";
+          description: "Update an Account";
+          required: [
+            "id"
+            ];
+        };
+        example: "{\"id\": 195, \"street\": \"Death Star 2\"}";
+    };
+    int64 id = 1;
+    optional string email = 2;
+    optional string password = 3;
+    optional string firstname = 4;
+    optional string lastname = 5;
+    optional string street = 6;
+    optional string city = 7;
+    optional string zip = 8;
+    optional string country = 9;
+    optional string phone = 10;
+    optional google.protobuf.Timestamp birthday = 11 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        example: "\"1990-10-05T00:00:0Z\""
+    }];
+}
+
+message UpdateAccountResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Updated Account";
+          description: "Returns the updated Account";
+        };
+    };
+    Account account = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

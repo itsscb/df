@@ -1,7 +1,11 @@
 DB_URL=postgresql://root:secret@localhost:5432/df?sslmode=disable
 
 reset_docker:
-	docker rm -vf df; docker rmi -f df; docker rm -vf postgres; docker rmi -f postgres; docker rm -vf migrate
+	docker rm -vf df
+	docker rmi -f df
+	docker rm -vf postgres
+	docker rmi -f postgres
+	docker rm -vf migrate
 
 backend_build:
 	make network; \
@@ -41,21 +45,45 @@ dropdb:
 	docker exec -it postgres dropdb df
 
 sqlc:
-	cd bff && sqlc generate && cd ..
+	cd bff && \
+	sqlc generate && \
+	cd ..
 
 sqlcinit:
+	cd bff && \
 	sqlc init
 
 test:
-	cd bff && go test -v -cover -short -count=1 ./... && cd ..
+	cd bff && \
+	go test -v -cover -short -count=1 ./... \
+	&& cd ..
 
 coverage:
-	cd bff && go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out && cd ..
+	cd bff && \
+	go test -coverprofile=coverage.out ./... && \
+	go tool cover -html=coverage.out && \
+	cd ..
 
 server:
-	cd bff && go run main.go && cd ..
+	cd bff && \
+	go run main.go && \
+	cd ..
 
 mock:
 	cd bff && mockgen -package mockdb -destination db/mock/store.go github.com/itsscb/df/bff/db/sqlc Store && cd ..
 
-.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server backend_build backend backend-stop reset_docker
+proto:
+	cd bff && \
+	rm -f doc/swagger/*.swagger.json && \
+	rm -f pb/*.go && \
+	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+	--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+	--openapiv2_out=doc/swagger --openapiv2_opt=allow_merge=true,merge_file_name=df \
+	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
+	./proto/*.proto
+	cd ..
+
+evans:
+	evans --host localhost --port 9090 --package pb -r repl
+
+.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server backend_build backend backend-stop reset_docker proto evans

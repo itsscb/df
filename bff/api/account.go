@@ -3,14 +3,12 @@ package api
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/token"
-	"golang.org/x/exp/slog"
 )
 
 type createAccountRequest struct {
@@ -111,7 +109,6 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	slog.Error("auth", "payload", fmt.Sprintf("%#v", authPayload))
 
 	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
 	if err != nil {

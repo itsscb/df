@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"time"
-
-	"github.com/itsscb/df/bff/util"
 )
 
 type CreateAccountTxParams struct {
@@ -39,10 +37,10 @@ func (store *SQLStore) CreateAccountTx(ctx context.Context, arg CreateAccountTxP
 		}
 	}
 
-	arg.Passwordhash, err = util.HashPassword(arg.Passwordhash)
-	if err != nil {
-		return Account{}, nil
-	}
+	// arg.Passwordhash, err = util.HashPassword(arg.Passwordhash)
+	// if err != nil {
+	// 	return Account{}, nil
+	// }
 
 	err = store.execTx(ctx, func(q *Queries) error {
 		var err error

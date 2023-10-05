@@ -9,7 +9,8 @@ import (
 type Config struct {
 	DBSource             string        `mapstructure:"DB_SOURCE"`
 	DBDriver             string        `mapstructure:"DB_DRIVER"`
-	ServerAddress        string        `mapstructure:"SERVER_ADDRESS"`
+	HTTPServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
+	GRPCServerAddress    string        `mapstructure:"GRPC_SERVER_ADDRESS"`
 	Environment          string        `mapstructure:"ENVIRONMENT"`
 	LogOutput            string        `mapstructure:"LOG_OUTPUT"`
 	TokenPrivateKeyHex   string        `mapstructure:"TOKEN_PRIVATEKEY_HEX"`
