@@ -29,7 +29,14 @@ func (store *SQLStore) CreatePersonTx(ctx context.Context, arg CreatePersonTxPar
 		var err error
 
 		result.Person, err = q.CreatePerson(ctx, CreatePersonParams(arg))
+		if err != nil {
+			return err
+		}
 
+		err = q.CloneProviders(ctx, CloneProvidersParams{
+			Creator:  arg.Creator,
+			PersonID: result.Person.ID,
+		})
 		return err
 	})
 

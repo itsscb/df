@@ -49,3 +49,27 @@ RETURNING *;
 -- name: DeleteReturn :exec
 DELETE FROM returns
 WHERE "id" = sqlc.arg(id);
+
+-- name: CloneProviders :exec
+INSERT INTO returns (
+    "provider_id",
+    "name",
+    "description",
+    "category",
+    "email",
+    "status",
+    "creator",
+    "changer",
+    "person_id"
+)
+SELECT 
+    "id",
+    "name",
+    "description",
+    "category",
+    "email",
+    'new',
+    sqlc.arg(creator),
+    sqlc.arg(creator),
+    sqlc.arg(person_id)
+FROM providers;
