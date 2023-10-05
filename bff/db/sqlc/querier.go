@@ -12,6 +12,7 @@ import (
 
 type Querier interface {
 	BlockSession(ctx context.Context, id uuid.UUID) error
+	CloneProviders(ctx context.Context, arg CloneProvidersParams) error
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
 	CreateDocumentMail(ctx context.Context, arg CreateDocumentMailParams) (Document, error)
 	CreateDocumentUpload(ctx context.Context, arg CreateDocumentUploadParams) (Document, error)
@@ -52,6 +53,7 @@ type Querier interface {
 	GetPerson(ctx context.Context, id int64) (Person, error)
 	GetProvider(ctx context.Context, id int64) (Provider, error)
 	GetReturn(ctx context.Context, id int64) (Return, error)
+	GetReturns(ctx context.Context, id int64) ([]Return, error)
 	GetReturnsLog(ctx context.Context, id int64) (ReturnsLog, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	InvalidateDocument(ctx context.Context, arg InvalidateDocumentParams) (Document, error)

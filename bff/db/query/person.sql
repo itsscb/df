@@ -43,3 +43,7 @@ RETURNING *;
 -- name: DeletePerson :exec
 DELETE FROM persons
 WHERE "id" = $1;
+
+-- name: GetReturns :many
+SELECT * FROM returns
+WHERE "person_id" = sqlc.arg(id);
