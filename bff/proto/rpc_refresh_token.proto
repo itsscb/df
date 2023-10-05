@@ -29,7 +29,7 @@ message RefreshTokenResponse {
       json_schema: {
         title: "Refresh Token Response";
       };
-      // example: "{\"email\": \"john.doe@example.com\", \"password\": \"MayTheForceBeWithYou!\"}";
+      example: "{\"access_token\": \"v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA1VDAxOjE3OjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiZjlhMjE2OWQtMWYxYS00YThiLTgzZWEtNzkxMzY5YjY3ZmYxIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9Ah0bVbx9S1LR-pf8hLWVRQPUfK9zrHZvA7ApJ5aZXwhA7H1j-kHhccBjOAGYXZQT-ts7Jq3SJlzo5vtUjGBtDg\"}";
   };
     string access_token = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title: "Access Token",

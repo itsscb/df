@@ -18,7 +18,7 @@ message UpdateAccountRequest {
             "id"
             ];
         };
-        example: "{\"id\": 195, \"street\": \"Death Star 2\"}";
+        example: "{\"id\": \"195\", \"street\": \"Death Star 2\"}";
     };
     int64 id = 1;
     optional string email = 2;

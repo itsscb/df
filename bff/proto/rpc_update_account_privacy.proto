@@ -18,10 +18,10 @@ message UpdateAccountPrivacyRequest {
             "privacy_accepted"
           ];
         };
-        example: "{\"id\": 185, \"privacy_accepted\": true }"
+        example: "{\"id\": \"1\", \"privacy_accepted\": true }"
     };
     int64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        example: "185",
+        example: "1",
         format: "int64"
       }];
     optional bool privacy_accepted = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {

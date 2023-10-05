@@ -323,7 +323,7 @@
     "pbAccount": {
       "type": "object",
       "example": {
-        "id": 185,
+        "id": "1",
         "email": "john.doe@example.com",
         "firstname": "John",
         "lastname": "Doe",
@@ -368,7 +368,8 @@
         },
         "birthday": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "example": "1990-10-05T00:00:00Z"
         },
         "phone": {
           "type": "string"
@@ -378,25 +379,29 @@
         },
         "privacyAcceptedDate": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
         },
         "permissionLevel": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "Default is 0 (non-priviledged)"
         },
         "creator": {
           "type": "string"
         },
         "created": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
         },
         "changer": {
           "type": "string"
         },
         "changed": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
         }
       },
       "title": "Account"
@@ -614,6 +619,9 @@
     },
     "pbRefreshTokenResponse": {
       "type": "object",
+      "example": {
+        "access_token": "v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA1VDAxOjE3OjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiZjlhMjE2OWQtMWYxYS00YThiLTgzZWEtNzkxMzY5YjY3ZmYxIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9Ah0bVbx9S1LR-pf8hLWVRQPUfK9zrHZvA7ApJ5aZXwhA7H1j-kHhccBjOAGYXZQT-ts7Jq3SJlzo5vtUjGBtDg"
+      },
       "properties": {
         "accessToken": {
           "type": "string",
@@ -630,14 +638,14 @@
     "pbUpdateAccountPrivacyRequest": {
       "type": "object",
       "example": {
-        "id": 185,
+        "id": "1",
         "privacy_accepted": true
       },
       "properties": {
         "id": {
           "type": "string",
           "format": "int64",
-          "example": 185
+          "example": 1
         },
         "privacyAccepted": {
           "type": "boolean",
@@ -664,7 +672,7 @@
     "pbUpdateAccountRequest": {
       "type": "object",
       "example": {
-        "id": 195,
+        "id": "195",
         "street": "Death Star 2"
       },
       "properties": {
@@ -753,7 +761,7 @@
   "securityDefinitions": {
     "BearerAuth": {
       "type": "apiKey",
-      "name": "Authorization Bearer",
+      "name": "Authorization",
       "in": "header"
     }
   }
