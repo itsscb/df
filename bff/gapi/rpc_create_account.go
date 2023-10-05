@@ -48,7 +48,7 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 
 	account, err := server.store.CreateAccountTx(ctx, arg)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to create account: %s", err)
+		return nil, status.Error(codes.Internal, "failed to create account")
 	}
 
 	rsp := &pb.CreateAccountResponse{

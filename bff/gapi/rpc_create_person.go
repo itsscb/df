@@ -2,6 +2,7 @@ package gapi
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
@@ -25,6 +26,9 @@ func (server *Server) CreatePerson(ctx context.Context, req *pb.CreatePersonRequ
 
 	account, err := server.store.GetAccount(ctx, req.GetAccountId())
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, status.Errorf(codes.NotFound, "account not found")
+		}
 		return nil, status.Error(codes.NotFound, "failed to get account")
 	}
 
@@ -49,7 +53,7 @@ func (server *Server) CreatePerson(ctx context.Context, req *pb.CreatePersonRequ
 
 	person, err := server.store.CreatePersonTx(ctx, arg)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to create person: %s", err)
+		return nil, status.Errorf(codes.Internal, "failed to create person")
 	}
 
 	rsp := &pb.CreatePersonResponse{

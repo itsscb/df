@@ -27,7 +27,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 			return nil, status.Error(codes.NotFound, "account not found")
 
 		}
-		return nil, status.Error(codes.Internal, "failed to find account")
+		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
 	err = util.CheckPassword(req.GetPassword(), account.Passwordhash)

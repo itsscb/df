@@ -86,4 +86,7 @@ proto:
 evans:
 	evans --host localhost --port 9090 --package pb -r repl
 
-.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server backend_build backend backend-stop reset_docker proto evans
+count_lines:
+	cloc --exclude-dir=.history,.git .
+
+.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server backend_build backend backend-stop reset_docker proto evans count_lines
