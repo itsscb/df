@@ -3,10 +3,10 @@
 To first run the application in your local environment you can use 
 
 ```
-# to (re-)build the app image including migration
+# First: (re-)build the app image including migration
 make backend_build
 
-# to run the db and the app as docker containers
+# Second: run the db and the app as docker containers
 make backend
 ``` 
 
@@ -69,6 +69,7 @@ Should you want to make changes you need further tools.
 
 - [sqlc](https://docs.sqlc.dev/en/stable/overview/install.html): For generating code from `postgres` queries
 - [gomock](https://github.com/uber-go/mock): For generating a mock database for testing
+- evans: For testing gRPC endpoints
 
 ## Frontend
 
