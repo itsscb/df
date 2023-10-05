@@ -2,6 +2,7 @@ package gapi
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
@@ -29,7 +30,10 @@ func (server *Server) ListAccounts(ctx context.Context, req *pb.ListAccountsRequ
 
 	dbAccounts, err := server.store.ListAccounts(ctx, arg)
 	if err != nil {
-		return nil, status.Error(codes.NotFound, "failed to get account")
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, status.Error(codes.NotFound, "no accounts found")
+		}
+		return nil, status.Error(codes.NotFound, "failed to get accounts")
 	}
 
 	if !server.isAdmin(ctx, authPayload) {

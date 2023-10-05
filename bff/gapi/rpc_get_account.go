@@ -2,6 +2,7 @@ package gapi
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/itsscb/df/bff/pb"
@@ -23,7 +24,10 @@ func (server *Server) GetAccount(ctx context.Context, req *pb.GetAccountRequest)
 
 	account, err := server.store.GetAccount(ctx, req.GetId())
 	if err != nil {
-		return nil, status.Error(codes.NotFound, "failed to get account")
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, status.Errorf(codes.NotFound, "account not found")
+		}
+		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
 	if authPayload.Email != account.Email {

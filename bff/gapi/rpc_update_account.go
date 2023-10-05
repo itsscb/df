@@ -25,7 +25,7 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Email != req.GetEmail() && !server.isAdmin(ctx, authPayload) {
+	if authPayload.Email != req.GetEmail() {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
