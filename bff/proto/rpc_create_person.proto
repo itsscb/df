@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "person.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message CreatePersonRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Create Person";
+          description: "Create an Person";
+          required: [
+            "firstname",
+            "lastname",
+            "street",
+            "city",
+            "zip",
+            "country",
+            "birthday"
+            ];
+        };
+        example: "{ \"account_id\": \"1\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"street\": \"Main Street 1\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:00Z\"}";
+    };
+    int64 account_id = 1;
+    string firstname = 2;
+    string lastname = 3;
+    string street = 4;
+    string city = 5;
+    string zip = 6;
+    string country = 7;
+    google.protobuf.Timestamp birthday = 8 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        example: "\"1990-10-05T00:00:00Z\""
+    }];
+}
+
+message CreatePersonResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Created Person";
+          description: "Returns the created Person";
+        };
+    };
+    Person person = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

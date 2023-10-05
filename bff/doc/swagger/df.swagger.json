@@ -97,6 +97,44 @@
         ]
       }
     },
+    "/v1/create_person": {
+      "post": {
+        "operationId": "df_CreatePerson",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreatePersonResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Create an Person",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreatePersonRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/get_account": {
       "get": {
         "operationId": "df_GetAccount",
@@ -518,6 +556,69 @@
       "description": "Returns the created Account",
       "title": "Created Account"
     },
+    "pbCreatePersonRequest": {
+      "type": "object",
+      "example": {
+        "account_id": "1",
+        "firstname": "John",
+        "lastname": "Doe",
+        "street": "Main Street 1",
+        "zip": "0815",
+        "city": "New York",
+        "country": "USA",
+        "birthday": "1990-10-05T00:00:00Z"
+      },
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1990-10-05T00:00:00Z"
+        }
+      },
+      "description": "Create an Person",
+      "title": "Create Person",
+      "required": [
+        "firstname",
+        "lastname",
+        "street",
+        "city",
+        "zip",
+        "country",
+        "birthday"
+      ]
+    },
+    "pbCreatePersonResponse": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "$ref": "#/definitions/pbPerson"
+        }
+      },
+      "description": "Returns the created Person",
+      "title": "Created Person"
+    },
     "pbGetAccountResponse": {
       "type": "object",
       "properties": {
@@ -598,6 +699,73 @@
         }
       },
       "title": "Login Response"
+    },
+    "pbPerson": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "email": "john.doe@example.com",
+        "firstname": "John",
+        "lastname": "Doe",
+        "phone": "",
+        "street": "Death Star 2",
+        "zip": "0815",
+        "city": "New York",
+        "country": "USA",
+        "birthday": "1990-10-05T00:00:00Z",
+        "privacy_accepted": false,
+        "privacy_accepted_date": "0001-01-01T00:00:00Z",
+        "creator": "john.doe@example.com",
+        "created": "2023-10-05T02:30:53Z",
+        "changer": "john.doe@example.com",
+        "changed": "2023-10-05T02:30:53Z"
+      },
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1990-10-05T00:00:00Z"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "changer": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        }
+      },
+      "title": "Person"
     },
     "pbRefreshTokenRequest": {
       "type": "object",

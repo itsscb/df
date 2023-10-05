@@ -3,6 +3,7 @@ package gapi
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -24,7 +25,7 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Email != req.GetEmail() {
+	if authPayload.Email != req.GetEmail() && !server.isAdmin(ctx, authPayload) {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
@@ -96,6 +97,10 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 }
 
 func validateUpdateAccountRequest(req *pb.UpdateAccountRequest) (violations []*errdetails.BadRequest_FieldViolation) {
+	if req.GetId() < 1 {
+		violations = append(violations, fieldViolation("id", errors.New("must be greater than 0")))
+	}
+
 	if req.GetEmail() != "" {
 		if err := val.ValidateEmail(req.GetEmail()); err != nil {
 			violations = append(violations, fieldViolation("email", err))

@@ -45,7 +45,6 @@ message CreateAccountRequest {
     }];
 }
 
-// \"1990-10-05T00:00:0Z\"
 message CreateAccountResponse {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
         json_schema: {

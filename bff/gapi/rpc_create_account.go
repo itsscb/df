@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"log"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -65,7 +64,6 @@ func validateCreateAccountRequest(req *pb.CreateAccountRequest) (violations []*e
 	}
 
 	if err := val.ValidatePassword(req.GetPassword()); err != nil {
-		log.Println(req.GetPassword(), len(req.GetPassword()))
 		violations = append(violations, fieldViolation("password", err))
 	}
 

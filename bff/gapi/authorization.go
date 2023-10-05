@@ -48,7 +48,8 @@ func (server *Server) authorizeUser(ctx context.Context) (*token.Payload, error)
 func (server *Server) isAdmin(ctx context.Context, payload *token.Payload) bool {
 	acc, err := server.store.GetAccountByEmail(ctx, payload.Email)
 	if err != nil {
+		fmt.Printf("could not verify admin: %#v", err)
 		return false
 	}
-	return acc.PermissionLevel < 1
+	return acc.PermissionLevel > 0
 }
