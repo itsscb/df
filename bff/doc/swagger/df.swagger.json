@@ -11,12 +11,8 @@
   },
   "tags": [
     {
-      "name": "Sessions",
-      "description": "Sessions"
-    },
-    {
-      "name": "Accounts",
-      "description": "Account"
+      "name": "df",
+      "description": "df"
     }
   ],
   "schemes": [
@@ -31,8 +27,8 @@
   ],
   "paths": {
     "/v1/block_session": {
-      "post": {
-        "operationId": "Sessions_BlockSession",
+      "patch": {
+        "operationId": "df_BlockSession",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -59,7 +55,7 @@
           }
         ],
         "tags": [
-          "Sessions"
+          "df"
         ],
         "security": [
           {
@@ -70,7 +66,7 @@
     },
     "/v1/create_account": {
       "post": {
-        "operationId": "Accounts_CreateAccount",
+        "operationId": "df_CreateAccount",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -97,13 +93,13 @@
           }
         ],
         "tags": [
-          "Accounts"
+          "df"
         ]
       }
     },
     "/v1/login": {
       "post": {
-        "operationId": "Sessions_Login",
+        "operationId": "df_Login",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -130,13 +126,13 @@
           }
         ],
         "tags": [
-          "Sessions"
+          "df"
         ]
       }
     },
     "/v1/refresh_token": {
       "post": {
-        "operationId": "Sessions_RefreshToken",
+        "operationId": "df_RefreshToken",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -163,13 +159,13 @@
           }
         ],
         "tags": [
-          "Sessions"
+          "df"
         ]
       }
     },
     "/v1/update_account": {
-      "post": {
-        "operationId": "Accounts_UpdateAccount",
+      "patch": {
+        "operationId": "df_UpdateAccount",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -196,7 +192,7 @@
           }
         ],
         "tags": [
-          "Accounts"
+          "df"
         ],
         "security": [
           {
@@ -206,8 +202,8 @@
       }
     },
     "/v1/update_account_privacy": {
-      "post": {
-        "operationId": "Accounts_UpdateAccountPrivacy",
+      "patch": {
+        "operationId": "df_UpdateAccountPrivacy",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -234,7 +230,7 @@
           }
         ],
         "tags": [
-          "Accounts"
+          "df"
         ],
         "security": [
           {
@@ -257,7 +253,7 @@
         "zip": "0815",
         "city": "New York",
         "country": "USA",
-        "birthday": "1990-10-05T00:00:0Z",
+        "birthday": "1990-10-05T00:00:00Z",
         "privacy_accepted": false,
         "privacy_accepted_date": "0001-01-01T00:00:00Z",
         "creator": "john.doe@example.com",
@@ -374,7 +370,7 @@
         "zip": "0815",
         "city": "New York",
         "country": "USA",
-        "birthday": "1990-10-05T00:00:0Z"
+        "birthday": "1990-10-05T00:00:00Z"
       },
       "properties": {
         "email": {
@@ -407,7 +403,7 @@
         "birthday": {
           "type": "string",
           "format": "date-time",
-          "example": "1990-10-05T00:00:0Z"
+          "example": "1990-10-05T00:00:00Z"
         },
         "privacyAccepted": {
           "type": "boolean",
@@ -542,7 +538,7 @@
         },
         "privacyAccepted": {
           "type": "boolean",
-          "example": true
+          "example": false
         }
       },
       "description": "Update the Privacy Consent of an Account",

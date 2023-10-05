@@ -18,7 +18,7 @@ backend_build:
 	docker run --name migrateup --rm --privileged=true -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) up
 
 backend:
-	docker start postgres; docker rm -vf df; docker run --name df --rm -p 8080:8080 --network df-network -d df:latest
+	docker start postgres; docker rm -vf df; docker run --name df --rm -p 8080:8080 -p 9090:9090 --network df-network -d df:latest
 
 backend-stop:
 	docker stop postgres; docker stop df

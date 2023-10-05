@@ -13,9 +13,11 @@ import (
 	"github.com/itsscb/df/bff/api"
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/gapi"
+	"github.com/itsscb/df/bff/pb"
 	"github.com/itsscb/df/bff/util"
 	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -54,7 +56,8 @@ func runGRPCServer(config util.Config, store db.Store) {
 	}
 
 	grpcServer := grpc.NewServer()
-	server.RegisterServer(grpcServer)
+	pb.RegisterDfServer(grpcServer, server)
+	reflection.Register(grpcServer)
 
 	listener, err := net.Listen("tcp", config.GRPCServerAddress)
 	if err != nil {
@@ -88,7 +91,10 @@ func runGatewayServer(config util.Config, store db.Store, swaggerFS http.FileSys
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	server.RegisterHandler(ctx, grpcMux)
+	err = pb.RegisterDfHandlerServer(ctx, grpcMux, server)
+	if err != nil {
+		log.Fatal("cannot register handler server")
+	}
 
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)

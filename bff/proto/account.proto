@@ -12,7 +12,7 @@ message Account {
         json_schema: {
           title: "Account";
         };
-        example: "{\"id\": 185,\"email\": \"john.doe@example.com\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"phone\": \"\", \"street\": \"Death Star 2\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:0Z\", \"privacy_accepted\": false, \"privacy_accepted_date\": \"0001-01-01T00:00:00Z\", \"creator\": \"john.doe@example.com\", \"created\": \"2023-10-05T02:30:53Z\", \"changer\": \"john.doe@example.com\", \"changed\": \"2023-10-05T02:30:53Z\"}";
+        example: "{\"id\": 185,\"email\": \"john.doe@example.com\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"phone\": \"\", \"street\": \"Death Star 2\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:00Z\", \"privacy_accepted\": false, \"privacy_accepted_date\": \"0001-01-01T00:00:00Z\", \"creator\": \"john.doe@example.com\", \"created\": \"2023-10-05T02:30:53Z\", \"changer\": \"john.doe@example.com\", \"changed\": \"2023-10-05T02:30:53Z\"}";
     };
     int64 id = 1;
     string email = 2;

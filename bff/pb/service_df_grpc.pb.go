@@ -19,327 +19,274 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Sessions_Login_FullMethodName        = "/pb.Sessions/Login"
-	Sessions_RefreshToken_FullMethodName = "/pb.Sessions/RefreshToken"
-	Sessions_BlockSession_FullMethodName = "/pb.Sessions/BlockSession"
+	Df_Login_FullMethodName                = "/pb.df/Login"
+	Df_RefreshToken_FullMethodName         = "/pb.df/RefreshToken"
+	Df_BlockSession_FullMethodName         = "/pb.df/BlockSession"
+	Df_CreateAccount_FullMethodName        = "/pb.df/CreateAccount"
+	Df_UpdateAccount_FullMethodName        = "/pb.df/UpdateAccount"
+	Df_UpdateAccountPrivacy_FullMethodName = "/pb.df/UpdateAccountPrivacy"
 )
 
-// SessionsClient is the client API for Sessions service.
+// DfClient is the client API for Df service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type SessionsClient interface {
+type DfClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 	BlockSession(ctx context.Context, in *BlockSessionRequest, opts ...grpc.CallOption) (*BlockSessionResponse, error)
-}
-
-type sessionsClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewSessionsClient(cc grpc.ClientConnInterface) SessionsClient {
-	return &sessionsClient{cc}
-}
-
-func (c *sessionsClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
-	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, Sessions_Login_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *sessionsClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
-	out := new(RefreshTokenResponse)
-	err := c.cc.Invoke(ctx, Sessions_RefreshToken_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *sessionsClient) BlockSession(ctx context.Context, in *BlockSessionRequest, opts ...grpc.CallOption) (*BlockSessionResponse, error) {
-	out := new(BlockSessionResponse)
-	err := c.cc.Invoke(ctx, Sessions_BlockSession_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// SessionsServer is the server API for Sessions service.
-// All implementations must embed UnimplementedSessionsServer
-// for forward compatibility
-type SessionsServer interface {
-	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
-	BlockSession(context.Context, *BlockSessionRequest) (*BlockSessionResponse, error)
-	mustEmbedUnimplementedSessionsServer()
-}
-
-// UnimplementedSessionsServer must be embedded to have forward compatible implementations.
-type UnimplementedSessionsServer struct {
-}
-
-func (UnimplementedSessionsServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
-}
-func (UnimplementedSessionsServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
-}
-func (UnimplementedSessionsServer) BlockSession(context.Context, *BlockSessionRequest) (*BlockSessionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BlockSession not implemented")
-}
-func (UnimplementedSessionsServer) mustEmbedUnimplementedSessionsServer() {}
-
-// UnsafeSessionsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to SessionsServer will
-// result in compilation errors.
-type UnsafeSessionsServer interface {
-	mustEmbedUnimplementedSessionsServer()
-}
-
-func RegisterSessionsServer(s grpc.ServiceRegistrar, srv SessionsServer) {
-	s.RegisterService(&Sessions_ServiceDesc, srv)
-}
-
-func _Sessions_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SessionsServer).Login(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Sessions_Login_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SessionsServer).Login(ctx, req.(*LoginRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Sessions_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RefreshTokenRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SessionsServer).RefreshToken(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Sessions_RefreshToken_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SessionsServer).RefreshToken(ctx, req.(*RefreshTokenRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Sessions_BlockSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BlockSessionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SessionsServer).BlockSession(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Sessions_BlockSession_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SessionsServer).BlockSession(ctx, req.(*BlockSessionRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// Sessions_ServiceDesc is the grpc.ServiceDesc for Sessions service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var Sessions_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.Sessions",
-	HandlerType: (*SessionsServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Login",
-			Handler:    _Sessions_Login_Handler,
-		},
-		{
-			MethodName: "RefreshToken",
-			Handler:    _Sessions_RefreshToken_Handler,
-		},
-		{
-			MethodName: "BlockSession",
-			Handler:    _Sessions_BlockSession_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "service_df.proto",
-}
-
-const (
-	Accounts_CreateAccount_FullMethodName        = "/pb.Accounts/CreateAccount"
-	Accounts_UpdateAccount_FullMethodName        = "/pb.Accounts/UpdateAccount"
-	Accounts_UpdateAccountPrivacy_FullMethodName = "/pb.Accounts/UpdateAccountPrivacy"
-)
-
-// AccountsClient is the client API for Accounts service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AccountsClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error)
 }
 
-type accountsClient struct {
+type dfClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAccountsClient(cc grpc.ClientConnInterface) AccountsClient {
-	return &accountsClient{cc}
+func NewDfClient(cc grpc.ClientConnInterface) DfClient {
+	return &dfClient{cc}
 }
 
-func (c *accountsClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error) {
+func (c *dfClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, Df_Login_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
+	out := new(RefreshTokenResponse)
+	err := c.cc.Invoke(ctx, Df_RefreshToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) BlockSession(ctx context.Context, in *BlockSessionRequest, opts ...grpc.CallOption) (*BlockSessionResponse, error) {
+	out := new(BlockSessionResponse)
+	err := c.cc.Invoke(ctx, Df_BlockSession_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error) {
 	out := new(CreateAccountResponse)
-	err := c.cc.Invoke(ctx, Accounts_CreateAccount_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Df_CreateAccount_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountsClient) UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error) {
+func (c *dfClient) UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error) {
 	out := new(UpdateAccountResponse)
-	err := c.cc.Invoke(ctx, Accounts_UpdateAccount_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Df_UpdateAccount_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountsClient) UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error) {
+func (c *dfClient) UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error) {
 	out := new(UpdateAccountPrivacyResponse)
-	err := c.cc.Invoke(ctx, Accounts_UpdateAccountPrivacy_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Df_UpdateAccountPrivacy_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// AccountsServer is the server API for Accounts service.
-// All implementations must embed UnimplementedAccountsServer
+// DfServer is the server API for Df service.
+// All implementations must embed UnimplementedDfServer
 // for forward compatibility
-type AccountsServer interface {
+type DfServer interface {
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	BlockSession(context.Context, *BlockSessionRequest) (*BlockSessionResponse, error)
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error)
-	mustEmbedUnimplementedAccountsServer()
+	mustEmbedUnimplementedDfServer()
 }
 
-// UnimplementedAccountsServer must be embedded to have forward compatible implementations.
-type UnimplementedAccountsServer struct {
+// UnimplementedDfServer must be embedded to have forward compatible implementations.
+type UnimplementedDfServer struct {
 }
 
-func (UnimplementedAccountsServer) CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error) {
+func (UnimplementedDfServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedDfServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
+func (UnimplementedDfServer) BlockSession(context.Context, *BlockSessionRequest) (*BlockSessionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BlockSession not implemented")
+}
+func (UnimplementedDfServer) CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
 }
-func (UnimplementedAccountsServer) UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error) {
+func (UnimplementedDfServer) UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccount not implemented")
 }
-func (UnimplementedAccountsServer) UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error) {
+func (UnimplementedDfServer) UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccountPrivacy not implemented")
 }
-func (UnimplementedAccountsServer) mustEmbedUnimplementedAccountsServer() {}
+func (UnimplementedDfServer) mustEmbedUnimplementedDfServer() {}
 
-// UnsafeAccountsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AccountsServer will
+// UnsafeDfServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DfServer will
 // result in compilation errors.
-type UnsafeAccountsServer interface {
-	mustEmbedUnimplementedAccountsServer()
+type UnsafeDfServer interface {
+	mustEmbedUnimplementedDfServer()
 }
 
-func RegisterAccountsServer(s grpc.ServiceRegistrar, srv AccountsServer) {
-	s.RegisterService(&Accounts_ServiceDesc, srv)
+func RegisterDfServer(s grpc.ServiceRegistrar, srv DfServer) {
+	s.RegisterService(&Df_ServiceDesc, srv)
 }
 
-func _Accounts_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Df_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_RefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).RefreshToken(ctx, req.(*RefreshTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_BlockSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).BlockSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_BlockSession_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).BlockSession(ctx, req.(*BlockSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsServer).CreateAccount(ctx, in)
+		return srv.(DfServer).CreateAccount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Accounts_CreateAccount_FullMethodName,
+		FullMethod: Df_CreateAccount_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsServer).CreateAccount(ctx, req.(*CreateAccountRequest))
+		return srv.(DfServer).CreateAccount(ctx, req.(*CreateAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Accounts_UpdateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Df_UpdateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsServer).UpdateAccount(ctx, in)
+		return srv.(DfServer).UpdateAccount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Accounts_UpdateAccount_FullMethodName,
+		FullMethod: Df_UpdateAccount_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsServer).UpdateAccount(ctx, req.(*UpdateAccountRequest))
+		return srv.(DfServer).UpdateAccount(ctx, req.(*UpdateAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Accounts_UpdateAccountPrivacy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Df_UpdateAccountPrivacy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateAccountPrivacyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountsServer).UpdateAccountPrivacy(ctx, in)
+		return srv.(DfServer).UpdateAccountPrivacy(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Accounts_UpdateAccountPrivacy_FullMethodName,
+		FullMethod: Df_UpdateAccountPrivacy_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountsServer).UpdateAccountPrivacy(ctx, req.(*UpdateAccountPrivacyRequest))
+		return srv.(DfServer).UpdateAccountPrivacy(ctx, req.(*UpdateAccountPrivacyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Accounts_ServiceDesc is the grpc.ServiceDesc for Accounts service.
+// Df_ServiceDesc is the grpc.ServiceDesc for Df service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Accounts_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.Accounts",
-	HandlerType: (*AccountsServer)(nil),
+var Df_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.df",
+	HandlerType: (*DfServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "Login",
+			Handler:    _Df_Login_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _Df_RefreshToken_Handler,
+		},
+		{
+			MethodName: "BlockSession",
+			Handler:    _Df_BlockSession_Handler,
+		},
+		{
 			MethodName: "CreateAccount",
-			Handler:    _Accounts_CreateAccount_Handler,
+			Handler:    _Df_CreateAccount_Handler,
 		},
 		{
 			MethodName: "UpdateAccount",
-			Handler:    _Accounts_UpdateAccount_Handler,
+			Handler:    _Df_UpdateAccount_Handler,
 		},
 		{
 			MethodName: "UpdateAccountPrivacy",
-			Handler:    _Accounts_UpdateAccountPrivacy_Handler,
+			Handler:    _Df_UpdateAccountPrivacy_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

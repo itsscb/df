@@ -26,7 +26,7 @@ message CreateAccountRequest {
             "birthday"
             ];
         };
-        example: "{\"email\": \"john.doe@example.com\", \"password\": \"MayTheForceBeWithYou!\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"street\": \"Main Street 1\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:0Z\"}";
+        example: "{\"email\": \"john.doe@example.com\", \"password\": \"MayTheForceBeWithYou!\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"street\": \"Main Street 1\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:00Z\"}";
     };
     string email = 1;
     string password = 2;
@@ -38,7 +38,7 @@ message CreateAccountRequest {
     string country = 8;
     string phone = 9;
     google.protobuf.Timestamp birthday = 10 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        example: "\"1990-10-05T00:00:0Z\""
+        example: "\"1990-10-05T00:00:00Z\""
     }];
     optional bool privacy_accepted = 11 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         example: "true"

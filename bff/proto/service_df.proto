@@ -36,11 +36,12 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         }
     }
 };
+    
+    service df {
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+            description: "df"
+        };
 
-service Sessions {
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
-      description: "Sessions"
-    };
     rpc Login (LoginRequest) returns (LoginResponse) {
         option (google.api.http) = {
             post: "/v1/login"
@@ -55,7 +56,7 @@ service Sessions {
     };
     rpc BlockSession (BlockSessionRequest) returns (BlockSessionResponse) {
         option (google.api.http) = {
-            post: "/v1/block_session"
+            patch: "/v1/block_session"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -67,12 +68,6 @@ service Sessions {
             }
         };
     };
-}
-
-service Accounts {
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
-      description: "Account"
-    };
     rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse) {
         option (google.api.http) = {
             post: "/v1/create_account"
@@ -81,7 +76,7 @@ service Accounts {
     };
     rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
         option (google.api.http) = {
-            post: "/v1/update_account"
+            patch: "/v1/update_account"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -95,7 +90,7 @@ service Accounts {
     };
     rpc UpdateAccountPrivacy (UpdateAccountPrivacyRequest) returns (UpdateAccountPrivacyResponse) {
         option (google.api.http) = {
-            post: "/v1/update_account_privacy"
+            patch: "/v1/update_account_privacy"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
