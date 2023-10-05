@@ -27,6 +27,7 @@ const (
 	Df_CreateAccount_FullMethodName        = "/pb.df/CreateAccount"
 	Df_UpdateAccount_FullMethodName        = "/pb.df/UpdateAccount"
 	Df_UpdateAccountPrivacy_FullMethodName = "/pb.df/UpdateAccountPrivacy"
+	Df_CreatePerson_FullMethodName         = "/pb.df/CreatePerson"
 )
 
 // DfClient is the client API for Df service.
@@ -41,6 +42,7 @@ type DfClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error)
+	CreatePerson(ctx context.Context, in *CreatePersonRequest, opts ...grpc.CallOption) (*CreatePersonResponse, error)
 }
 
 type dfClient struct {
@@ -123,6 +125,15 @@ func (c *dfClient) UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPr
 	return out, nil
 }
 
+func (c *dfClient) CreatePerson(ctx context.Context, in *CreatePersonRequest, opts ...grpc.CallOption) (*CreatePersonResponse, error) {
+	out := new(CreatePersonResponse)
+	err := c.cc.Invoke(ctx, Df_CreatePerson_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DfServer is the server API for Df service.
 // All implementations must embed UnimplementedDfServer
 // for forward compatibility
@@ -135,6 +146,7 @@ type DfServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error)
+	CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error)
 	mustEmbedUnimplementedDfServer()
 }
 
@@ -165,6 +177,9 @@ func (UnimplementedDfServer) UpdateAccount(context.Context, *UpdateAccountReques
 }
 func (UnimplementedDfServer) UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccountPrivacy not implemented")
+}
+func (UnimplementedDfServer) CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePerson not implemented")
 }
 func (UnimplementedDfServer) mustEmbedUnimplementedDfServer() {}
 
@@ -323,6 +338,24 @@ func _Df_UpdateAccountPrivacy_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_CreatePerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePersonRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).CreatePerson(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_CreatePerson_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).CreatePerson(ctx, req.(*CreatePersonRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Df_ServiceDesc is the grpc.ServiceDesc for Df service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -361,6 +394,10 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAccountPrivacy",
 			Handler:    _Df_UpdateAccountPrivacy_Handler,
+		},
+		{
+			MethodName: "CreatePerson",
+			Handler:    _Df_CreatePerson_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

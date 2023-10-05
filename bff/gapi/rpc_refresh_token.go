@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"log"
 	"time"
 
 	"github.com/itsscb/df/bff/pb"
@@ -21,7 +20,6 @@ func (server *Server) RefreshToken(ctx context.Context, req *pb.RefreshTokenRequ
 		return nil, invalidArgumentError(violations)
 	}
 
-	log.Println(req.GetRefreshToken(), len(req.GetRefreshToken()))
 	refreshPayload, err := server.tokenMaker.VerifyToken(req.GetRefreshToken())
 	if err != nil {
 		return nil, status.Error(codes.PermissionDenied, "invalid session token")

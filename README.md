@@ -12,6 +12,8 @@ make backend
 
 or run those commands, listed in ```Makefile```, ***manually*** with your terminal in the repository root directory.
 
+**Important**: The docker commands were tested on *fedora*. On *Windows* some commands might differ or do not work at all. E. g. `make migrateup`.
+That is due to the fact that on *Windows* the parameters `--privileged=true` and `--network host` do not exist or are handled differently.
 
 # Prerequisites
 
@@ -69,7 +71,21 @@ Should you want to make changes you need further tools.
 
 - [sqlc](https://docs.sqlc.dev/en/stable/overview/install.html): For generating code from `postgres` queries
 - [gomock](https://github.com/uber-go/mock): For generating a mock database for testing
-- evans: For testing gRPC endpoints
+- [evans](https://github.com/ktr0731/evans): For testing gRPC endpoints
+- [protoc](https://grpc.io/docs/protoc-installation/): For generating code from `.proto`-files (gRPC)
+  - *plugins*:```
+        go install \
+    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
+    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
+    google.golang.org/protobuf/cmd/protoc-gen-go \
+    google.golang.org/grpc/cmd/protoc-gen-go-grpc
+        ```
+
+**Important**: If you install `protoc` on *fedora* you will need an additional package to make it work. Use the following command for setup:
+```
+sudo dnf install -y protobuf-compiler protobuf-devel
+``` 
+
 
 ## Frontend
 
