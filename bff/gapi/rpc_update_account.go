@@ -31,6 +31,7 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 	}
 
 	arg := db.UpdateAccountTxParams{
+		ID:      req.GetId(),
 		Changer: authPayload.Email,
 		Email: sql.NullString{
 			Valid:  req.GetEmail() != "",
@@ -95,32 +96,40 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 }
 
 func validateUpdateAccountRequest(req *pb.UpdateAccountRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateEmail(req.GetEmail()); err != nil {
-		violations = append(violations, fieldViolation("email", err))
+	if req.GetEmail() != "" {
+		if err := val.ValidateEmail(req.GetEmail()); err != nil {
+			violations = append(violations, fieldViolation("email", err))
+		}
 	}
-
-	if err := val.ValidatePassword(req.GetPassword()); err != nil {
-		violations = append(violations, fieldViolation("password", err))
+	if req.GetPassword() != "" {
+		if err := val.ValidatePassword(req.GetPassword()); err != nil {
+			violations = append(violations, fieldViolation("password", err))
+		}
 	}
-
-	if err := val.ValidateName(req.GetFirstname()); err != nil {
-		violations = append(violations, fieldViolation("first_name", err))
+	if req.GetFirstname() != "" {
+		if err := val.ValidateName(req.GetFirstname()); err != nil {
+			violations = append(violations, fieldViolation("first_name", err))
+		}
 	}
-
-	if err := val.ValidateName(req.GetLastname()); err != nil {
-		violations = append(violations, fieldViolation("last_name", err))
+	if req.GetLastname() != "" {
+		if err := val.ValidateName(req.GetLastname()); err != nil {
+			violations = append(violations, fieldViolation("last_name", err))
+		}
 	}
-
-	if err := val.ValidateName(req.GetCity()); err != nil {
-		violations = append(violations, fieldViolation("city", err))
+	if req.GetCity() != "" {
+		if err := val.ValidateName(req.GetCity()); err != nil {
+			violations = append(violations, fieldViolation("city", err))
+		}
 	}
-
-	if err := val.ValidateName(req.GetZip()); err != nil {
-		violations = append(violations, fieldViolation("zip", err))
+	if req.GetZip() != "" {
+		if err := val.ValidateName(req.GetZip()); err != nil {
+			violations = append(violations, fieldViolation("zip", err))
+		}
 	}
-
-	if err := val.ValidateName(req.GetStreet()); err != nil {
-		violations = append(violations, fieldViolation("street", err))
+	if req.GetStreet() != "" {
+		if err := val.ValidateStreet(req.GetStreet()); err != nil {
+			violations = append(violations, fieldViolation("street", err))
+		}
 	}
 
 	return violations

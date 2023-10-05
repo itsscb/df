@@ -7,6 +7,8 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 
 import "rpc_create_account.proto";
 import "rpc_update_account.proto";
+import "rpc_get_account.proto";
+import "rpc_list_accounts.proto";
 import "rpc_block_session.proto";
 import "rpc_update_account_privacy.proto";
 import "rpc_login.proto";
@@ -32,7 +34,11 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     security_definitions: {
         security: {
             key: "BearerAuth";
-            value: {type: TYPE_API_KEY}
+            value: {
+                type: TYPE_API_KEY
+                in: IN_HEADER
+                name: "Authorization"
+            }
         }
     }
 };
@@ -58,6 +64,34 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         option (google.api.http) = {
             patch: "/v1/block_session"
             body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc GetAccount (GetAccountRequest) returns (GetAccountResponse) {
+        option (google.api.http) = {
+            get: "/v1/get_account"
+            // get: "/v1/accounts/{id=id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+
+    rpc ListAccounts (ListAccountsRequest) returns (ListAccountsResponse) {
+        option (google.api.http) = {
+            get: "/v1/list_accounts"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             security: {

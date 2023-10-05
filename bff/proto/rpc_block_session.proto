@@ -18,7 +18,6 @@ message BlockSessionRequest {
         example: "{\"session_id\": \"5e1d67da-7c9b-4365-a4d5-3cc0a051241e\"}"
     };
     string session_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        // title: "Session ID",
         format: "uuid",
         example: "\"5e1d67da-7c9b-4365-a4d5-3cc0a051241e\""
       }];
@@ -32,12 +31,10 @@ message BlockSessionResponse {
         example: "{\"session_id\": \"5e1d67da-7c9b-4365-a4d5-3cc0a051241e\", \"blocked\": true}"
     };
     string session_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        // title: "Session ID",
         format: "uuid",
         example: "\"5e1d67da-7c9b-4365-a4d5-3cc0a051241e\""
       }];
     bool blocked = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        // title: "Session blocked",
         example: "true"
     }];
 }

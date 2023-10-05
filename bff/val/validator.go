@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	isValidName = regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString
+	isValidName     = regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString
+	isValidAlphaNum = regexp.MustCompile(`^[a-zA-Z0-9\s]+$`).MatchString
 )
 
 func ValidateString(value string, minLength int, maxLength int) error {
@@ -43,9 +44,21 @@ func ValidateEmail(value string) error {
 }
 
 func ValidateEmailId(value int64) error {
-	if value <= 0 {
+	if value < 1 {
 		return fmt.Errorf("must be a positive integer")
 	}
+	return nil
+}
+
+func ValidateStreet(value string) error {
+	if err := ValidateString(value, 4, 100); err != nil {
+		return err
+	}
+
+	if !isValidAlphaNum(value) {
+		return fmt.Errorf("must contain only letters, numbers or spaces")
+	}
+
 	return nil
 }
 

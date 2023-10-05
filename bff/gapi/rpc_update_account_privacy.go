@@ -4,11 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
-	"github.com/itsscb/df/bff/val"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -59,8 +57,8 @@ func (server *Server) UpdateAccountPrivacy(ctx context.Context, req *pb.UpdateAc
 }
 
 func validateUpdateAccountPrivacyRequest(req *pb.UpdateAccountPrivacyRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateString(fmt.Sprint(req.GetId()), 30, 70); err != nil {
-		violations = append(violations, fieldViolation("id", err))
+	if req.GetId() < 1 {
+		violations = append(violations, fieldViolation("id", errors.New("must be greater than 0")))
 	}
 	return violations
 }

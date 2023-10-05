@@ -18,7 +18,7 @@ message UpdateAccountRequest {
             "id"
             ];
         };
-        example: "{\"id\": 195, \"street\": \"Death Star 2\"}";
+        example: "{\"id\": \"195\", \"street\": \"Death Star 2\"}";
     };
     int64 id = 1;
     optional string email = 2;
@@ -31,7 +31,7 @@ message UpdateAccountRequest {
     optional string country = 9;
     optional string phone = 10;
     optional google.protobuf.Timestamp birthday = 11 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        example: "\"1990-10-05T00:00:0Z\""
+        example: "\"1990-10-05T00:00:00Z\""
     }];
 }
 
