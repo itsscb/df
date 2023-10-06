@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=df
+    ports:
+      - "5432:5432"
+    volumes: 
+      - ./db/migration:/docker-entrypoint-initdb.d
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      - DB_SOURCE=postgresql://root:secret@postgres:5432/df?sslmode=disable
+    depends_on:
+      - postgres
+    command: [ "/app/main" ]
