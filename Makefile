@@ -8,20 +8,26 @@ reset_docker:
 	docker rm -vf migrate
 
 backend_build:
-	make network; \
-	make postgres; \
-	docker rm -vf df; \
-	docker rmi -f df:latest; \
-	docker rmi -f docker.io/library/golang:1.21-alpine3.18; \
-	docker build -t df:latest -f bff/Dockerfile; \
-	docker exec -it postgres createdb --username=root --owner=root df; \
+	make network
+	make postgres
+	docker rm -vf df
+	docker rmi -f df:latest
+	docker rmi -f docker.io/library/golang:1.21-alpine3.18
+	docker build -t df:latest -f bff/Dockerfile
+	docker exec -it postgres createdb --username=root --owner=root df
 	docker run --name migrateup --rm --privileged=true -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) up
 
 backend:
-	docker start postgres; docker rm -vf df; docker run --name df --rm -p 8080:8080 -p 9090:9090 --network df-network -d df:latest
+	docker-compose -f ./bff/docker-compose.yaml -p df-bff up -d
 
-backend-stop:
-	docker stop postgres; docker stop df
+stop-backend:
+	docker-compose -f ./bff/docker-compose.yaml -p df-bff down
+
+dev:
+	make network
+	make postgres
+	make createdb
+	make migrateup
 
 network:
 	docker network create df-network
