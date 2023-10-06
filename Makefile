@@ -1,18 +1,18 @@
 DB_URL=postgresql://root:secret@localhost:5432/df?sslmode=disable
 
 reset_docker:
-	docker rm -vf df
-	docker rmi -f df
-	docker rm -vf postgres
-	docker rmi -f postgres
-	docker rm -vf migrate
+	-docker rm -vf df
+	-docker rmi -f df
+	-docker rm -vf postgres
+	-docker rmi -f postgres
+	-docker rm -vf migrate
 
 backend_build:
-	make network
-	make postgres
-	docker rm -vf df
-	docker rmi -f df:latest
-	docker rmi -f docker.io/library/golang:1.21-alpine3.18
+	make network;
+	make postgres;
+	-docker rm -vf df;
+	-docker rmi -f df:latest;
+	-docker rmi -f docker.io/library/golang:1.21-alpine3.18
 	docker build -t df:latest -f bff/Dockerfile
 	docker exec -it postgres createdb --username=root --owner=root df
 	docker run --name migrateup --rm --privileged=true -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) up
@@ -30,7 +30,7 @@ dev:
 	make migrateup
 
 network:
-	docker network create df-network
+	-docker network create df-network
 
 postgres:
 	docker start postgres || docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret --network df-network -d postgres:15-alpine

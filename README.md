@@ -72,10 +72,10 @@ Should you want to make changes you need further tools.
 - [evans](https://github.com/ktr0731/evans): For testing gRPC endpoints
 - [protoc](https://grpc.io/docs/protoc-installation/): For generating code from `.proto`-files (gRPC)
   - *plugins*:```
-        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest \
-        github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest \
-        google.golang.org/protobuf/cmd/protoc-gen-go@latest \
-        google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+        go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
         ```
 
 **Important**: If you install `protoc` on *fedora* you will need an additional package to make it work. Use the following command for setup:
