@@ -3,17 +3,15 @@
 To first run the application in your local environment you can use 
 
 ```
-# First: (re-)build the app image including migration
-make backend_build
+# In the root directory
+docker-compose -f ./bff/docker-compose.yaml -p df-bff up -d 
+ 
+# In bff directory
+docker-compose -p df-bff up -d 
 
-# Second: run the db and the app as docker containers
+# Using `make`
 make backend
 ``` 
-
-or run those commands, listed in ```Makefile```, ***manually*** with your terminal in the repository root directory.
-
-**Important**: The docker commands were tested on *fedora*. On *Windows* some commands might differ or do not work at all. E. g. `make migrateup`.
-That is due to the fact that on *Windows* the parameters `--privileged=true` and `--network host` do not exist or are handled differently.
 
 # Prerequisites
 
