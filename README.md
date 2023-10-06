@@ -3,17 +3,15 @@
 To first run the application in your local environment you can use 
 
 ```
-# First: (re-)build the app image including migration
-make backend_build
+# In the root directory
+docker-compose -f ./bff/docker-compose.yaml -p df-bff up -d 
+ 
+# In bff directory
+docker-compose -p df-bff up -d 
 
-# Second: run the db and the app as docker containers
+# Using `make`
 make backend
 ``` 
-
-or run those commands, listed in ```Makefile```, ***manually*** with your terminal in the repository root directory.
-
-**Important**: The docker commands were tested on *fedora*. On *Windows* some commands might differ or do not work at all. E. g. `make migrateup`.
-That is due to the fact that on *Windows* the parameters `--privileged=true` and `--network host` do not exist or are handled differently.
 
 # Prerequisites
 
@@ -74,11 +72,10 @@ Should you want to make changes you need further tools.
 - [evans](https://github.com/ktr0731/evans): For testing gRPC endpoints
 - [protoc](https://grpc.io/docs/protoc-installation/): For generating code from `.proto`-files (gRPC)
   - *plugins*:```
-        go install \
-    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
-    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
-    google.golang.org/protobuf/cmd/protoc-gen-go \
-    google.golang.org/grpc/cmd/protoc-gen-go-grpc
+        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+        go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
         ```
 
 **Important**: If you install `protoc` on *fedora* you will need an additional package to make it work. Use the following command for setup:
