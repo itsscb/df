@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message Session {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Session";
+        };
+        example: "{\"id\": \"1\",\"email\": \"john.doe@example.com\", \"refresh_token\": \"v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw\", \"expires_at\": \"2023-10-05T02:30:53Z\", \"created_at\": \"2023-10-05T01:20:11Z\", \"client_ip\": \"10.56.0.12\", \"user_agent\": \"Mozilla Firefox\", \"is_blocked\": false}";
+    };
+    string id = 1;
+    string email = 2;
+    string user_agent = 3;
+    string client_ip = 4;
+    bool is_blocked = 5;
+    google.protobuf.Timestamp expires_at = 6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"1990-10-05T00:00:00Z\""
+    }];
+    google.protobuf.Timestamp created_at = 8 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"1990-10-05T00:00:00Z\""
+    }];
+    string refresh_token = 7;
+}

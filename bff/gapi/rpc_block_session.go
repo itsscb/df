@@ -57,7 +57,7 @@ func (server *Server) BlockSession(ctx context.Context, req *pb.BlockSessionRequ
 }
 
 func validateBlockSessionRequest(req *pb.BlockSessionRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateString(req.GetSessionId(), 200, 400); err != nil {
+	if err := val.ValidateString(req.GetSessionId(), 30, 100); err != nil {
 		violations = append(violations, fieldViolation("session_id", err))
 	}
 

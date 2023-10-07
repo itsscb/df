@@ -44,3 +44,16 @@ func convertPerson(person db.Person) *pb.Person {
 		Changed:   timestamppb.New(person.Changed),
 	}
 }
+
+func convertSession(session db.Session) *pb.Session {
+	return &pb.Session{
+		Id:           session.ID.String(),
+		Email:        session.Email,
+		ClientIp:     session.ClientIp,
+		UserAgent:    session.UserAgent,
+		RefreshToken: session.RefreshToken,
+		ExpiresAt:    timestamppb.New(session.ExpiresAt),
+		CreatedAt:    timestamppb.New(session.CreatedAt),
+		IsBlocked:    session.IsBlocked,
+	}
+}

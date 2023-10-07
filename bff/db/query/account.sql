@@ -81,3 +81,7 @@ RETURNING *;
 -- name: DeleteAccount :exec
 DELETE FROM accounts
 WHERE "id" = $1;
+
+-- name: ListSessions :many
+SELECT * FROM sessions
+WHERE email = sqlc.arg(email) AND is_blocked = false AND expires_at > now();
