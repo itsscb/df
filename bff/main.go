@@ -6,6 +6,7 @@ import (
 	"embed"
 	"io/fs"
 	"log"
+	"log/slog"
 	"net"
 	"net/http"
 	"time"
@@ -59,12 +60,12 @@ func main() {
 func runDBMigration(migrationURL string, dbSource string, retries int) {
 	migration, err := migrate.New(migrationURL, dbSource)
 	if err != nil {
-		log.Printf("could not create migrate instance. Retrying %d more times...\n", retries)
+		slog.Warn("could not migrate db instance. Retrying...")
 
 		count := 1
 		var e error
-		for _ = range time.Tick(3 * time.Second) {
-			log.Printf("retry: %d/%d\n", count, retries)
+		for range time.Tick(3 * time.Second) {
+			slog.Info("migrate db", slog.Int("retry number", count), slog.Int("max retries", retries))
 			migration, e = migrate.New(migrationURL, dbSource)
 			if e == nil || count >= retries {
 				break
@@ -80,7 +81,7 @@ func runDBMigration(migrationURL string, dbSource string, retries int) {
 		log.Fatal("failed to run migrate up")
 	}
 
-	log.Println("db migrated successfully")
+	slog.Info("db migrated successfully")
 }
 
 func runGRPCServer(config util.Config, store db.Store) {
@@ -89,7 +90,8 @@ func runGRPCServer(config util.Config, store db.Store) {
 		log.Fatalf("could not start server: %s", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcLogger := grpc.UnaryInterceptor(gapi.GrpcLogger)
+	grpcServer := grpc.NewServer(grpcLogger)
 	pb.RegisterDfServer(grpcServer, server)
 	reflection.Register(grpcServer)
 
@@ -98,7 +100,8 @@ func runGRPCServer(config util.Config, store db.Store) {
 		log.Fatal("cannot create gRPC server:", err)
 	}
 
-	log.Printf("start gRPC server at %s", listener.Addr().String())
+	slog.Info("start gRPC server", slog.String("address", listener.Addr().String()))
+
 	err = grpcServer.Serve(listener)
 	if err != nil {
 		log.Fatal("cannot start gRPC server:", err)
@@ -142,8 +145,9 @@ func runGatewayServer(config util.Config, store db.Store, swaggerFS http.FileSys
 		log.Fatal("cannot create listener")
 	}
 
-	log.Printf("start HTTP gateway server at %s\n", listener.Addr().String())
-	err = http.Serve(listener, mux)
+	slog.Info("start HTTP gateway server", slog.String("address", listener.Addr().String()))
+	handler := gapi.HttpLogger(mux)
+	err = http.Serve(listener, handler)
 	if err != nil {
 		log.Fatal("cannot start HTTP gateway server")
 	}
