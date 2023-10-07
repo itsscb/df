@@ -17,6 +17,13 @@ backend_build:
 	docker exec -it postgres createdb --username=root --owner=root df
 	docker run --name migrateup --rm --privileged=true -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) up
 
+rebuild:
+	docker stop df-bff_api_1
+	docker stop df-bff_postgres_1
+	docker rm df-bff_api_1
+	docker rmi df-bff_api
+	make backend
+
 backend:
 	docker-compose -f ./bff/docker-compose.yaml -p df-bff up -d
 
@@ -95,4 +102,4 @@ evans:
 count_lines:
 	cloc --exclude-dir=.history,.git .
 
-.PHONY: postgres migratenew createdb dropdb migrateup migratedown sqlc sqlcinit test server backend_build backend backend-stop reset_docker proto evans count_lines
+.PHONY: reset_docker backend_build rebuild backend backend dev network postgres migratenew migrateup migratedown createdb dropdb sqlc sqlcinit test coverage server mock proto evans count_lines

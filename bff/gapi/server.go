@@ -2,6 +2,8 @@ package gapi
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -28,6 +30,22 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		config:     config,
 		tokenMaker: tokenMaker,
 	}
+
+	logLevel := slog.LevelError
+	if config.Environment == "development" {
+		logLevel = slog.LevelDebug
+	}
+
+	opts := slog.HandlerOptions{
+		Level: logLevel,
+	}
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &opts))
+
+	if config.LogOutput == "json" {
+		logger = slog.New(slog.NewJSONHandler(os.Stdout, &opts))
+	}
+
+	slog.SetDefault(logger)
 
 	return server, nil
 }
