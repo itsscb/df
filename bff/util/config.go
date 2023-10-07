@@ -14,6 +14,8 @@ type Config struct {
 	Environment          string        `mapstructure:"ENVIRONMENT"`
 	LogOutput            string        `mapstructure:"LOG_OUTPUT"`
 	TokenPrivateKeyHex   string        `mapstructure:"TOKEN_PRIVATEKEY_HEX"`
+	MigrationURL         string        `mapstructure:"MIGRATION_URL"`
+	MigrationRetries  	 int		   `mapstructure:"MIGRATION_RETRIES"`
 	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
 }

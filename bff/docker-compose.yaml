@@ -8,8 +8,8 @@ services:
       - POSTGRES_DB=df
     ports:
       - "5432:5432"
-    volumes: 
-      - ./db/migration:/docker-entrypoint-initdb.d
+    # volumes: 
+    #   - ./db/migration:/docker-entrypoint-initdb.d
   api:
     build:
       context: .
