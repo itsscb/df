@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/itsscb/df/bff/api"
@@ -19,6 +20,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
+
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 //go:embed doc/swagger
@@ -35,6 +40,8 @@ func main() {
 		log.Fatalf("could not connect to DB: %s", err)
 	}
 
+	runDBMigration(config.MigrationURL, config.DBSource, config.MigrationRetries)
+
 	store := db.NewStore(conn)
 
 	if config.Environment == "development" {
@@ -47,6 +54,33 @@ func main() {
 
 	go runGatewayServer(config, store, swaggerFS)
 	runGRPCServer(config, store)
+}
+
+func runDBMigration(migrationURL string, dbSource string, retries int) {
+	migration, err := migrate.New(migrationURL, dbSource)
+	if err != nil {
+		log.Printf("could not create migrate instance. Retrying %d more times...\n", retries)
+
+		count := 1
+		var e error
+		for _ = range time.Tick(3 * time.Second) {
+			log.Printf("retry: %d/%d\n", count, retries)
+			migration, e = migrate.New(migrationURL, dbSource)
+			if e == nil || count >= retries {
+				break
+			}
+			count++
+		}
+		if e != nil {
+			log.Fatalf("cannot create new migrate instance for '%s': %s", migrationURL, err)
+		}
+	}
+
+	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("failed to run migrate up")
+	}
+
+	log.Println("db migrated successfully")
 }
 
 func runGRPCServer(config util.Config, store db.Store) {
