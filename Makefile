@@ -18,10 +18,10 @@ backend_build:
 	docker run --name migrateup --rm --privileged=true -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) up
 
 rebuild:
-	docker stop df-bff_api_1
-	docker stop df-bff_postgres_1
-	docker rm df-bff_api_1
-	docker rmi df-bff_api
+	-docker stop df-bff_api_1
+	-docker stop df-bff_postgres_1
+	-docker rm df-bff_api_1
+	-docker rmi df-bff_api
 	make backend
 
 backend:

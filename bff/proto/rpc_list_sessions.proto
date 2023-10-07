@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "session.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message ListSessionsRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "ListSessions";
+          description: "Returns a List of Accounts";
+          required: [
+            "email"
+            ];
+        };
+        example: "{\"email\": \"john.doe@example.com\" }";
+    };
+    string email = 1;
+}
+
+message ListSessionsResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "ListSessions Response";
+          description: "Returns the Sessions";
+        };
+    };
+    repeated Session session = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

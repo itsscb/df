@@ -42,6 +42,19 @@ func (server *Server) authorizeUser(ctx context.Context) (*token.Payload, error)
 		return nil, fmt.Errorf("invalid access token: %s", err)
 	}
 
+	// TODO: #76 Add check on db if session is expired
+	// session, err := server.store.GetSession(ctx, payload.ID)
+	// if err != nil {
+	// 	if err == sql.ErrNoRows {
+	// 		return nil, fmt.Errorf("no valid session found")
+	// 	}
+	// 	return nil, fmt.Errorf("could not get session")
+	// }
+
+	// if session.IsBlocked || time.Now().After(session.ExpiresAt) {
+	// 	return nil, fmt.Errorf("blocked or expired")
+	// }
+
 	return payload, nil
 }
 
