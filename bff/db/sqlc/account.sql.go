@@ -259,43 +259,6 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 	return items, nil
 }
 
-const listSessions = `-- name: ListSessions :many
-SELECT id, email, user_agent, client_ip, refresh_token, is_blocked, expires_at, created_at FROM sessions
-WHERE email = $1 AND is_blocked = false AND expires_at > now()
-`
-
-func (q *Queries) ListSessions(ctx context.Context, email string) ([]Session, error) {
-	rows, err := q.db.QueryContext(ctx, listSessions, email)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []Session{}
-	for rows.Next() {
-		var i Session
-		if err := rows.Scan(
-			&i.ID,
-			&i.Email,
-			&i.UserAgent,
-			&i.ClientIp,
-			&i.RefreshToken,
-			&i.IsBlocked,
-			&i.ExpiresAt,
-			&i.CreatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts
 SET
