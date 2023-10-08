@@ -50,19 +50,22 @@ func (server *Server) loginAccount(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
-		account.Email,
-		server.config.AccessTokenDuration,
-	)
+	id, err := server.tokenMaker.NewTokenID()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
+		ctx.JSON(http.StatusInternalServerError, errorResponse(errors.New("failed to create session token")))
 	}
-
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
 		account.Email,
+		id,
 		server.config.RefreshTokenDuration,
 	)
+
+	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
+		account.Email,
+		id,
+		server.config.AccessTokenDuration,
+	)
+
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

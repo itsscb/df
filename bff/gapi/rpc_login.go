@@ -35,16 +35,14 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 		return nil, status.Error(codes.PermissionDenied, "invalid password")
 	}
 
-	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
-		account.Email,
-		server.config.AccessTokenDuration,
-	)
+	id, err := server.tokenMaker.NewTokenID()
 	if err != nil {
-		return nil, status.Error(codes.Internal, "failed to create access token")
+		return nil, status.Error(codes.Internal, "failed to create token id")
 	}
 
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
 		account.Email,
+		id,
 		server.config.RefreshTokenDuration,
 	)
 	if err != nil {
@@ -52,9 +50,18 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 
 	}
 
+	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
+		account.Email,
+		id,
+		server.config.AccessTokenDuration,
+	)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to create access token")
+	}
+
 	mtdt := server.extractMetadata(ctx)
 
-	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
+	_, err = server.store.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
 		Email:        account.Email,
 		RefreshToken: refreshToken,
@@ -69,7 +76,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 	}
 
 	rsp := &pb.LoginResponse{
-		SessionId:             session.ID.String(),
+		SessionId:             refreshPayload.ID.String(),
 		AccessToken:           accessToken,
 		AccessTokenExpiresAt:  timestamppb.New(accessPayload.ExpiredAt),
 		RefreshToken:          refreshToken,

@@ -52,12 +52,17 @@ func (server *Server) RefreshToken(ctx context.Context, req *pb.RefreshTokenRequ
 		return nil, status.Error(codes.PermissionDenied, "session expired")
 	}
 
+	id, err := server.tokenMaker.NewTokenID()
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to create session token")
+	}
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
 		refreshPayload.Email,
+		id,
 		server.config.AccessTokenDuration,
 	)
 	if err != nil {
-		return nil, status.Error(codes.Internal, "cannot create session token")
+		return nil, status.Error(codes.Internal, "failed to create session token")
 	}
 
 	rsp := &pb.RefreshTokenResponse{

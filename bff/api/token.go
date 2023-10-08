@@ -66,10 +66,16 @@ func (server *Server) renewAccessToken(ctx *gin.Context) {
 		return
 	}
 
+	id, err := server.tokenMaker.NewTokenID()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(errors.New("failed to create session token")))
+	}
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
 		refreshPayload.Email,
+		id,
 		server.config.AccessTokenDuration,
 	)
+
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
