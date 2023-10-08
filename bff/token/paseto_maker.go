@@ -30,9 +30,13 @@ func NewPasetoMaker(privateKeyHex string) (Maker, error) {
 	return maker, nil
 }
 
+func (maker *PasetoMaker) NewTokenID() (uuid.UUID, error) {
+	return uuid.NewRandom()
+}
+
 // CreateToken creates a new token for a specific username and duration
-func (maker *PasetoMaker) CreateToken(email string, duration time.Duration) (string, *Payload, error) {
-	payload, err := NewPayload(email, duration)
+func (maker *PasetoMaker) CreateToken(email string, id uuid.UUID, duration time.Duration) (string, *Payload, error) {
+	payload, err := NewPayload(email, id, duration)
 	if err != nil {
 		return "", payload, err
 	}
@@ -41,7 +45,7 @@ func (maker *PasetoMaker) CreateToken(email string, duration time.Duration) (str
 	token.SetNotBefore(time.Now())
 	token.SetIssuedAt(payload.IssuedAt)
 	token.SetExpiration(payload.ExpiredAt)
-	token.SetString("id", payload.ID.String())
+	token.SetString("id", id.String())
 	token.SetString("email", payload.Email)
 
 	signed := token.V4Sign(maker.privateKey, nil)

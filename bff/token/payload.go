@@ -22,12 +22,7 @@ type Payload struct {
 }
 
 // NewPayload creates a new token payload with a specific accountID and duration
-func NewPayload(email string, duration time.Duration) (*Payload, error) {
-	tokenID, err := uuid.NewRandom()
-	if err != nil {
-		return nil, err
-	}
-
+func NewPayload(email string, tokenID uuid.UUID, duration time.Duration) (*Payload, error) {
 	payload := &Payload{
 		ID:        tokenID,
 		Email:     email,
