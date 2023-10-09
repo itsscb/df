@@ -115,18 +115,12 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
 
 const listPayments = `-- name: ListPayments :many
 SELECT id, account_id, payment_category, bankname, "IBAN", "BIC", paypal_account, paypal_id, payment_system, type, creator, created, changer, changed FROM payments
+WHERE "account_id" = $1
 ORDER BY "payment_category"
-LIMIT $1
-OFFSET $2
 `
 
-type ListPaymentsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
-func (q *Queries) ListPayments(ctx context.Context, arg ListPaymentsParams) ([]Payment, error) {
-	rows, err := q.db.QueryContext(ctx, listPayments, arg.Limit, arg.Offset)
+func (q *Queries) ListPayments(ctx context.Context, accountID int64) ([]Payment, error) {
+	rows, err := q.db.QueryContext(ctx, listPayments, accountID)
 	if err != nil {
 		return nil, err
 	}

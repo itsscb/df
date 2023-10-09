@@ -14,12 +14,15 @@ message ListSessionsRequest {
           title: "ListSessions";
           description: "Returns a List of Accounts";
           required: [
-            "email"
+            "account_id"
             ];
         };
-        example: "{\"email\": \"john.doe@example.com\" }";
+        example: "{\"account_id\": \"1\" }";
     };
-    string email = 1;
+    int64 account_id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "1",
+      format: "int64"
+    }];
 }
 
 message ListSessionsResponse {
@@ -29,6 +32,6 @@ message ListSessionsResponse {
           description: "Returns the Sessions";
         };
     };
-    repeated Session session = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    repeated Session sessions = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       }];
 }

@@ -57,3 +57,22 @@ func convertSession(session db.Session) *pb.Session {
 		IsBlocked:    session.IsBlocked,
 	}
 }
+
+func convertPayment(payment db.Payment) *pb.Payment {
+	return &pb.Payment{
+		Id:              payment.ID,
+		AccountId:       payment.AccountID,
+		PaymentCategory: payment.PaymentCategory,
+		Bankname:        &payment.Bankname.String,
+		IBAN:            &payment.IBAN.String,
+		BIC:             &payment.BIC.String,
+		PaypalAccount:   &payment.PaypalAccount.String,
+		PaypalId:        &payment.PaypalID.String,
+		PaymentSystem:   &payment.PaymentSystem.String,
+		Type:            payment.Type,
+		Creator:         payment.Creator,
+		Created:         timestamppb.New(payment.Created),
+		Changer:         payment.Changer,
+		Changed:         timestamppb.New(payment.Changed),
+	}
+}

@@ -11,13 +11,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (server *Server) ListSessions(ctx context.Context, req *pb.ListSessionsRequest) (*pb.ListSessionsResponse, error) {
+func (server *Server) ListPayments(ctx context.Context, req *pb.ListPaymentsRequest) (*pb.ListPaymentsResponse, error) {
 	authPayload, err := server.authorizeUser(ctx)
 	if err != nil {
 		return nil, unauthenticatedError(err)
 	}
 
-	violations := validateListSessionsRequest(req)
+	violations := validateListPaymentsRequest(req)
 	if violations != nil {
 		return nil, invalidArgumentError(violations)
 	}
@@ -42,27 +42,27 @@ func (server *Server) ListSessions(ctx context.Context, req *pb.ListSessionsRequ
 		}
 	}
 
-	dbSessions, err := server.store.ListSessions(ctx, account.Email)
+	dbPayments, err := server.store.ListPayments(ctx, req.GetAccountId())
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, status.Error(codes.NotFound, "no accounts found")
+			return nil, status.Error(codes.NotFound, "no payments found")
 		}
-		return nil, status.Error(codes.NotFound, "failed to get accounts")
+		return nil, status.Error(codes.NotFound, "failed to get payments")
 	}
 
-	var sessions []*pb.Session
-	for _, s := range dbSessions {
-		sessions = append(sessions, convertSession(s))
+	var payments []*pb.Payment
+	for _, a := range dbPayments {
+		payments = append(payments, convertPayment(a))
 	}
 
-	rsp := &pb.ListSessionsResponse{
-		Sessions: sessions,
+	rsp := &pb.ListPaymentsResponse{
+		Payments: payments,
 	}
 
 	return rsp, nil
 }
 
-func validateListSessionsRequest(req *pb.ListSessionsRequest) (violations []*errdetails.BadRequest_FieldViolation) {
+func validateListPaymentsRequest(req *pb.ListPaymentsRequest) (violations []*errdetails.BadRequest_FieldViolation) {
 	if req.GetAccountId() < 1 {
 		violations = append(violations, fieldViolation("account_id", errors.New("must be greater than 0")))
 	}

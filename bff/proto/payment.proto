@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message Payment {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Payment";
+        };
+        example: "{\"id\": \"1\",\"account_id\": \"1\", \"payment_category\": \"TBD: paypal\", \"paypal_account\": \"john.doe@example.com\", \"paypal_id\": \"this-is-a-paypal-id\", \"payment_system\": \"TBD: paypal system\", \"type\": \"TBD: some type\", \"creator\": \"john.doe@example.com\", \"created\": \"2023-10-05T02:30:53Z\", \"changer\": \"john.doe@example.com\", \"changed\": \"2023-10-05T02:30:53Z\"}";
+    };
+    int64 id = 1;
+    int64 account_id = 2;
+    string payment_category = 3;
+    optional string bankname = 4;
+    optional string IBAN = 5;
+    optional string BIC = 6;
+    optional string paypal_account = 7;
+    optional string paypal_id = 8;
+    optional string payment_system = 9;
+    string type = 10;
+    string creator = 11;
+    google.protobuf.Timestamp created = 12 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"2023-10-05T00:00:00Z\""
+  }];
+    string changer = 13;
+    google.protobuf.Timestamp changed = 14 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"2023-10-05T00:00:00Z\""
+  }];
+}

@@ -21,9 +21,8 @@ INSERT INTO payments (
 
 -- name: ListPayments :many
 SELECT * FROM payments
-ORDER BY "payment_category"
-LIMIT $1
-OFFSET $2;
+WHERE "account_id" = sqlc.arg(account_id)
+ORDER BY "payment_category";
 
 -- name: UpdatePayment :one
 UPDATE payments

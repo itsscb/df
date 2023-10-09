@@ -601,7 +601,7 @@ func (mr *MockStoreMockRecorder) ListMails(arg0, arg1 any) *gomock.Call {
 }
 
 // ListPayments mocks base method.
-func (m *MockStore) ListPayments(arg0 context.Context, arg1 db.ListPaymentsParams) ([]db.Payment, error) {
+func (m *MockStore) ListPayments(arg0 context.Context, arg1 int64) ([]db.Payment, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPayments", arg0, arg1)
 	ret0, _ := ret[0].([]db.Payment)

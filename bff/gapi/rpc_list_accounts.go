@@ -46,7 +46,7 @@ func (server *Server) ListAccounts(ctx context.Context, req *pb.ListAccountsRequ
 	}
 
 	rsp := &pb.ListAccountsResponse{
-		Account: accounts,
+		Accounts: accounts,
 	}
 
 	return rsp, nil

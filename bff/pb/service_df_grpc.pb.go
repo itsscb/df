@@ -21,14 +21,17 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Df_Login_FullMethodName                = "/pb.df/Login"
 	Df_RefreshToken_FullMethodName         = "/pb.df/RefreshToken"
+	Df_ListSessions_FullMethodName         = "/pb.df/ListSessions"
 	Df_BlockSession_FullMethodName         = "/pb.df/BlockSession"
 	Df_GetAccount_FullMethodName           = "/pb.df/GetAccount"
-	Df_ListSessions_FullMethodName         = "/pb.df/ListSessions"
 	Df_ListAccounts_FullMethodName         = "/pb.df/ListAccounts"
 	Df_CreateAccount_FullMethodName        = "/pb.df/CreateAccount"
 	Df_UpdateAccount_FullMethodName        = "/pb.df/UpdateAccount"
 	Df_UpdateAccountPrivacy_FullMethodName = "/pb.df/UpdateAccountPrivacy"
 	Df_CreatePerson_FullMethodName         = "/pb.df/CreatePerson"
+	Df_CreatePayment_FullMethodName        = "/pb.df/CreatePayment"
+	Df_ListPayments_FullMethodName         = "/pb.df/ListPayments"
+	Df_UpdatePayment_FullMethodName        = "/pb.df/UpdatePayment"
 )
 
 // DfClient is the client API for Df service.
@@ -37,14 +40,17 @@ const (
 type DfClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
+	ListSessions(ctx context.Context, in *ListSessionsRequest, opts ...grpc.CallOption) (*ListSessionsResponse, error)
 	BlockSession(ctx context.Context, in *BlockSessionRequest, opts ...grpc.CallOption) (*BlockSessionResponse, error)
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
-	ListSessions(ctx context.Context, in *ListSessionsRequest, opts ...grpc.CallOption) (*ListSessionsResponse, error)
 	ListAccounts(ctx context.Context, in *ListAccountsRequest, opts ...grpc.CallOption) (*ListAccountsResponse, error)
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error)
 	CreatePerson(ctx context.Context, in *CreatePersonRequest, opts ...grpc.CallOption) (*CreatePersonResponse, error)
+	CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error)
+	ListPayments(ctx context.Context, in *ListPaymentsRequest, opts ...grpc.CallOption) (*ListPaymentsResponse, error)
+	UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error)
 }
 
 type dfClient struct {
@@ -73,6 +79,15 @@ func (c *dfClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, op
 	return out, nil
 }
 
+func (c *dfClient) ListSessions(ctx context.Context, in *ListSessionsRequest, opts ...grpc.CallOption) (*ListSessionsResponse, error) {
+	out := new(ListSessionsResponse)
+	err := c.cc.Invoke(ctx, Df_ListSessions_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *dfClient) BlockSession(ctx context.Context, in *BlockSessionRequest, opts ...grpc.CallOption) (*BlockSessionResponse, error) {
 	out := new(BlockSessionResponse)
 	err := c.cc.Invoke(ctx, Df_BlockSession_FullMethodName, in, out, opts...)
@@ -85,15 +100,6 @@ func (c *dfClient) BlockSession(ctx context.Context, in *BlockSessionRequest, op
 func (c *dfClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error) {
 	out := new(GetAccountResponse)
 	err := c.cc.Invoke(ctx, Df_GetAccount_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dfClient) ListSessions(ctx context.Context, in *ListSessionsRequest, opts ...grpc.CallOption) (*ListSessionsResponse, error) {
-	out := new(ListSessionsResponse)
-	err := c.cc.Invoke(ctx, Df_ListSessions_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -145,20 +151,50 @@ func (c *dfClient) CreatePerson(ctx context.Context, in *CreatePersonRequest, op
 	return out, nil
 }
 
+func (c *dfClient) CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error) {
+	out := new(CreatePaymentResponse)
+	err := c.cc.Invoke(ctx, Df_CreatePayment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) ListPayments(ctx context.Context, in *ListPaymentsRequest, opts ...grpc.CallOption) (*ListPaymentsResponse, error) {
+	out := new(ListPaymentsResponse)
+	err := c.cc.Invoke(ctx, Df_ListPayments_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error) {
+	out := new(UpdatePaymentResponse)
+	err := c.cc.Invoke(ctx, Df_UpdatePayment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DfServer is the server API for Df service.
 // All implementations must embed UnimplementedDfServer
 // for forward compatibility
 type DfServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	ListSessions(context.Context, *ListSessionsRequest) (*ListSessionsResponse, error)
 	BlockSession(context.Context, *BlockSessionRequest) (*BlockSessionResponse, error)
 	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
-	ListSessions(context.Context, *ListSessionsRequest) (*ListSessionsResponse, error)
 	ListAccounts(context.Context, *ListAccountsRequest) (*ListAccountsResponse, error)
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error)
 	CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error)
+	CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error)
+	ListPayments(context.Context, *ListPaymentsRequest) (*ListPaymentsResponse, error)
+	UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error)
 	mustEmbedUnimplementedDfServer()
 }
 
@@ -172,14 +208,14 @@ func (UnimplementedDfServer) Login(context.Context, *LoginRequest) (*LoginRespon
 func (UnimplementedDfServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
+func (UnimplementedDfServer) ListSessions(context.Context, *ListSessionsRequest) (*ListSessionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListSessions not implemented")
+}
 func (UnimplementedDfServer) BlockSession(context.Context, *BlockSessionRequest) (*BlockSessionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlockSession not implemented")
 }
 func (UnimplementedDfServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
-}
-func (UnimplementedDfServer) ListSessions(context.Context, *ListSessionsRequest) (*ListSessionsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListSessions not implemented")
 }
 func (UnimplementedDfServer) ListAccounts(context.Context, *ListAccountsRequest) (*ListAccountsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAccounts not implemented")
@@ -195,6 +231,15 @@ func (UnimplementedDfServer) UpdateAccountPrivacy(context.Context, *UpdateAccoun
 }
 func (UnimplementedDfServer) CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePerson not implemented")
+}
+func (UnimplementedDfServer) CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePayment not implemented")
+}
+func (UnimplementedDfServer) ListPayments(context.Context, *ListPaymentsRequest) (*ListPaymentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPayments not implemented")
+}
+func (UnimplementedDfServer) UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePayment not implemented")
 }
 func (UnimplementedDfServer) mustEmbedUnimplementedDfServer() {}
 
@@ -245,6 +290,24 @@ func _Df_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_ListSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSessionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).ListSessions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_ListSessions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).ListSessions(ctx, req.(*ListSessionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Df_BlockSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BlockSessionRequest)
 	if err := dec(in); err != nil {
@@ -277,24 +340,6 @@ func _Df_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DfServer).GetAccount(ctx, req.(*GetAccountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Df_ListSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListSessionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DfServer).ListSessions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Df_ListSessions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DfServer).ListSessions(ctx, req.(*ListSessionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -389,6 +434,60 @@ func _Df_CreatePerson_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_CreatePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).CreatePayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_CreatePayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).CreatePayment(ctx, req.(*CreatePaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_ListPayments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPaymentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).ListPayments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_ListPayments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).ListPayments(ctx, req.(*ListPaymentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_UpdatePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).UpdatePayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_UpdatePayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).UpdatePayment(ctx, req.(*UpdatePaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Df_ServiceDesc is the grpc.ServiceDesc for Df service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -405,16 +504,16 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Df_RefreshToken_Handler,
 		},
 		{
+			MethodName: "ListSessions",
+			Handler:    _Df_ListSessions_Handler,
+		},
+		{
 			MethodName: "BlockSession",
 			Handler:    _Df_BlockSession_Handler,
 		},
 		{
 			MethodName: "GetAccount",
 			Handler:    _Df_GetAccount_Handler,
-		},
-		{
-			MethodName: "ListSessions",
-			Handler:    _Df_ListSessions_Handler,
 		},
 		{
 			MethodName: "ListAccounts",
@@ -435,6 +534,18 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreatePerson",
 			Handler:    _Df_CreatePerson_Handler,
+		},
+		{
+			MethodName: "CreatePayment",
+			Handler:    _Df_CreatePayment_Handler,
+		},
+		{
+			MethodName: "ListPayments",
+			Handler:    _Df_ListPayments_Handler,
+		},
+		{
+			MethodName: "UpdatePayment",
+			Handler:    _Df_UpdatePayment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

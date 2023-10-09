@@ -30,6 +30,6 @@ message ListAccountsResponse {
           description: "Returns the Account";
         };
     };
-    repeated Account account = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    repeated Account accounts = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       }];
 }

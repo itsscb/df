@@ -60,7 +60,7 @@ type Querier interface {
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
 	ListDocuments(ctx context.Context, arg ListDocumentsParams) ([]Document, error)
 	ListMails(ctx context.Context, arg ListMailsParams) ([]Mail, error)
-	ListPayments(ctx context.Context, arg ListPaymentsParams) ([]Payment, error)
+	ListPayments(ctx context.Context, accountID int64) ([]Payment, error)
 	ListPersons(ctx context.Context, arg ListPersonsParams) ([]Person, error)
 	ListProviders(ctx context.Context, arg ListProvidersParams) ([]Provider, error)
 	ListReturns(ctx context.Context, arg ListReturnsParams) ([]Return, error)

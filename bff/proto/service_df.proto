@@ -7,9 +7,12 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 
 import "rpc_create_account.proto";
 import "rpc_create_person.proto";
+import "rpc_create_payment.proto";
 import "rpc_update_account.proto";
+import "rpc_update_payment.proto";
 import "rpc_get_account.proto";
 import "rpc_list_accounts.proto";
+import "rpc_list_payments.proto";
 import "rpc_list_sessions.proto";
 import "rpc_block_session.proto";
 import "rpc_update_account_privacy.proto";
@@ -58,13 +61,26 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {
         option (google.api.http) = {
-            post: "/v1/refresh_token"
+            post: "/v1/sessions/refresh_token"
             body: "*"
+        };
+    };
+    rpc ListSessions (ListSessionsRequest) returns (ListSessionsResponse) {
+        option (google.api.http) = {
+            get: "/v1/sessions/list_sessions/{account_id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
         };
     };
     rpc BlockSession (BlockSessionRequest) returns (BlockSessionResponse) {
         option (google.api.http) = {
-            patch: "/v1/block_session"
+            patch: "/v1/sessions/block_session"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -78,22 +94,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc GetAccount (GetAccountRequest) returns (GetAccountResponse) {
         option (google.api.http) = {
-            get: "/v1/get_account"
+            get: "/v1/accounts/get_account"
             // get: "/v1/accounts/{id=id}"
-        };
-        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            security: {
-              security_requirement: {
-                key: "BearerAuth";
-                value: {}
-              }
-            }
-        };
-    };
-
-    rpc ListSessions (ListSessionsRequest) returns (ListSessionsResponse) {
-        option (google.api.http) = {
-            get: "/v1/list_sessions"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             security: {
@@ -106,7 +108,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc ListAccounts (ListAccountsRequest) returns (ListAccountsResponse) {
         option (google.api.http) = {
-            get: "/v1/list_accounts"
+            get: "/v1/accounts/list_accounts"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             security: {
@@ -119,13 +121,13 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse) {
         option (google.api.http) = {
-            post: "/v1/create_account"
+            post: "/v1/accounts/create_account"
             body: "*"
         };
     };
     rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
         option (google.api.http) = {
-            patch: "/v1/update_account"
+            patch: "/v1/accounts/update_account"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -139,7 +141,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc UpdateAccountPrivacy (UpdateAccountPrivacyRequest) returns (UpdateAccountPrivacyResponse) {
         option (google.api.http) = {
-            patch: "/v1/update_account_privacy"
+            patch: "/v1/accounts/update_account_privacy"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -153,7 +155,48 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc CreatePerson (CreatePersonRequest) returns (CreatePersonResponse) {
         option (google.api.http) = {
-            post: "/v1/create_person"
+            post: "/v1/persons/create_person"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse) {
+        option (google.api.http) = {
+            post: "/v1/payments/create_payment"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc ListPayments (ListPaymentsRequest) returns (ListPaymentsResponse) {
+        option (google.api.http) = {
+            get: "/v1/payments/list_payments"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc UpdatePayment (UpdatePaymentRequest) returns (UpdatePaymentResponse) {
+        option (google.api.http) = {
+            patch: "/v1/payments/update_payment"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

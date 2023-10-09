@@ -126,22 +126,3 @@ func TestUpdatePayment(t *testing.T) {
 	require.Equal(t, person1.PaymentCategory, person2.PaymentCategory)
 	require.NotEqual(t, person1.Bankname, person2.Bankname)
 }
-
-func TestListPayments(t *testing.T) {
-	for i := 0; i < 10; i++ {
-		createRandomPayment(t)
-	}
-
-	arg := ListPaymentsParams{
-		Limit:  5,
-		Offset: 5,
-	}
-
-	persons, err := testQueries.ListPayments(context.Background(), arg)
-	require.NoError(t, err)
-	require.Len(t, persons, 5)
-
-	for _, person := range persons {
-		require.NotEmpty(t, person)
-	}
-}
