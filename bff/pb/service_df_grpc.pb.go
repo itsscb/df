@@ -37,6 +37,7 @@ const (
 	Df_DeletePayment_FullMethodName        = "/pb.df/DeletePayment"
 	Df_ListPayments_FullMethodName         = "/pb.df/ListPayments"
 	Df_UpdatePayment_FullMethodName        = "/pb.df/UpdatePayment"
+	Df_ListReturnsLog_FullMethodName       = "/pb.df/ListReturnsLog"
 )
 
 // DfClient is the client API for Df service.
@@ -61,6 +62,7 @@ type DfClient interface {
 	DeletePayment(ctx context.Context, in *DeletePaymentRequest, opts ...grpc.CallOption) (*DeletePaymentResponse, error)
 	ListPayments(ctx context.Context, in *ListPaymentsRequest, opts ...grpc.CallOption) (*ListPaymentsResponse, error)
 	UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error)
+	ListReturnsLog(ctx context.Context, in *ListReturnsLogRequest, opts ...grpc.CallOption) (*ListReturnsLogResponse, error)
 }
 
 type dfClient struct {
@@ -233,6 +235,15 @@ func (c *dfClient) UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, 
 	return out, nil
 }
 
+func (c *dfClient) ListReturnsLog(ctx context.Context, in *ListReturnsLogRequest, opts ...grpc.CallOption) (*ListReturnsLogResponse, error) {
+	out := new(ListReturnsLogResponse)
+	err := c.cc.Invoke(ctx, Df_ListReturnsLog_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DfServer is the server API for Df service.
 // All implementations must embed UnimplementedDfServer
 // for forward compatibility
@@ -255,6 +266,7 @@ type DfServer interface {
 	DeletePayment(context.Context, *DeletePaymentRequest) (*DeletePaymentResponse, error)
 	ListPayments(context.Context, *ListPaymentsRequest) (*ListPaymentsResponse, error)
 	UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error)
+	ListReturnsLog(context.Context, *ListReturnsLogRequest) (*ListReturnsLogResponse, error)
 	mustEmbedUnimplementedDfServer()
 }
 
@@ -315,6 +327,9 @@ func (UnimplementedDfServer) ListPayments(context.Context, *ListPaymentsRequest)
 }
 func (UnimplementedDfServer) UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePayment not implemented")
+}
+func (UnimplementedDfServer) ListReturnsLog(context.Context, *ListReturnsLogRequest) (*ListReturnsLogResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListReturnsLog not implemented")
 }
 func (UnimplementedDfServer) mustEmbedUnimplementedDfServer() {}
 
@@ -653,6 +668,24 @@ func _Df_UpdatePayment_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_ListReturnsLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListReturnsLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).ListReturnsLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_ListReturnsLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).ListReturnsLog(ctx, req.(*ListReturnsLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Df_ServiceDesc is the grpc.ServiceDesc for Df service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -731,6 +764,10 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdatePayment",
 			Handler:    _Df_UpdatePayment_Handler,
+		},
+		{
+			MethodName: "ListReturnsLog",
+			Handler:    _Df_ListReturnsLog_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

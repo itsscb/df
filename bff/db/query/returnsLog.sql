@@ -23,6 +23,13 @@ ORDER BY "status"
 LIMIT $1
 OFFSET $2;
 
+-- name: ListReturnsLogsByPersonID :many
+SELECT rl.*
+FROM "returns" AS r
+INNER JOIN "returnsLog" AS rl
+    ON r.id = rl.return_id
+WHERE r.person_id = sqlc.arg(id);
+
 -- name: UpdateReturnsLog :one
 UPDATE "returnsLog"
 SET

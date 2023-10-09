@@ -577,6 +577,42 @@
         ]
       }
     },
+    "/v1/returns_log/list_returns_log/{personId}": {
+      "get": {
+        "operationId": "df_ListReturnsLog",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListReturnsLogResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/sessions/block_session": {
       "patch": {
         "operationId": "df_BlockSession",
@@ -1112,6 +1148,20 @@
       "description": "Returns the Person",
       "title": "ListPersons Response"
     },
+    "pbListReturnsLogResponse": {
+      "type": "object",
+      "properties": {
+        "returnsLog": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbReturnsLog"
+          }
+        }
+      },
+      "description": "Returns the ReturnsLog",
+      "title": "ListReturnsLog Response"
+    },
     "pbListSessionsResponse": {
       "type": "object",
       "properties": {
@@ -1356,6 +1406,61 @@
         }
       },
       "title": "Refresh Token Response"
+    },
+    "pbReturnsLog": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "email": "john.doe@example.com",
+        "firstname": "John",
+        "lastname": "Doe",
+        "phone": "",
+        "street": "Death Star 2",
+        "zip": "0815",
+        "city": "New York",
+        "country": "USA",
+        "birthday": "1990-10-05T00:00:00Z",
+        "privacy_accepted": false,
+        "privacy_accepted_date": "0001-01-01T00:00:00Z",
+        "creator": "john.doe@example.com",
+        "created": "2023-10-05T02:30:53Z",
+        "changer": "john.doe@example.com",
+        "changed": "2023-10-05T02:30:53Z"
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "returnId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "mailId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "status": {
+          "type": "string"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "changer": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        }
+      },
+      "title": "ReturnsLog"
     },
     "pbSession": {
       "type": "object",

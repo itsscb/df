@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message ReturnsLog {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "ReturnsLog";
+        };
+        example: "{\"id\": \"1\",\"email\": \"john.doe@example.com\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"phone\": \"\", \"street\": \"Death Star 2\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:00Z\", \"privacy_accepted\": false, \"privacy_accepted_date\": \"0001-01-01T00:00:00Z\", \"creator\": \"john.doe@example.com\", \"created\": \"2023-10-05T02:30:53Z\", \"changer\": \"john.doe@example.com\", \"changed\": \"2023-10-05T02:30:53Z\"}";
+    };
+    uint64 id = 1;
+    uint64 return_id = 2;
+    uint64 mail_id = 3;
+    string status = 4;
+    string creator = 5;
+    google.protobuf.Timestamp created = 6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"2023-10-05T00:00:00Z\""
+  }];
+    string changer = 7;
+    google.protobuf.Timestamp changed = 8 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"2023-10-05T00:00:00Z\""
+  }];
+}

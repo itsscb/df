@@ -65,6 +65,7 @@ type Querier interface {
 	ListProviders(ctx context.Context, arg ListProvidersParams) ([]Provider, error)
 	ListReturns(ctx context.Context, arg ListReturnsParams) ([]Return, error)
 	ListReturnsLogs(ctx context.Context, arg ListReturnsLogsParams) ([]ReturnsLog, error)
+	ListReturnsLogsByPersonID(ctx context.Context, id uint64) ([]ReturnsLog, error)
 	ListSessions(ctx context.Context, email string) ([]Session, error)
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
 	UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPrivacyParams) (Account, error)

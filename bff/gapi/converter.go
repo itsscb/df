@@ -77,3 +77,16 @@ func convertPayment(payment db.Payment) *pb.Payment {
 		Changed:         timestamppb.New(payment.Changed),
 	}
 }
+
+func convertReturnsLog(returnsLog db.ReturnsLog) *pb.ReturnsLog {
+	return &pb.ReturnsLog{
+		Id:       returnsLog.ID,
+		ReturnId: returnsLog.ReturnID,
+		MailId:   returnsLog.MailID,
+		Status:   returnsLog.Status,
+		Creator:  returnsLog.Creator,
+		Changer:  returnsLog.Changer,
+		Created:  timestamppb.New(returnsLog.Created),
+		Changed:  timestamppb.New(returnsLog.Changed),
+	}
+}

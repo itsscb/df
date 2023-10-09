@@ -27,10 +27,10 @@ INSERT INTO "returnsLog" (
 `
 
 type CreateReturnsLogParams struct {
-	ReturnID uint64         `json:"return_id"`
-	MailID   uint64         `json:"mail_id"`
-	Status   sql.NullString `json:"status"`
-	Creator  string         `json:"creator"`
+	ReturnID uint64 `json:"return_id"`
+	MailID   uint64 `json:"mail_id"`
+	Status   string `json:"status"`
+	Creator  string `json:"creator"`
 }
 
 func (q *Queries) CreateReturnsLog(ctx context.Context, arg CreateReturnsLogParams) (ReturnsLog, error) {
@@ -99,6 +99,46 @@ type ListReturnsLogsParams struct {
 
 func (q *Queries) ListReturnsLogs(ctx context.Context, arg ListReturnsLogsParams) ([]ReturnsLog, error) {
 	rows, err := q.db.QueryContext(ctx, listReturnsLogs, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ReturnsLog{}
+	for rows.Next() {
+		var i ReturnsLog
+		if err := rows.Scan(
+			&i.ID,
+			&i.ReturnID,
+			&i.MailID,
+			&i.Status,
+			&i.Creator,
+			&i.Created,
+			&i.Changer,
+			&i.Changed,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listReturnsLogsByPersonID = `-- name: ListReturnsLogsByPersonID :many
+SELECT rl.id, rl.return_id, rl.mail_id, rl.status, rl.creator, rl.created, rl.changer, rl.changed
+FROM "returns" AS r
+INNER JOIN "returnsLog" AS rl
+    ON r.id = rl.return_id
+WHERE r.person_id = $1
+`
+
+func (q *Queries) ListReturnsLogsByPersonID(ctx context.Context, id uint64) ([]ReturnsLog, error) {
+	rows, err := q.db.QueryContext(ctx, listReturnsLogsByPersonID, id)
 	if err != nil {
 		return nil, err
 	}

@@ -21,6 +21,7 @@ import "rpc_list_payments.proto";
 import "rpc_list_sessions.proto";
 import "rpc_block_session.proto";
 import "rpc_update_account_privacy.proto";
+import "rpc_list_returns_log_by_person_id.proto";
 import "rpc_login.proto";
 import "rpc_refresh_token.proto";
 
@@ -268,6 +269,19 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         option (google.api.http) = {
             patch: "/v1/payments/update_payment"
             body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc ListReturnsLog (ListReturnsLogRequest) returns (ListReturnsLogResponse) {
+        option (google.api.http) = {
+            get: "/v1/returns_log/list_returns_log/{person_id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             security: {

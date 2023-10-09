@@ -20,11 +20,8 @@ func createRandomReturnsLog(t *testing.T) ReturnsLog {
 	arg := CreateReturnsLogParams{
 		ReturnID: ret.ID,
 		MailID:   mail.ID,
-		Status: sql.NullString{
-			Valid:  true,
-			String: util.RandomString(7),
-		},
-		Creator: creator,
+		Status:   util.RandomString(7),
+		Creator:  creator,
 	}
 
 	returnsLog, err := testQueries.CreateReturnsLog(context.Background(), arg)
