@@ -59,7 +59,7 @@
         ]
       }
     },
-    "/v1/accounts/get_account": {
+    "/v1/accounts/get_account/{id}": {
       "get": {
         "operationId": "df_GetAccount",
         "responses": {
@@ -79,7 +79,7 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
             "required": true,
             "type": "string",
             "format": "int64"
@@ -285,6 +285,42 @@
         ]
       }
     },
+    "/v1/payments/get_payment/{id}": {
+      "get": {
+        "operationId": "df_GetPayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetPaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/payments/list_payments": {
       "get": {
         "operationId": "df_ListPayments",
@@ -306,7 +342,7 @@
           {
             "name": "accountId",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "format": "int64"
           }
@@ -836,6 +872,16 @@
       "description": "Returns the Account",
       "title": "GetAccount Response"
     },
+    "pbGetPaymentResponse": {
+      "type": "object",
+      "properties": {
+        "payment": {
+          "$ref": "#/definitions/pbPayment"
+        }
+      },
+      "description": "Returns the Payment",
+      "title": "GetPayment Response"
+    },
     "pbListAccountsResponse": {
       "type": "object",
       "properties": {
@@ -1186,7 +1232,7 @@
     "pbUpdateAccountRequest": {
       "type": "object",
       "example": {
-        "id": "195",
+        "id": "1",
         "street": "Death Star 2"
       },
       "properties": {

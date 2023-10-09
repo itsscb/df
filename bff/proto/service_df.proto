@@ -11,6 +11,7 @@ import "rpc_create_payment.proto";
 import "rpc_update_account.proto";
 import "rpc_update_payment.proto";
 import "rpc_get_account.proto";
+import "rpc_get_payment.proto";
 import "rpc_list_accounts.proto";
 import "rpc_list_payments.proto";
 import "rpc_list_sessions.proto";
@@ -94,7 +95,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc GetAccount (GetAccountRequest) returns (GetAccountResponse) {
         option (google.api.http) = {
-            get: "/v1/accounts/get_account"
+            get: "/v1/accounts/get_account/{id}"
             // get: "/v1/accounts/{id=id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -178,6 +179,19 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
                     key: "BearerAuth";
                     value: {}
                 }
+            }
+        };
+    };
+    rpc GetPayment (GetPaymentRequest) returns (GetPaymentResponse) {
+        option (google.api.http) = {
+            get: "/v1/payments/get_payment/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
             }
         };
     };
