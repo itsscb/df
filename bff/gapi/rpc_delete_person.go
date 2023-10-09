@@ -44,10 +44,7 @@ func (server *Server) DeletePerson(ctx context.Context, req *pb.DeletePersonRequ
 		return nil, status.Errorf(codes.Internal, "failed to get person")
 	}
 
-	personID := int64(person.ID)
-	accountID := int64(account.ID)
-
-	if person.AccountID != accountID {
+	if person.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "person not found")
 		}
@@ -60,7 +57,7 @@ func (server *Server) DeletePerson(ctx context.Context, req *pb.DeletePersonRequ
 	}
 
 	rsp := &pb.DeletePersonResponse{
-		Id:      personID,
+		Id:      person.ID,
 		Deleted: true,
 	}
 	return rsp, nil

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -46,9 +47,7 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 		return nil, status.Error(codes.Internal, "failed to get payment")
 	}
 
-	accountID := int64(account.ID)
-
-	if dbPayment.AccountID != accountID {
+	if dbPayment.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "payment not found")
 		}
@@ -93,6 +92,7 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 
 	payment, err := server.store.UpdatePayment(ctx, arg)
 	if err != nil {
+		slog.Error("Update Payment", slog.Int64("id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to update payment")
 	}
 

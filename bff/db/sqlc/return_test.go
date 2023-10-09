@@ -18,8 +18,8 @@ func createRandomReturn(t *testing.T) Return {
 	creator := util.RandomName()
 
 	arg := CreateReturnParams{
-		PersonID:    int64(person.ID),
-		ProviderID:  int64(provider.ID),
+		PersonID:    person.ID,
+		ProviderID:  provider.ID,
 		Status:      util.RandomString(7),
 		Name:        util.RandomName(),
 		Description: util.RandomString(30),

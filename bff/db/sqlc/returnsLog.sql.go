@@ -27,8 +27,8 @@ INSERT INTO "returnsLog" (
 `
 
 type CreateReturnsLogParams struct {
-	ReturnID int64          `json:"return_id"`
-	MailID   int64          `json:"mail_id"`
+	ReturnID uint64         `json:"return_id"`
+	MailID   uint64         `json:"mail_id"`
 	Status   sql.NullString `json:"status"`
 	Creator  string         `json:"creator"`
 }
@@ -132,31 +132,21 @@ func (q *Queries) ListReturnsLogs(ctx context.Context, arg ListReturnsLogsParams
 const updateReturnsLog = `-- name: UpdateReturnsLog :one
 UPDATE "returnsLog"
 SET
-    "return_id" = COALESCE($2, "return_id"),
-    "mail_id" = COALESCE($3, "mail_id"),
-    "status" = COALESCE($4, "status"),
+    "status" = COALESCE($2, "status"),
     "changer" = $1,
     "changed" = now()
-WHERE "id" = $5
+WHERE "id" = $3
 RETURNING id, return_id, mail_id, status, creator, created, changer, changed
 `
 
 type UpdateReturnsLogParams struct {
-	Changer  string         `json:"changer"`
-	ReturnID sql.NullInt64  `json:"return_id"`
-	MailID   sql.NullInt64  `json:"mail_id"`
-	Status   sql.NullString `json:"status"`
-	ID       uint64         `json:"id"`
+	Changer string         `json:"changer"`
+	Status  sql.NullString `json:"status"`
+	ID      uint64         `json:"id"`
 }
 
 func (q *Queries) UpdateReturnsLog(ctx context.Context, arg UpdateReturnsLogParams) (ReturnsLog, error) {
-	row := q.db.QueryRowContext(ctx, updateReturnsLog,
-		arg.Changer,
-		arg.ReturnID,
-		arg.MailID,
-		arg.Status,
-		arg.ID,
-	)
+	row := q.db.QueryRowContext(ctx, updateReturnsLog, arg.Changer, arg.Status, arg.ID)
 	var i ReturnsLog
 	err := row.Scan(
 		&i.ID,

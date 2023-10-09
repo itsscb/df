@@ -1015,7 +1015,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "deleted": {
           "type": "boolean"
@@ -1032,7 +1032,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "deleted": {
           "type": "boolean"

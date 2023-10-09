@@ -65,7 +65,7 @@ type Mail struct {
 
 type Payment struct {
 	ID              uint64         `json:"id"`
-	AccountID       int64          `json:"account_id"`
+	AccountID       uint64         `json:"account_id"`
 	PaymentCategory string         `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
 	IBAN            sql.NullString `json:"IBAN"`
@@ -82,7 +82,7 @@ type Payment struct {
 
 type Person struct {
 	ID        uint64    `json:"id"`
-	AccountID int64     `json:"account_id"`
+	AccountID uint64    `json:"account_id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
 	Birthday  time.Time `json:"birthday"`
@@ -110,8 +110,8 @@ type Provider struct {
 
 type Return struct {
 	ID          uint64    `json:"id"`
-	PersonID    int64     `json:"person_id"`
-	ProviderID  int64     `json:"provider_id"`
+	PersonID    uint64    `json:"person_id"`
+	ProviderID  uint64    `json:"provider_id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Category    string    `json:"category"`
@@ -125,8 +125,8 @@ type Return struct {
 
 type ReturnsLog struct {
 	ID       uint64         `json:"id"`
-	ReturnID int64          `json:"return_id"`
-	MailID   int64          `json:"mail_id"`
+	ReturnID uint64         `json:"return_id"`
+	MailID   uint64         `json:"mail_id"`
 	Status   sql.NullString `json:"status"`
 	Creator  string         `json:"creator"`
 	Created  time.Time      `json:"created"`

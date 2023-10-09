@@ -18,9 +18,10 @@ INSERT INTO documents (
     "path",
     "url",
     "creator",
-    "changer"
+    "changer",
+    "person_id"
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7
+    $1, $2, $3, $4, $5, $6, $7, NULL
 ) RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed
 `
 
@@ -72,9 +73,10 @@ INSERT INTO documents (
     "path",
     "url",
     "creator",
-    "changer"
+    "changer",
+    "mail_id"
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7
+    $1, $2, $3, $4, $5, $6, $7, NULL
 ) RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed
 `
 
@@ -247,11 +249,10 @@ func (q *Queries) ListDocuments(ctx context.Context, arg ListDocumentsParams) ([
 const updateDocument = `-- name: UpdateDocument :one
 UPDATE documents
 SET
-    "person_id" = COALESCE($3, "person_id"),
-    "name" = COALESCE($4, "name"),
-    "type" = COALESCE($5, "type"),
-    "path" = COALESCE($6, "path"),
-    "url" = COALESCE($7, "url"),
+    "name" = COALESCE($3, "name"),
+    "type" = COALESCE($4, "type"),
+    "path" = COALESCE($5, "path"),
+    "url" = COALESCE($6, "url"),
     changer = $2,
     changed = now()
 WHERE "id" = $1
@@ -259,20 +260,18 @@ RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by,
 `
 
 type UpdateDocumentParams struct {
-	ID       uint64         `json:"id"`
-	Changer  string         `json:"changer"`
-	PersonID sql.NullInt64  `json:"person_id"`
-	Name     sql.NullString `json:"name"`
-	Type     sql.NullString `json:"type"`
-	Path     sql.NullString `json:"path"`
-	Url      sql.NullString `json:"url"`
+	ID      uint64         `json:"id"`
+	Changer string         `json:"changer"`
+	Name    sql.NullString `json:"name"`
+	Type    sql.NullString `json:"type"`
+	Path    sql.NullString `json:"path"`
+	Url     sql.NullString `json:"url"`
 }
 
 func (q *Queries) UpdateDocument(ctx context.Context, arg UpdateDocumentParams) (Document, error) {
 	row := q.db.QueryRowContext(ctx, updateDocument,
 		arg.ID,
 		arg.Changer,
-		arg.PersonID,
 		arg.Name,
 		arg.Type,
 		arg.Path,

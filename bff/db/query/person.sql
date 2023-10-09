@@ -26,7 +26,6 @@ ORDER BY "lastname", "firstname";
 -- name: UpdatePerson :one
 UPDATE persons
 SET
-    "account_id" = COALESCE(sqlc.narg(account_id), "account_id"),
     "firstname" = COALESCE(sqlc.narg(firstname), "firstname"),
     "lastname" = COALESCE(sqlc.narg(lastname), "lastname"),
     "birthday" = COALESCE(sqlc.narg(birthday), "birthday"),

@@ -44,10 +44,7 @@ func (server *Server) DeletePayment(ctx context.Context, req *pb.DeletePaymentRe
 		return nil, status.Errorf(codes.Internal, "failed to get payment")
 	}
 
-	paymentID := int64(req.GetId())
-	accountID := int64(account.ID)
-
-	if payment.AccountID != accountID {
+	if payment.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "payment not found")
 		}
@@ -60,7 +57,7 @@ func (server *Server) DeletePayment(ctx context.Context, req *pb.DeletePaymentRe
 	}
 
 	rsp := &pb.DeletePaymentResponse{
-		Id:      paymentID,
+		Id:      payment.ID,
 		Deleted: true,
 	}
 	return rsp, nil

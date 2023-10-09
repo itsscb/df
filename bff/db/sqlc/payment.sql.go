@@ -29,7 +29,7 @@ INSERT INTO payments (
 `
 
 type CreatePaymentParams struct {
-	AccountID       int64          `json:"account_id"`
+	AccountID       uint64         `json:"account_id"`
 	PaymentCategory string         `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
 	IBAN            sql.NullString `json:"IBAN"`
@@ -119,7 +119,7 @@ WHERE "account_id" = $1
 ORDER BY "payment_category"
 `
 
-func (q *Queries) ListPayments(ctx context.Context, accountID int64) ([]Payment, error) {
+func (q *Queries) ListPayments(ctx context.Context, accountID uint64) ([]Payment, error) {
 	rows, err := q.db.QueryContext(ctx, listPayments, accountID)
 	if err != nil {
 		return nil, err
@@ -160,25 +160,21 @@ func (q *Queries) ListPayments(ctx context.Context, accountID int64) ([]Payment,
 const updatePayment = `-- name: UpdatePayment :one
 UPDATE payments
 SET
-    "account_id" = COALESCE($3, "account_id"),
-    "payment_category" = COALESCE($4, "payment_category"),
-    "bankname" = COALESCE($5, "bankname"),
-    "IBAN" = COALESCE($6, "IBAN"),
-    "BIC" = COALESCE($7, "BIC"),
-    "paypal_account" = COALESCE($8, "paypal_account"),
-    "paypal_id" = COALESCE($9, "paypal_id"),
-    "payment_system" = COALESCE($10, "payment_system"),
-    "type" = COALESCE($11, "type"),
-    "changer" = $2,
+    "payment_category" = COALESCE($1, "payment_category"),
+    "bankname" = COALESCE($2, "bankname"),
+    "IBAN" = COALESCE($3, "IBAN"),
+    "BIC" = COALESCE($4, "BIC"),
+    "paypal_account" = COALESCE($5, "paypal_account"),
+    "paypal_id" = COALESCE($6, "paypal_id"),
+    "payment_system" = COALESCE($7, "payment_system"),
+    "type" = COALESCE($8, "type"),
+    "changer" = $9,
     "changed" = now()
-WHERE "id" = $1
+WHERE "id" = $10
 RETURNING id, account_id, payment_category, bankname, "IBAN", "BIC", paypal_account, paypal_id, payment_system, type, creator, created, changer, changed
 `
 
 type UpdatePaymentParams struct {
-	ID              uint64         `json:"id"`
-	Changer         string         `json:"changer"`
-	AccountID       sql.NullInt64  `json:"account_id"`
 	PaymentCategory sql.NullString `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
 	Iban            sql.NullString `json:"iban"`
@@ -187,13 +183,12 @@ type UpdatePaymentParams struct {
 	PaypalID        sql.NullString `json:"paypal_id"`
 	PaymentSystem   sql.NullString `json:"payment_system"`
 	Type            sql.NullString `json:"type"`
+	Changer         string         `json:"changer"`
+	ID              uint64         `json:"id"`
 }
 
 func (q *Queries) UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (Payment, error) {
 	row := q.db.QueryRowContext(ctx, updatePayment,
-		arg.ID,
-		arg.Changer,
-		arg.AccountID,
 		arg.PaymentCategory,
 		arg.Bankname,
 		arg.Iban,
@@ -202,6 +197,8 @@ func (q *Queries) UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (P
 		arg.PaypalID,
 		arg.PaymentSystem,
 		arg.Type,
+		arg.Changer,
+		arg.ID,
 	)
 	var i Payment
 	err := row.Scan(

@@ -6,7 +6,7 @@ import (
 )
 
 type CreatePersonTxParams struct {
-	AccountID int64     `json:"account_id"`
+	AccountID uint64    `json:"account_id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
 	Birthday  time.Time `json:"birthday"`
@@ -35,7 +35,7 @@ func (store *SQLStore) CreatePersonTx(ctx context.Context, arg CreatePersonTxPar
 
 		err = q.CloneProviders(ctx, CloneProvidersParams{
 			Creator:  arg.Creator,
-			PersonID: int64(result.Person.ID),
+			PersonID: result.Person.ID,
 		})
 		return err
 	})

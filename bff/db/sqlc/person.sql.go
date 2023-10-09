@@ -29,7 +29,7 @@ INSERT INTO persons (
 `
 
 type CreatePersonParams struct {
-	AccountID int64     `json:"account_id"`
+	AccountID uint64    `json:"account_id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
 	Birthday  time.Time `json:"birthday"`
@@ -114,7 +114,7 @@ SELECT id, person_id, provider_id, name, description, category, email, status, c
 WHERE "person_id" = $1
 `
 
-func (q *Queries) GetReturns(ctx context.Context, id int64) ([]Return, error) {
+func (q *Queries) GetReturns(ctx context.Context, id uint64) ([]Return, error) {
 	rows, err := q.db.QueryContext(ctx, getReturns, id)
 	if err != nil {
 		return nil, err
@@ -156,7 +156,7 @@ WHERE "account_id" = $1
 ORDER BY "lastname", "firstname"
 `
 
-func (q *Queries) ListPersons(ctx context.Context, accountID int64) ([]Person, error) {
+func (q *Queries) ListPersons(ctx context.Context, accountID uint64) ([]Person, error) {
 	rows, err := q.db.QueryContext(ctx, listPersons, accountID)
 	if err != nil {
 		return nil, err
@@ -196,14 +196,13 @@ func (q *Queries) ListPersons(ctx context.Context, accountID int64) ([]Person, e
 const updatePerson = `-- name: UpdatePerson :one
 UPDATE persons
 SET
-    "account_id" = COALESCE($3, "account_id"),
-    "firstname" = COALESCE($4, "firstname"),
-    "lastname" = COALESCE($5, "lastname"),
-    "birthday" = COALESCE($6, "birthday"),
-    "city" = COALESCE($7, "city"),
-    "zip" = COALESCE($8, "zip"),
-    "street" = COALESCE($9, "street"),
-    "country" = COALESCE($10, "country"),
+    "firstname" = COALESCE($3, "firstname"),
+    "lastname" = COALESCE($4, "lastname"),
+    "birthday" = COALESCE($5, "birthday"),
+    "city" = COALESCE($6, "city"),
+    "zip" = COALESCE($7, "zip"),
+    "street" = COALESCE($8, "street"),
+    "country" = COALESCE($9, "country"),
     "changer" = $2,
     "changed" = now()
 WHERE "id" = $1
@@ -213,7 +212,6 @@ RETURNING id, account_id, firstname, lastname, birthday, city, zip, street, coun
 type UpdatePersonParams struct {
 	ID        uint64         `json:"id"`
 	Changer   string         `json:"changer"`
-	AccountID sql.NullInt64  `json:"account_id"`
 	Firstname sql.NullString `json:"firstname"`
 	Lastname  sql.NullString `json:"lastname"`
 	Birthday  sql.NullTime   `json:"birthday"`
@@ -227,7 +225,6 @@ func (q *Queries) UpdatePerson(ctx context.Context, arg UpdatePersonParams) (Per
 	row := q.db.QueryRowContext(ctx, updatePerson,
 		arg.ID,
 		arg.Changer,
-		arg.AccountID,
 		arg.Firstname,
 		arg.Lastname,
 		arg.Birthday,

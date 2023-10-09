@@ -27,6 +27,6 @@ message DeletePersonResponse {
         };
         example: "{\"id\": \"1\", \"deleted\": true}"
     };
-    int64 id = 1;
+    uint64 id = 1;
     bool deleted = 2;
 }

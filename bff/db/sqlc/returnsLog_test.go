@@ -18,8 +18,8 @@ func createRandomReturnsLog(t *testing.T) ReturnsLog {
 	creator := util.RandomName()
 
 	arg := CreateReturnsLogParams{
-		ReturnID: int64(ret.ID),
-		MailID:   int64(mail.ID),
+		ReturnID: ret.ID,
+		MailID:   mail.ID,
 		Status: sql.NullString{
 			Valid:  true,
 			String: util.RandomString(7),

@@ -510,7 +510,7 @@ func (mr *MockStoreMockRecorder) GetReturn(arg0, arg1 any) *gomock.Call {
 }
 
 // GetReturns mocks base method.
-func (m *MockStore) GetReturns(arg0 context.Context, arg1 int64) ([]db.Return, error) {
+func (m *MockStore) GetReturns(arg0 context.Context, arg1 uint64) ([]db.Return, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetReturns", arg0, arg1)
 	ret0, _ := ret[0].([]db.Return)
@@ -615,7 +615,7 @@ func (mr *MockStoreMockRecorder) ListMails(arg0, arg1 any) *gomock.Call {
 }
 
 // ListPayments mocks base method.
-func (m *MockStore) ListPayments(arg0 context.Context, arg1 int64) ([]db.Payment, error) {
+func (m *MockStore) ListPayments(arg0 context.Context, arg1 uint64) ([]db.Payment, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPayments", arg0, arg1)
 	ret0, _ := ret[0].([]db.Payment)
@@ -630,7 +630,7 @@ func (mr *MockStoreMockRecorder) ListPayments(arg0, arg1 any) *gomock.Call {
 }
 
 // ListPersons mocks base method.
-func (m *MockStore) ListPersons(arg0 context.Context, arg1 int64) ([]db.Person, error) {
+func (m *MockStore) ListPersons(arg0 context.Context, arg1 uint64) ([]db.Person, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPersons", arg0, arg1)
 	ret0, _ := ret[0].([]db.Person)

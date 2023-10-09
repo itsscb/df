@@ -42,9 +42,7 @@ func (server *Server) ListPayments(ctx context.Context, req *pb.ListPaymentsRequ
 		}
 	}
 
-	accountID := int64(account.ID)
-
-	dbPayments, err := server.store.ListPayments(ctx, accountID)
+	dbPayments, err := server.store.ListPayments(ctx, account.ID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "no payments found")

@@ -26,8 +26,6 @@ OFFSET $2;
 -- name: UpdateReturnsLog :one
 UPDATE "returnsLog"
 SET
-    "return_id" = COALESCE(sqlc.narg(return_id), "return_id"),
-    "mail_id" = COALESCE(sqlc.narg(mail_id), "mail_id"),
     "status" = COALESCE(sqlc.narg(status), "status"),
     "changer" = $1,
     "changed" = now()

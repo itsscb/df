@@ -10,9 +10,10 @@ INSERT INTO documents (
     "path",
     "url",
     "creator",
-    "changer"
+    "changer",
+    "mail_id"
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7
+    $1, $2, $3, $4, $5, $6, $7, NULL
 ) RETURNING *;
 
 -- name: CreateDocumentMail :one
@@ -23,9 +24,10 @@ INSERT INTO documents (
     "path",
     "url",
     "creator",
-    "changer"
+    "changer",
+    "person_id"
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7
+    $1, $2, $3, $4, $5, $6, $7, NULL
 ) RETURNING *;
 
 -- name: ListDocuments :many
@@ -37,7 +39,6 @@ OFFSET $2;
 -- name: UpdateDocument :one
 UPDATE documents
 SET
-    "person_id" = COALESCE(sqlc.narg(person_id), "person_id"),
     "name" = COALESCE(sqlc.narg(name), "name"),
     "type" = COALESCE(sqlc.narg(type), "type"),
     "path" = COALESCE(sqlc.narg(path), "path"),
