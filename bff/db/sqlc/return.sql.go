@@ -116,7 +116,7 @@ DELETE FROM returns
 WHERE "id" = $1
 `
 
-func (q *Queries) DeleteReturn(ctx context.Context, id int64) error {
+func (q *Queries) DeleteReturn(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deleteReturn, id)
 	return err
 }
@@ -126,7 +126,7 @@ SELECT id, person_id, provider_id, name, description, category, email, status, c
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetReturn(ctx context.Context, id int64) (Return, error) {
+func (q *Queries) GetReturn(ctx context.Context, id uint64) (Return, error) {
 	row := q.db.QueryRowContext(ctx, getReturn, id)
 	var i Return
 	err := row.Scan(
@@ -219,7 +219,7 @@ type UpdateReturnParams struct {
 	Email       sql.NullString `json:"email"`
 	Status      sql.NullString `json:"status"`
 	Changer     string         `json:"changer"`
-	ID          int64          `json:"id"`
+	ID          uint64         `json:"id"`
 }
 
 func (q *Queries) UpdateReturn(ctx context.Context, arg UpdateReturnParams) (Return, error) {

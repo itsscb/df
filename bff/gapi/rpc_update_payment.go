@@ -46,7 +46,9 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 		return nil, status.Error(codes.Internal, "failed to get payment")
 	}
 
-	if dbPayment.AccountID != account.ID {
+	accountID := int64(account.ID)
+
+	if dbPayment.AccountID != accountID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "payment not found")
 		}

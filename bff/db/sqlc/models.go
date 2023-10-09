@@ -12,7 +12,7 @@ import (
 )
 
 type Account struct {
-	ID                  int64          `json:"id"`
+	ID                  uint64         `json:"id"`
 	PermissionLevel     int32          `json:"permission_level"`
 	Passwordhash        string         `json:"passwordhash"`
 	Firstname           string         `json:"firstname"`
@@ -33,7 +33,7 @@ type Account struct {
 }
 
 type Document struct {
-	ID          int64          `json:"id"`
+	ID          uint64         `json:"id"`
 	PersonID    sql.NullInt64  `json:"person_id"`
 	Name        string         `json:"name"`
 	Type        string         `json:"type"`
@@ -50,7 +50,7 @@ type Document struct {
 }
 
 type Mail struct {
-	ID        int64     `json:"id"`
+	ID        uint64    `json:"id"`
 	From      string    `json:"from"`
 	To        []string  `json:"to"`
 	Cc        []string  `json:"cc"`
@@ -64,7 +64,7 @@ type Mail struct {
 }
 
 type Payment struct {
-	ID              int64          `json:"id"`
+	ID              uint64         `json:"id"`
 	AccountID       int64          `json:"account_id"`
 	PaymentCategory string         `json:"payment_category"`
 	Bankname        sql.NullString `json:"bankname"`
@@ -81,7 +81,7 @@ type Payment struct {
 }
 
 type Person struct {
-	ID        int64     `json:"id"`
+	ID        uint64    `json:"id"`
 	AccountID int64     `json:"account_id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
@@ -97,7 +97,7 @@ type Person struct {
 }
 
 type Provider struct {
-	ID          int64     `json:"id"`
+	ID          uint64    `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Category    string    `json:"category"`
@@ -109,7 +109,7 @@ type Provider struct {
 }
 
 type Return struct {
-	ID          int64     `json:"id"`
+	ID          uint64    `json:"id"`
 	PersonID    int64     `json:"person_id"`
 	ProviderID  int64     `json:"provider_id"`
 	Name        string    `json:"name"`
@@ -124,7 +124,7 @@ type Return struct {
 }
 
 type ReturnsLog struct {
-	ID       int64          `json:"id"`
+	ID       uint64         `json:"id"`
 	ReturnID int64          `json:"return_id"`
 	MailID   int64          `json:"mail_id"`
 	Status   sql.NullString `json:"status"`

@@ -44,7 +44,9 @@ func (server *Server) GetPerson(ctx context.Context, req *pb.GetPersonRequest) (
 		return nil, status.Error(codes.NotFound, "failed to get persons")
 	}
 
-	if account.ID != person.AccountID {
+	accountID := int64(account.ID)
+
+	if accountID != person.AccountID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}

@@ -188,7 +188,7 @@ func TestGetAccountAPI(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		accountID     int64
+		accountID     uint64
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)

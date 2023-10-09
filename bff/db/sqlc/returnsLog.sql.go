@@ -59,7 +59,7 @@ DELETE FROM "returnsLog"
 WHERE "id" = $1
 `
 
-func (q *Queries) DeleteReturnsLog(ctx context.Context, id int64) error {
+func (q *Queries) DeleteReturnsLog(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deleteReturnsLog, id)
 	return err
 }
@@ -69,7 +69,7 @@ SELECT id, return_id, mail_id, status, creator, created, changer, changed FROM "
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetReturnsLog(ctx context.Context, id int64) (ReturnsLog, error) {
+func (q *Queries) GetReturnsLog(ctx context.Context, id uint64) (ReturnsLog, error) {
 	row := q.db.QueryRowContext(ctx, getReturnsLog, id)
 	var i ReturnsLog
 	err := row.Scan(
@@ -146,7 +146,7 @@ type UpdateReturnsLogParams struct {
 	ReturnID sql.NullInt64  `json:"return_id"`
 	MailID   sql.NullInt64  `json:"mail_id"`
 	Status   sql.NullString `json:"status"`
-	ID       int64          `json:"id"`
+	ID       uint64         `json:"id"`
 }
 
 func (q *Queries) UpdateReturnsLog(ctx context.Context, arg UpdateReturnsLogParams) (ReturnsLog, error) {

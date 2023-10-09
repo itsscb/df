@@ -31,7 +31,7 @@ func convertAccount(account db.Account) *pb.Account {
 func convertPerson(person db.Person) *pb.Person {
 	return &pb.Person{
 		Id:        person.ID,
-		AccountId: person.AccountID,
+		AccountId: uint64(person.AccountID),
 		Firstname: person.Firstname,
 		Lastname:  person.Lastname,
 		Street:    person.Street,
@@ -62,7 +62,7 @@ func convertSession(session db.Session) *pb.Session {
 func convertPayment(payment db.Payment) *pb.Payment {
 	return &pb.Payment{
 		Id:              payment.ID,
-		AccountId:       payment.AccountID,
+		AccountId:       uint64(payment.AccountID),
 		PaymentCategory: payment.PaymentCategory,
 		Bankname:        &payment.Bankname.String,
 		IBAN:            &payment.IBAN.String,

@@ -24,8 +24,8 @@ func (server *Server) ListAccounts(ctx context.Context, req *pb.ListAccountsRequ
 	}
 
 	arg := db.ListAccountsParams{
-		Limit:  req.GetPageSize(),
-		Offset: (req.GetPageId() - 1) * req.GetPageSize(),
+		Limit:  int32(req.GetPageSize()),
+		Offset: int32((req.GetPageId() - 1) * req.GetPageSize()),
 	}
 
 	dbAccounts, err := server.store.ListAccounts(ctx, arg)

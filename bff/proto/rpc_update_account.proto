@@ -20,7 +20,7 @@ message UpdateAccountRequest {
         };
         example: "{\"id\": \"1\", \"street\": \"Death Star 2\"}";
     };
-    int64 id = 1;
+    uint64 id = 1;
     optional string email = 2;
     optional string password = 3;
     optional string firstname = 4;

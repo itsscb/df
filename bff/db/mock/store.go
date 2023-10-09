@@ -249,7 +249,7 @@ func (mr *MockStoreMockRecorder) CreateSession(arg0, arg1 any) *gomock.Call {
 }
 
 // DeleteAccount mocks base method.
-func (m *MockStore) DeleteAccount(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeleteAccount(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteAccount", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -263,7 +263,7 @@ func (mr *MockStoreMockRecorder) DeleteAccount(arg0, arg1 any) *gomock.Call {
 }
 
 // DeleteDocument mocks base method.
-func (m *MockStore) DeleteDocument(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeleteDocument(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteDocument", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -277,7 +277,7 @@ func (mr *MockStoreMockRecorder) DeleteDocument(arg0, arg1 any) *gomock.Call {
 }
 
 // DeleteMail mocks base method.
-func (m *MockStore) DeleteMail(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeleteMail(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteMail", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -291,7 +291,7 @@ func (mr *MockStoreMockRecorder) DeleteMail(arg0, arg1 any) *gomock.Call {
 }
 
 // DeletePayment mocks base method.
-func (m *MockStore) DeletePayment(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeletePayment(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeletePayment", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -305,7 +305,7 @@ func (mr *MockStoreMockRecorder) DeletePayment(arg0, arg1 any) *gomock.Call {
 }
 
 // DeletePerson mocks base method.
-func (m *MockStore) DeletePerson(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeletePerson(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeletePerson", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -319,7 +319,7 @@ func (mr *MockStoreMockRecorder) DeletePerson(arg0, arg1 any) *gomock.Call {
 }
 
 // DeletePersonTx mocks base method.
-func (m *MockStore) DeletePersonTx(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeletePersonTx(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeletePersonTx", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -333,7 +333,7 @@ func (mr *MockStoreMockRecorder) DeletePersonTx(arg0, arg1 any) *gomock.Call {
 }
 
 // DeleteProvider mocks base method.
-func (m *MockStore) DeleteProvider(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeleteProvider(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteProvider", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -347,7 +347,7 @@ func (mr *MockStoreMockRecorder) DeleteProvider(arg0, arg1 any) *gomock.Call {
 }
 
 // DeleteReturn mocks base method.
-func (m *MockStore) DeleteReturn(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeleteReturn(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteReturn", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -361,7 +361,7 @@ func (mr *MockStoreMockRecorder) DeleteReturn(arg0, arg1 any) *gomock.Call {
 }
 
 // DeleteReturnsLog mocks base method.
-func (m *MockStore) DeleteReturnsLog(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeleteReturnsLog(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteReturnsLog", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -375,7 +375,7 @@ func (mr *MockStoreMockRecorder) DeleteReturnsLog(arg0, arg1 any) *gomock.Call {
 }
 
 // GetAccount mocks base method.
-func (m *MockStore) GetAccount(arg0 context.Context, arg1 int64) (db.Account, error) {
+func (m *MockStore) GetAccount(arg0 context.Context, arg1 uint64) (db.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccount", arg0, arg1)
 	ret0, _ := ret[0].(db.Account)
@@ -405,7 +405,7 @@ func (mr *MockStoreMockRecorder) GetAccountByEmail(arg0, arg1 any) *gomock.Call 
 }
 
 // GetAccountForUpdate mocks base method.
-func (m *MockStore) GetAccountForUpdate(arg0 context.Context, arg1 int64) (db.Account, error) {
+func (m *MockStore) GetAccountForUpdate(arg0 context.Context, arg1 uint64) (db.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccountForUpdate", arg0, arg1)
 	ret0, _ := ret[0].(db.Account)
@@ -420,7 +420,7 @@ func (mr *MockStoreMockRecorder) GetAccountForUpdate(arg0, arg1 any) *gomock.Cal
 }
 
 // GetDocument mocks base method.
-func (m *MockStore) GetDocument(arg0 context.Context, arg1 int64) (db.Document, error) {
+func (m *MockStore) GetDocument(arg0 context.Context, arg1 uint64) (db.Document, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDocument", arg0, arg1)
 	ret0, _ := ret[0].(db.Document)
@@ -435,7 +435,7 @@ func (mr *MockStoreMockRecorder) GetDocument(arg0, arg1 any) *gomock.Call {
 }
 
 // GetMail mocks base method.
-func (m *MockStore) GetMail(arg0 context.Context, arg1 int64) (db.Mail, error) {
+func (m *MockStore) GetMail(arg0 context.Context, arg1 uint64) (db.Mail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetMail", arg0, arg1)
 	ret0, _ := ret[0].(db.Mail)
@@ -450,7 +450,7 @@ func (mr *MockStoreMockRecorder) GetMail(arg0, arg1 any) *gomock.Call {
 }
 
 // GetPayment mocks base method.
-func (m *MockStore) GetPayment(arg0 context.Context, arg1 int64) (db.Payment, error) {
+func (m *MockStore) GetPayment(arg0 context.Context, arg1 uint64) (db.Payment, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPayment", arg0, arg1)
 	ret0, _ := ret[0].(db.Payment)
@@ -465,7 +465,7 @@ func (mr *MockStoreMockRecorder) GetPayment(arg0, arg1 any) *gomock.Call {
 }
 
 // GetPerson mocks base method.
-func (m *MockStore) GetPerson(arg0 context.Context, arg1 int64) (db.Person, error) {
+func (m *MockStore) GetPerson(arg0 context.Context, arg1 uint64) (db.Person, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPerson", arg0, arg1)
 	ret0, _ := ret[0].(db.Person)
@@ -480,7 +480,7 @@ func (mr *MockStoreMockRecorder) GetPerson(arg0, arg1 any) *gomock.Call {
 }
 
 // GetProvider mocks base method.
-func (m *MockStore) GetProvider(arg0 context.Context, arg1 int64) (db.Provider, error) {
+func (m *MockStore) GetProvider(arg0 context.Context, arg1 uint64) (db.Provider, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetProvider", arg0, arg1)
 	ret0, _ := ret[0].(db.Provider)
@@ -495,7 +495,7 @@ func (mr *MockStoreMockRecorder) GetProvider(arg0, arg1 any) *gomock.Call {
 }
 
 // GetReturn mocks base method.
-func (m *MockStore) GetReturn(arg0 context.Context, arg1 int64) (db.Return, error) {
+func (m *MockStore) GetReturn(arg0 context.Context, arg1 uint64) (db.Return, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetReturn", arg0, arg1)
 	ret0, _ := ret[0].(db.Return)
@@ -525,7 +525,7 @@ func (mr *MockStoreMockRecorder) GetReturns(arg0, arg1 any) *gomock.Call {
 }
 
 // GetReturnsLog mocks base method.
-func (m *MockStore) GetReturnsLog(arg0 context.Context, arg1 int64) (db.ReturnsLog, error) {
+func (m *MockStore) GetReturnsLog(arg0 context.Context, arg1 uint64) (db.ReturnsLog, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetReturnsLog", arg0, arg1)
 	ret0, _ := ret[0].(db.ReturnsLog)

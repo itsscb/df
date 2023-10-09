@@ -63,7 +63,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 }
 
 type getAccountRequest struct {
-	ID int64 `uri:"id" binding:"required,min=1" json:"id"`
+	ID uint64 `uri:"id" binding:"required,min=1" json:"id"`
 }
 
 func (server *Server) getAccount(ctx *gin.Context) {
@@ -142,8 +142,8 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 }
 
 type updateAccountPrivacyRequest struct {
-	ID              int64 `binding:"required" json:"ID"`
-	PrivacyAccepted *bool `binding:"required" json:"privacy_accepted"`
+	ID              uint64 `binding:"required" json:"ID"`
+	PrivacyAccepted *bool  `binding:"required" json:"privacy_accepted"`
 }
 
 func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
@@ -180,7 +180,7 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 }
 
 type updateAccountRequest struct {
-	ID          int64     `binding:"required" json:"ID"`
+	ID          uint64    `binding:"required" json:"ID"`
 	NewPassword string    `json:"new_password"`
 	Firstname   string    `json:"firstname"`
 	Lastname    string    `json:"lastname"`

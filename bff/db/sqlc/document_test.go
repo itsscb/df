@@ -19,7 +19,7 @@ func createRandomDocumentUpload(t *testing.T) Document {
 	arg := CreateDocumentUploadParams{
 		PersonID: sql.NullInt64{
 			Valid: true,
-			Int64: person.ID,
+			Int64: int64(person.ID),
 		},
 		Name:    util.RandomString(20),
 		Type:    util.RandomString(5),
@@ -57,7 +57,7 @@ func TestCreateDocumentMail(t *testing.T) {
 	arg := CreateDocumentMailParams{
 		MailID: sql.NullInt64{
 			Valid: true,
-			Int64: mail.ID,
+			Int64: int64(mail.ID),
 		},
 		Name:    util.RandomString(20),
 		Type:    util.RandomString(5),

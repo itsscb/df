@@ -14,8 +14,8 @@ message Payment {
         };
         example: "{\"id\": \"1\",\"account_id\": \"1\", \"payment_category\": \"TBD: paypal\", \"paypal_account\": \"john.doe@example.com\", \"paypal_id\": \"this-is-a-paypal-id\", \"payment_system\": \"TBD: paypal system\", \"type\": \"TBD: some type\", \"creator\": \"john.doe@example.com\", \"created\": \"2023-10-05T02:30:53Z\", \"changer\": \"john.doe@example.com\", \"changed\": \"2023-10-05T02:30:53Z\"}";
     };
-    int64 id = 1;
-    int64 account_id = 2;
+    uint64 id = 1;
+    uint64 account_id = 2;
     string payment_category = 3;
     optional string bankname = 4;
     optional string IBAN = 5;

@@ -81,7 +81,7 @@ DELETE FROM payments
 WHERE "id" = $1
 `
 
-func (q *Queries) DeletePayment(ctx context.Context, id int64) error {
+func (q *Queries) DeletePayment(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deletePayment, id)
 	return err
 }
@@ -91,7 +91,7 @@ SELECT id, account_id, payment_category, bankname, "IBAN", "BIC", paypal_account
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetPayment(ctx context.Context, id int64) (Payment, error) {
+func (q *Queries) GetPayment(ctx context.Context, id uint64) (Payment, error) {
 	row := q.db.QueryRowContext(ctx, getPayment, id)
 	var i Payment
 	err := row.Scan(
@@ -176,7 +176,7 @@ RETURNING id, account_id, payment_category, bankname, "IBAN", "BIC", paypal_acco
 `
 
 type UpdatePaymentParams struct {
-	ID              int64          `json:"id"`
+	ID              uint64         `json:"id"`
 	Changer         string         `json:"changer"`
 	AccountID       sql.NullInt64  `json:"account_id"`
 	PaymentCategory sql.NullString `json:"payment_category"`

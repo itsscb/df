@@ -12,7 +12,7 @@ type Store interface {
 	UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error)
 	UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAccountPrivacyTxParams) (Account, error)
 	CreatePersonTx(ctx context.Context, arg CreatePersonTxParams) (Person, error)
-	DeletePersonTx(ctx context.Context, id int64) error
+	DeletePersonTx(ctx context.Context, id uint64) error
 }
 
 // Store provides all functions to execute db queries and transactions

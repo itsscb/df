@@ -17,7 +17,7 @@ func createRandomPerson(t *testing.T) Person {
 	creator := util.RandomName()
 
 	arg := CreatePersonParams{
-		AccountID: account.ID,
+		AccountID: int64(account.ID),
 		Firstname: util.RandomName(),
 		Lastname:  util.RandomName(),
 		Birthday:  time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),

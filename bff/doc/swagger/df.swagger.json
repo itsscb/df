@@ -82,7 +82,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -116,16 +116,16 @@
           {
             "name": "pageId",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           {
             "name": "pageSize",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           }
         ],
         "tags": [
@@ -308,7 +308,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -344,7 +344,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -380,7 +380,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -492,7 +492,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -528,7 +528,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -564,7 +564,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -638,7 +638,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -709,7 +709,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "email": {
           "type": "string"
@@ -897,7 +897,7 @@
       "properties": {
         "accountId": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "paymentCategory": {
           "type": "string"
@@ -929,7 +929,6 @@
       "required": [
         "accountId",
         "paymentCategory",
-        "paymentSystem",
         "type"
       ]
     },
@@ -958,7 +957,7 @@
       "properties": {
         "accountId": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "firstname": {
           "type": "string"
@@ -987,6 +986,7 @@
       "description": "Create an Person",
       "title": "Create Person",
       "required": [
+        "accountId",
         "firstname",
         "lastname",
         "street",
@@ -1201,11 +1201,11 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "accountId": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "paymentCategory": {
           "type": "string"
@@ -1273,11 +1273,11 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "accountId": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "firstname": {
           "type": "string"
@@ -1444,7 +1444,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "email": {
           "type": "string"
@@ -1508,7 +1508,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "paymentCategory": {
           "type": "string"

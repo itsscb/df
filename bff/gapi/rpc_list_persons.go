@@ -42,7 +42,9 @@ func (server *Server) ListPersons(ctx context.Context, req *pb.ListPersonsReques
 		}
 	}
 
-	dbPersons, err := server.store.ListPersons(ctx, req.GetAccountId())
+	accountID := int64(account.ID)
+
+	dbPersons, err := server.store.ListPersons(ctx, accountID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "no persons found")

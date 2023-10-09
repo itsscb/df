@@ -38,8 +38,9 @@ func (server *Server) CreatePerson(ctx context.Context, req *pb.CreatePersonRequ
 		}
 	}
 
+	accountID := int64(req.GetAccountId())
 	arg := db.CreatePersonTxParams{
-		AccountID: req.GetAccountId(),
+		AccountID: accountID,
 		Firstname: req.GetFirstname(),
 		Lastname:  req.GetLastname(),
 		Birthday:  req.GetBirthday().AsTime(),

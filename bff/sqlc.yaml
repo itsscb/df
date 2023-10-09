@@ -13,6 +13,11 @@ sql:
         emit_empty_slices: true
         emit_exact_table_names: false
         overrides:
+          - db_type: "bigserial"
+            go_type: "uint64"
+          - db_type: "bigint"
+            null: false
+            go_type: "uint64"
           - db_type: "timestamptz"
             go_type: "time.Time"
           - db_type: "uuid"

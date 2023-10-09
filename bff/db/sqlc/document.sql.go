@@ -123,7 +123,7 @@ DELETE FROM documents
 WHERE "id" = $1
 `
 
-func (q *Queries) DeleteDocument(ctx context.Context, id int64) error {
+func (q *Queries) DeleteDocument(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deleteDocument, id)
 	return err
 }
@@ -133,7 +133,7 @@ SELECT id, person_id, name, type, path, url, valid, valid_date, validated_by, ma
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetDocument(ctx context.Context, id int64) (Document, error) {
+func (q *Queries) GetDocument(ctx context.Context, id uint64) (Document, error) {
 	row := q.db.QueryRowContext(ctx, getDocument, id)
 	var i Document
 	err := row.Scan(
@@ -168,7 +168,7 @@ RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by,
 `
 
 type InvalidateDocumentParams struct {
-	ID      int64  `json:"id"`
+	ID      uint64 `json:"id"`
 	Changer string `json:"changer"`
 }
 
@@ -259,7 +259,7 @@ RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by,
 `
 
 type UpdateDocumentParams struct {
-	ID       int64          `json:"id"`
+	ID       uint64         `json:"id"`
 	Changer  string         `json:"changer"`
 	PersonID sql.NullInt64  `json:"person_id"`
 	Name     sql.NullString `json:"name"`
@@ -311,7 +311,7 @@ RETURNING id, person_id, name, type, path, url, valid, valid_date, validated_by,
 `
 
 type ValidateDocumentParams struct {
-	ID          int64          `json:"id"`
+	ID          uint64         `json:"id"`
 	ValidatedBy sql.NullString `json:"validated_by"`
 }
 

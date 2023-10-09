@@ -20,7 +20,7 @@ message UpdateAccountPrivacyRequest {
         };
         example: "{\"id\": \"1\", \"privacy_accepted\": true }"
     };
-    int64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         example: "1",
         format: "int64"
       }];

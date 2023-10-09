@@ -23,8 +23,8 @@ type Querier interface {
 	CreateReturn(ctx context.Context, arg CreateReturnParams) (Return, error)
 	CreateReturnsLog(ctx context.Context, arg CreateReturnsLogParams) (ReturnsLog, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
-	DeleteAccount(ctx context.Context, id int64) error
-	DeleteDocument(ctx context.Context, id int64) error
+	DeleteAccount(ctx context.Context, id uint64) error
+	DeleteDocument(ctx context.Context, id uint64) error
 	// -- name: UpdateMail :one
 	// UPDATE mails
 	// SET
@@ -38,23 +38,23 @@ type Querier interface {
 	//     changed = now()
 	// WHERE "id" = $1
 	// RETURNING *;
-	DeleteMail(ctx context.Context, id int64) error
-	DeletePayment(ctx context.Context, id int64) error
-	DeletePerson(ctx context.Context, id int64) error
-	DeleteProvider(ctx context.Context, id int64) error
-	DeleteReturn(ctx context.Context, id int64) error
-	DeleteReturnsLog(ctx context.Context, id int64) error
-	GetAccount(ctx context.Context, id int64) (Account, error)
+	DeleteMail(ctx context.Context, id uint64) error
+	DeletePayment(ctx context.Context, id uint64) error
+	DeletePerson(ctx context.Context, id uint64) error
+	DeleteProvider(ctx context.Context, id uint64) error
+	DeleteReturn(ctx context.Context, id uint64) error
+	DeleteReturnsLog(ctx context.Context, id uint64) error
+	GetAccount(ctx context.Context, id uint64) (Account, error)
 	GetAccountByEmail(ctx context.Context, email string) (Account, error)
-	GetAccountForUpdate(ctx context.Context, id int64) (Account, error)
-	GetDocument(ctx context.Context, id int64) (Document, error)
-	GetMail(ctx context.Context, id int64) (Mail, error)
-	GetPayment(ctx context.Context, id int64) (Payment, error)
-	GetPerson(ctx context.Context, id int64) (Person, error)
-	GetProvider(ctx context.Context, id int64) (Provider, error)
-	GetReturn(ctx context.Context, id int64) (Return, error)
+	GetAccountForUpdate(ctx context.Context, id uint64) (Account, error)
+	GetDocument(ctx context.Context, id uint64) (Document, error)
+	GetMail(ctx context.Context, id uint64) (Mail, error)
+	GetPayment(ctx context.Context, id uint64) (Payment, error)
+	GetPerson(ctx context.Context, id uint64) (Person, error)
+	GetProvider(ctx context.Context, id uint64) (Provider, error)
+	GetReturn(ctx context.Context, id uint64) (Return, error)
 	GetReturns(ctx context.Context, id int64) ([]Return, error)
-	GetReturnsLog(ctx context.Context, id int64) (ReturnsLog, error)
+	GetReturnsLog(ctx context.Context, id uint64) (ReturnsLog, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	InvalidateDocument(ctx context.Context, arg InvalidateDocumentParams) (Document, error)
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)

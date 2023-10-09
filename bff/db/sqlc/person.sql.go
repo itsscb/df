@@ -78,7 +78,7 @@ DELETE FROM persons
 WHERE "id" = $1
 `
 
-func (q *Queries) DeletePerson(ctx context.Context, id int64) error {
+func (q *Queries) DeletePerson(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deletePerson, id)
 	return err
 }
@@ -88,7 +88,7 @@ SELECT id, account_id, firstname, lastname, birthday, city, zip, street, country
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetPerson(ctx context.Context, id int64) (Person, error) {
+func (q *Queries) GetPerson(ctx context.Context, id uint64) (Person, error) {
 	row := q.db.QueryRowContext(ctx, getPerson, id)
 	var i Person
 	err := row.Scan(
@@ -211,7 +211,7 @@ RETURNING id, account_id, firstname, lastname, birthday, city, zip, street, coun
 `
 
 type UpdatePersonParams struct {
-	ID        int64          `json:"id"`
+	ID        uint64         `json:"id"`
 	Changer   string         `json:"changer"`
 	AccountID sql.NullInt64  `json:"account_id"`
 	Firstname sql.NullString `json:"firstname"`

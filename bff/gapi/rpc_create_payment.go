@@ -38,8 +38,9 @@ func (server *Server) CreatePayment(ctx context.Context, req *pb.CreatePaymentRe
 		}
 	}
 
+	accountID := int64(req.GetAccountId())
 	arg := db.CreatePaymentParams{
-		AccountID:       req.GetAccountId(),
+		AccountID:       accountID,
 		PaymentCategory: req.GetPaymentCategory(),
 		Bankname: sql.NullString{
 			Valid:  req.GetBankname() != "",

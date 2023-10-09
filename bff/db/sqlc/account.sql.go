@@ -106,7 +106,7 @@ DELETE FROM accounts
 WHERE "id" = $1
 `
 
-func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {
+func (q *Queries) DeleteAccount(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deleteAccount, id)
 	return err
 }
@@ -116,7 +116,7 @@ SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privac
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
+func (q *Queries) GetAccount(ctx context.Context, id uint64) (Account, error) {
 	row := q.db.QueryRowContext(ctx, getAccount, id)
 	var i Account
 	err := row.Scan(
@@ -179,7 +179,7 @@ WHERE "id" = $1 LIMIT 1
 FOR NO KEY UPDATE
 `
 
-func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, error) {
+func (q *Queries) GetAccountForUpdate(ctx context.Context, id uint64) (Account, error) {
 	row := q.db.QueryRowContext(ctx, getAccountForUpdate, id)
 	var i Account
 	err := row.Scan(
@@ -279,7 +279,7 @@ RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, pri
 `
 
 type UpdateAccountParams struct {
-	ID           int64          `json:"id"`
+	ID           uint64         `json:"id"`
 	Changer      string         `json:"changer"`
 	Passwordhash sql.NullString `json:"passwordhash"`
 	Firstname    sql.NullString `json:"firstname"`
@@ -347,7 +347,7 @@ type UpdateAccountPrivacyParams struct {
 	PrivacyAccepted     sql.NullBool `json:"privacy_accepted"`
 	PrivacyAcceptedDate sql.NullTime `json:"privacy_accepted_date"`
 	Changer             string       `json:"changer"`
-	ID                  int64        `json:"id"`
+	ID                  uint64       `json:"id"`
 }
 
 func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPrivacyParams) (Account, error) {

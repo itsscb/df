@@ -44,7 +44,9 @@ func (server *Server) GetPayment(ctx context.Context, req *pb.GetPaymentRequest)
 		return nil, status.Error(codes.NotFound, "failed to get payments")
 	}
 
-	if account.ID != payment.AccountID {
+	accountID := int64(account.ID)
+
+	if accountID != payment.AccountID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}

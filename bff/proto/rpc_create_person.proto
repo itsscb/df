@@ -15,6 +15,7 @@ message CreatePersonRequest {
           title: "Create Person";
           description: "Create an Person";
           required: [
+            "account_id",
             "firstname",
             "lastname",
             "street",
@@ -26,7 +27,7 @@ message CreatePersonRequest {
         };
         example: "{ \"account_id\": \"1\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"street\": \"Main Street 1\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:00Z\"}";
     };
-    int64 account_id = 1;
+    uint64 account_id = 1;
     string firstname = 2;
     string lastname = 3;
     string street = 4;

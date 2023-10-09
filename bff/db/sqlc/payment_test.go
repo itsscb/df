@@ -17,7 +17,7 @@ func createRandomPayment(t *testing.T) Payment {
 	creator := util.RandomName()
 
 	arg := CreatePaymentParams{
-		AccountID:       account.ID,
+		AccountID:       int64(account.ID),
 		PaymentCategory: util.RandomName(),
 		Bankname: sql.NullString{
 			Valid:  true,
