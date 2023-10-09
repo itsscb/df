@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message DeletePersonRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Delete Person";
+          description: "Delete a Person";
+          required: [
+            "id"
+          ];
+        };
+        example: "{\"id\": \"1\"}"
+    };
+    int64 id = 1;
+}
+
+message DeletePersonResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Delete Person Response";
+        };
+        example: "{\"id\": \"1\", \"deleted\": true}"
+    };
+    int64 id = 1;
+    bool deleted = 2;
+}

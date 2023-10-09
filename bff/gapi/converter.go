@@ -30,6 +30,7 @@ func convertAccount(account db.Account) *pb.Account {
 
 func convertPerson(person db.Person) *pb.Person {
 	return &pb.Person{
+		Id:        person.ID,
 		AccountId: person.AccountID,
 		Firstname: person.Firstname,
 		Lastname:  person.Lastname,

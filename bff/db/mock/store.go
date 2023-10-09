@@ -318,6 +318,20 @@ func (mr *MockStoreMockRecorder) DeletePerson(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePerson", reflect.TypeOf((*MockStore)(nil).DeletePerson), arg0, arg1)
 }
 
+// DeletePersonTx mocks base method.
+func (m *MockStore) DeletePersonTx(arg0 context.Context, arg1 int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeletePersonTx", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeletePersonTx indicates an expected call of DeletePersonTx.
+func (mr *MockStoreMockRecorder) DeletePersonTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePersonTx", reflect.TypeOf((*MockStore)(nil).DeletePersonTx), arg0, arg1)
+}
+
 // DeleteProvider mocks base method.
 func (m *MockStore) DeleteProvider(arg0 context.Context, arg1 int64) error {
 	m.ctrl.T.Helper()
@@ -616,7 +630,7 @@ func (mr *MockStoreMockRecorder) ListPayments(arg0, arg1 any) *gomock.Call {
 }
 
 // ListPersons mocks base method.
-func (m *MockStore) ListPersons(arg0 context.Context, arg1 db.ListPersonsParams) ([]db.Person, error) {
+func (m *MockStore) ListPersons(arg0 context.Context, arg1 int64) ([]db.Person, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPersons", arg0, arg1)
 	ret0, _ := ret[0].([]db.Person)

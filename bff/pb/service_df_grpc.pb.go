@@ -29,8 +29,12 @@ const (
 	Df_UpdateAccount_FullMethodName        = "/pb.df/UpdateAccount"
 	Df_UpdateAccountPrivacy_FullMethodName = "/pb.df/UpdateAccountPrivacy"
 	Df_CreatePerson_FullMethodName         = "/pb.df/CreatePerson"
+	Df_GetPerson_FullMethodName            = "/pb.df/GetPerson"
+	Df_DeletePerson_FullMethodName         = "/pb.df/DeletePerson"
+	Df_ListPersons_FullMethodName          = "/pb.df/ListPersons"
 	Df_CreatePayment_FullMethodName        = "/pb.df/CreatePayment"
 	Df_GetPayment_FullMethodName           = "/pb.df/GetPayment"
+	Df_DeletePayment_FullMethodName        = "/pb.df/DeletePayment"
 	Df_ListPayments_FullMethodName         = "/pb.df/ListPayments"
 	Df_UpdatePayment_FullMethodName        = "/pb.df/UpdatePayment"
 )
@@ -49,8 +53,12 @@ type DfClient interface {
 	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error)
 	CreatePerson(ctx context.Context, in *CreatePersonRequest, opts ...grpc.CallOption) (*CreatePersonResponse, error)
+	GetPerson(ctx context.Context, in *GetPersonRequest, opts ...grpc.CallOption) (*GetPersonResponse, error)
+	DeletePerson(ctx context.Context, in *DeletePersonRequest, opts ...grpc.CallOption) (*DeletePersonResponse, error)
+	ListPersons(ctx context.Context, in *ListPersonsRequest, opts ...grpc.CallOption) (*ListPersonsResponse, error)
 	CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error)
 	GetPayment(ctx context.Context, in *GetPaymentRequest, opts ...grpc.CallOption) (*GetPaymentResponse, error)
+	DeletePayment(ctx context.Context, in *DeletePaymentRequest, opts ...grpc.CallOption) (*DeletePaymentResponse, error)
 	ListPayments(ctx context.Context, in *ListPaymentsRequest, opts ...grpc.CallOption) (*ListPaymentsResponse, error)
 	UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error)
 }
@@ -153,6 +161,33 @@ func (c *dfClient) CreatePerson(ctx context.Context, in *CreatePersonRequest, op
 	return out, nil
 }
 
+func (c *dfClient) GetPerson(ctx context.Context, in *GetPersonRequest, opts ...grpc.CallOption) (*GetPersonResponse, error) {
+	out := new(GetPersonResponse)
+	err := c.cc.Invoke(ctx, Df_GetPerson_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) DeletePerson(ctx context.Context, in *DeletePersonRequest, opts ...grpc.CallOption) (*DeletePersonResponse, error) {
+	out := new(DeletePersonResponse)
+	err := c.cc.Invoke(ctx, Df_DeletePerson_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) ListPersons(ctx context.Context, in *ListPersonsRequest, opts ...grpc.CallOption) (*ListPersonsResponse, error) {
+	out := new(ListPersonsResponse)
+	err := c.cc.Invoke(ctx, Df_ListPersons_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *dfClient) CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error) {
 	out := new(CreatePaymentResponse)
 	err := c.cc.Invoke(ctx, Df_CreatePayment_FullMethodName, in, out, opts...)
@@ -165,6 +200,15 @@ func (c *dfClient) CreatePayment(ctx context.Context, in *CreatePaymentRequest, 
 func (c *dfClient) GetPayment(ctx context.Context, in *GetPaymentRequest, opts ...grpc.CallOption) (*GetPaymentResponse, error) {
 	out := new(GetPaymentResponse)
 	err := c.cc.Invoke(ctx, Df_GetPayment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) DeletePayment(ctx context.Context, in *DeletePaymentRequest, opts ...grpc.CallOption) (*DeletePaymentResponse, error) {
+	out := new(DeletePaymentResponse)
+	err := c.cc.Invoke(ctx, Df_DeletePayment_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -203,8 +247,12 @@ type DfServer interface {
 	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error)
 	CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error)
+	GetPerson(context.Context, *GetPersonRequest) (*GetPersonResponse, error)
+	DeletePerson(context.Context, *DeletePersonRequest) (*DeletePersonResponse, error)
+	ListPersons(context.Context, *ListPersonsRequest) (*ListPersonsResponse, error)
 	CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error)
 	GetPayment(context.Context, *GetPaymentRequest) (*GetPaymentResponse, error)
+	DeletePayment(context.Context, *DeletePaymentRequest) (*DeletePaymentResponse, error)
 	ListPayments(context.Context, *ListPaymentsRequest) (*ListPaymentsResponse, error)
 	UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error)
 	mustEmbedUnimplementedDfServer()
@@ -244,11 +292,23 @@ func (UnimplementedDfServer) UpdateAccountPrivacy(context.Context, *UpdateAccoun
 func (UnimplementedDfServer) CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePerson not implemented")
 }
+func (UnimplementedDfServer) GetPerson(context.Context, *GetPersonRequest) (*GetPersonResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPerson not implemented")
+}
+func (UnimplementedDfServer) DeletePerson(context.Context, *DeletePersonRequest) (*DeletePersonResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePerson not implemented")
+}
+func (UnimplementedDfServer) ListPersons(context.Context, *ListPersonsRequest) (*ListPersonsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPersons not implemented")
+}
 func (UnimplementedDfServer) CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePayment not implemented")
 }
 func (UnimplementedDfServer) GetPayment(context.Context, *GetPaymentRequest) (*GetPaymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPayment not implemented")
+}
+func (UnimplementedDfServer) DeletePayment(context.Context, *DeletePaymentRequest) (*DeletePaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePayment not implemented")
 }
 func (UnimplementedDfServer) ListPayments(context.Context, *ListPaymentsRequest) (*ListPaymentsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPayments not implemented")
@@ -449,6 +509,60 @@ func _Df_CreatePerson_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_GetPerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPersonRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).GetPerson(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_GetPerson_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).GetPerson(ctx, req.(*GetPersonRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_DeletePerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePersonRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).DeletePerson(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_DeletePerson_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).DeletePerson(ctx, req.(*DeletePersonRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_ListPersons_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPersonsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).ListPersons(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_ListPersons_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).ListPersons(ctx, req.(*ListPersonsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Df_CreatePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreatePaymentRequest)
 	if err := dec(in); err != nil {
@@ -481,6 +595,24 @@ func _Df_GetPayment_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DfServer).GetPayment(ctx, req.(*GetPaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_DeletePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).DeletePayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_DeletePayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).DeletePayment(ctx, req.(*DeletePaymentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -569,12 +701,28 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Df_CreatePerson_Handler,
 		},
 		{
+			MethodName: "GetPerson",
+			Handler:    _Df_GetPerson_Handler,
+		},
+		{
+			MethodName: "DeletePerson",
+			Handler:    _Df_DeletePerson_Handler,
+		},
+		{
+			MethodName: "ListPersons",
+			Handler:    _Df_ListPersons_Handler,
+		},
+		{
 			MethodName: "CreatePayment",
 			Handler:    _Df_CreatePayment_Handler,
 		},
 		{
 			MethodName: "GetPayment",
 			Handler:    _Df_GetPayment_Handler,
+		},
+		{
+			MethodName: "DeletePayment",
+			Handler:    _Df_DeletePayment_Handler,
 		},
 		{
 			MethodName: "ListPayments",

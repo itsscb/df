@@ -285,6 +285,42 @@
         ]
       }
     },
+    "/v1/payments/delete_payment/{id}": {
+      "delete": {
+        "operationId": "df_DeletePayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeletePaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/payments/get_payment/{id}": {
       "get": {
         "operationId": "df_GetPayment",
@@ -321,7 +357,7 @@
         ]
       }
     },
-    "/v1/payments/list_payments": {
+    "/v1/payments/list_payments/{accountId}": {
       "get": {
         "operationId": "df_ListPayments",
         "responses": {
@@ -341,7 +377,7 @@
         "parameters": [
           {
             "name": "accountId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "type": "string",
             "format": "int64"
@@ -421,6 +457,114 @@
             "schema": {
               "$ref": "#/definitions/pbCreatePersonRequest"
             }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/delete_person/{id}": {
+      "delete": {
+        "operationId": "df_DeletePerson",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeletePersonResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/get_person/{id}": {
+      "get": {
+        "operationId": "df_GetPerson",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetPersonResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/list_persons/{accountId}": {
+      "get": {
+        "operationId": "df_ListPersons",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListPersonsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -862,6 +1006,40 @@
       "description": "Returns the created Person",
       "title": "Created Person"
     },
+    "pbDeletePaymentResponse": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "deleted": true
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "title": "Delete Payment Response"
+    },
+    "pbDeletePersonResponse": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "deleted": true
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "title": "Delete Person Response"
+    },
     "pbGetAccountResponse": {
       "type": "object",
       "properties": {
@@ -881,6 +1059,16 @@
       },
       "description": "Returns the Payment",
       "title": "GetPayment Response"
+    },
+    "pbGetPersonResponse": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "$ref": "#/definitions/pbPerson"
+        }
+      },
+      "description": "Returns the Person",
+      "title": "GetPerson Response"
     },
     "pbListAccountsResponse": {
       "type": "object",
@@ -909,6 +1097,20 @@
       },
       "description": "Returns the Payment",
       "title": "ListPayments Response"
+    },
+    "pbListPersonsResponse": {
+      "type": "object",
+      "properties": {
+        "persons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbPerson"
+          }
+        }
+      },
+      "description": "Returns the Person",
+      "title": "ListPersons Response"
     },
     "pbListSessionsResponse": {
       "type": "object",
@@ -1069,6 +1271,10 @@
         "changed": "2023-10-05T02:30:53Z"
       },
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
         "accountId": {
           "type": "string",
           "format": "int64"

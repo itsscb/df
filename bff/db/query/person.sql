@@ -20,9 +20,8 @@ INSERT INTO persons (
 
 -- name: ListPersons :many
 SELECT * FROM persons
-ORDER BY "lastname", "firstname"
-LIMIT $1
-OFFSET $2;
+WHERE "account_id" = sqlc.arg(account_id)
+ORDER BY "lastname", "firstname";
 
 -- name: UpdatePerson :one
 UPDATE persons
@@ -42,7 +41,7 @@ RETURNING *;
 
 -- name: DeletePerson :exec
 DELETE FROM persons
-WHERE "id" = $1;
+WHERE "id" = sqlc.arg(id);
 
 -- name: GetReturns :many
 SELECT * FROM returns

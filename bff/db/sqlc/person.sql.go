@@ -152,18 +152,12 @@ func (q *Queries) GetReturns(ctx context.Context, id int64) ([]Return, error) {
 
 const listPersons = `-- name: ListPersons :many
 SELECT id, account_id, firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed FROM persons
+WHERE "account_id" = $1
 ORDER BY "lastname", "firstname"
-LIMIT $1
-OFFSET $2
 `
 
-type ListPersonsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
-func (q *Queries) ListPersons(ctx context.Context, arg ListPersonsParams) ([]Person, error) {
-	rows, err := q.db.QueryContext(ctx, listPersons, arg.Limit, arg.Offset)
+func (q *Queries) ListPersons(ctx context.Context, accountID int64) ([]Person, error) {
+	rows, err := q.db.QueryContext(ctx, listPersons, accountID)
 	if err != nil {
 		return nil, err
 	}

@@ -11,8 +11,12 @@ import "rpc_create_payment.proto";
 import "rpc_update_account.proto";
 import "rpc_update_payment.proto";
 import "rpc_get_account.proto";
+import "rpc_delete_person.proto";
+import "rpc_delete_payment.proto";
+import "rpc_get_person.proto";
 import "rpc_get_payment.proto";
 import "rpc_list_accounts.proto";
+import "rpc_list_persons.proto";
 import "rpc_list_payments.proto";
 import "rpc_list_sessions.proto";
 import "rpc_block_session.proto";
@@ -168,6 +172,45 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             }
         };
     };
+    rpc GetPerson (GetPersonRequest) returns (GetPersonResponse) {
+        option (google.api.http) = {
+            get: "/v1/persons/get_person/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc DeletePerson (DeletePersonRequest) returns (DeletePersonResponse) {
+        option (google.api.http) = {
+            delete: "/v1/persons/delete_person/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc ListPersons (ListPersonsRequest) returns (ListPersonsResponse) {
+        option (google.api.http) = {
+            get: "/v1/persons/list_persons/{account_id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
     rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse) {
         option (google.api.http) = {
             post: "/v1/payments/create_payment"
@@ -195,9 +238,22 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             }
         };
     };
+    rpc DeletePayment (DeletePaymentRequest) returns (DeletePaymentResponse) {
+        option (google.api.http) = {
+            delete: "/v1/payments/delete_payment/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
     rpc ListPayments (ListPaymentsRequest) returns (ListPaymentsResponse) {
         option (google.api.http) = {
-            get: "/v1/payments/list_payments"
+            get: "/v1/payments/list_payments/{account_id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             security: {

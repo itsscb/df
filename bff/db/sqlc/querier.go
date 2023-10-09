@@ -61,7 +61,7 @@ type Querier interface {
 	ListDocuments(ctx context.Context, arg ListDocumentsParams) ([]Document, error)
 	ListMails(ctx context.Context, arg ListMailsParams) ([]Mail, error)
 	ListPayments(ctx context.Context, accountID int64) ([]Payment, error)
-	ListPersons(ctx context.Context, arg ListPersonsParams) ([]Person, error)
+	ListPersons(ctx context.Context, accountID int64) ([]Person, error)
 	ListProviders(ctx context.Context, arg ListProvidersParams) ([]Provider, error)
 	ListReturns(ctx context.Context, arg ListReturnsParams) ([]Return, error)
 	ListReturnsLogs(ctx context.Context, arg ListReturnsLogsParams) ([]ReturnsLog, error)
