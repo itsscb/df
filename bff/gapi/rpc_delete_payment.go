@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	"github.com/itsscb/df/bff/pb"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -27,6 +28,7 @@ func (server *Server) DeletePayment(ctx context.Context, req *pb.DeletePaymentRe
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("delete_payment (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
@@ -41,6 +43,7 @@ func (server *Server) DeletePayment(ctx context.Context, req *pb.DeletePaymentRe
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "payment not found")
 		}
+		slog.Error("delete_payment (get_payment)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to get payment")
 	}
 
@@ -52,7 +55,8 @@ func (server *Server) DeletePayment(ctx context.Context, req *pb.DeletePaymentRe
 
 	err = server.store.DeletePayment(ctx, req.GetId())
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to block payment")
+		slog.Error("delete_payment (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
+		return nil, status.Errorf(codes.Internal, "failed to delete payment")
 
 	}
 

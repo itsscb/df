@@ -30,6 +30,7 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("update_payment (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
@@ -44,6 +45,7 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "payment not found")
 		}
+		slog.Error("update_payment (get_payment)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get payment")
 	}
 
@@ -92,7 +94,7 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 
 	payment, err := server.store.UpdatePayment(ctx, arg)
 	if err != nil {
-		slog.Error("Update Payment", slog.Int64("id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_payment (get_payment)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to update payment")
 	}
 

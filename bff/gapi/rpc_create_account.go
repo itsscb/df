@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -22,6 +23,7 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 
 	hashedPassword, err := util.HashPassword(req.GetPassword())
 	if err != nil {
+		slog.Error("create_account (hash_password)", slog.String("invoked_by", req.GetEmail()), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to hash password: %s", err)
 	}
 
@@ -48,6 +50,7 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 
 	account, err := server.store.CreateAccountTx(ctx, arg)
 	if err != nil {
+		slog.Error("create_account (db)", slog.String("invoked_by", req.GetEmail()), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to create account")
 	}
 

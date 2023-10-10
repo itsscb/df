@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -75,6 +76,7 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 	if req.Password != nil {
 		hashedPassword, err := util.HashPassword(req.GetPassword())
 		if err != nil {
+			slog.Error("update_account (hash_password)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
 			return nil, status.Error(codes.Internal, "failed to hash password")
 		}
 
@@ -86,6 +88,7 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 
 	account, err := server.store.UpdateAccountTx(ctx, arg)
 	if err != nil {
+		slog.Error("update_account (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to update account")
 	}
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	"github.com/google/uuid"
 	"github.com/itsscb/df/bff/pb"
@@ -30,6 +31,7 @@ func (server *Server) BlockSession(ctx context.Context, req *pb.BlockSessionRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "session not found")
 		}
+		slog.Error("block_session (get)", slog.String("invoked_by", authPayload.Email), slog.String("session_id", req.GetSessionId()), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to get session")
 	}
 
@@ -45,6 +47,7 @@ func (server *Server) BlockSession(ctx context.Context, req *pb.BlockSessionRequ
 
 	err = server.store.BlockSession(ctx, uid)
 	if err != nil {
+		slog.Error("block_session (db)", slog.String("invoked_by", authPayload.Email), slog.String("session_id", req.GetSessionId()), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to block session")
 
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	"github.com/itsscb/df/bff/pb"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -27,6 +28,7 @@ func (server *Server) GetPerson(ctx context.Context, req *pb.GetPersonRequest) (
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("get_person (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
@@ -41,6 +43,7 @@ func (server *Server) GetPerson(ctx context.Context, req *pb.GetPersonRequest) (
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "no persons found")
 		}
+		slog.Error("get_person (get_person)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get persons")
 	}
 

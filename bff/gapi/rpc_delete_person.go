@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	"github.com/itsscb/df/bff/pb"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -27,6 +28,7 @@ func (server *Server) DeletePerson(ctx context.Context, req *pb.DeletePersonRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("delete_person (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
@@ -41,6 +43,7 @@ func (server *Server) DeletePerson(ctx context.Context, req *pb.DeletePersonRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "person not found")
 		}
+		slog.Error("delete_person (get_person)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to get person")
 	}
 
@@ -52,6 +55,7 @@ func (server *Server) DeletePerson(ctx context.Context, req *pb.DeletePersonRequ
 
 	err = server.store.DeletePersonTx(ctx, person.ID)
 	if err != nil {
+		slog.Error("delete_person (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to delete person")
 
 	}

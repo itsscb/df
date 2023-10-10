@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -33,6 +34,7 @@ func (server *Server) ListAccounts(ctx context.Context, req *pb.ListAccountsRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "no accounts found")
 		}
+		slog.Error("list_accounts (db)", slog.String("invoked_by", authPayload.Email), slog.Int("page_id", int(req.GetPageId())), slog.Int("page_size", int(req.GetPageSize())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get accounts")
 	}
 

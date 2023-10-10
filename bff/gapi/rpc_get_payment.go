@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	"github.com/itsscb/df/bff/pb"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -27,6 +28,7 @@ func (server *Server) GetPayment(ctx context.Context, req *pb.GetPaymentRequest)
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("get_payment (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
@@ -41,6 +43,7 @@ func (server *Server) GetPayment(ctx context.Context, req *pb.GetPaymentRequest)
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "no payments found")
 		}
+		slog.Error("get_payment (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get payments")
 	}
 

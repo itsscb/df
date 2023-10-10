@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -29,6 +31,7 @@ func (server *Server) CreatePerson(ctx context.Context, req *pb.CreatePersonRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("create_person (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get account")
 	}
 
@@ -53,6 +56,7 @@ func (server *Server) CreatePerson(ctx context.Context, req *pb.CreatePersonRequ
 
 	person, err := server.store.CreatePersonTx(ctx, arg)
 	if err != nil {
+		slog.Error("create_person (db)", slog.String("invoked_by", authPayload.Email), slog.String("person", fmt.Sprintf("%s, %s", req.GetLastname(), req.GetFirstname())), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to create person")
 	}
 

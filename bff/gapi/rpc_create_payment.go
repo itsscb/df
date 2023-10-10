@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -29,6 +30,7 @@ func (server *Server) CreatePayment(ctx context.Context, req *pb.CreatePaymentRe
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("create_payment (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get account")
 	}
 
@@ -72,6 +74,7 @@ func (server *Server) CreatePayment(ctx context.Context, req *pb.CreatePaymentRe
 
 	payment, err := server.store.CreatePayment(ctx, arg)
 	if err != nil {
+		slog.Error("create_payment (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("payment_category", req.GetPaymentCategory()), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to create payment")
 	}
 
