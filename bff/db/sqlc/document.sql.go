@@ -130,6 +130,16 @@ func (q *Queries) DeleteDocument(ctx context.Context, id uint64) error {
 	return err
 }
 
+const deleteDocumentsByPersonID = `-- name: DeleteDocumentsByPersonID :exec
+DELETE FROM "documents"
+WHERE "person_id" = $1
+`
+
+func (q *Queries) DeleteDocumentsByPersonID(ctx context.Context, personID sql.NullInt64) error {
+	_, err := q.db.ExecContext(ctx, deleteDocumentsByPersonID, personID)
+	return err
+}
+
 const getDocument = `-- name: GetDocument :one
 SELECT id, person_id, name, type, path, url, valid, valid_date, validated_by, mail_id, creator, created, changer, changed FROM documents
 WHERE "id" = $1 LIMIT 1

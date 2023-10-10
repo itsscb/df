@@ -5,25 +5,30 @@ package pb;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-import "rpc_create_account.proto";
-import "rpc_create_person.proto";
 import "rpc_create_payment.proto";
-import "rpc_update_account.proto";
-import "rpc_update_payment.proto";
-import "rpc_get_account.proto";
-import "rpc_delete_person.proto";
-import "rpc_delete_payment.proto";
-import "rpc_get_person.proto";
 import "rpc_get_payment.proto";
-import "rpc_list_accounts.proto";
-import "rpc_list_persons.proto";
 import "rpc_list_payments.proto";
-import "rpc_list_sessions.proto";
-import "rpc_block_session.proto";
+import "rpc_update_payment.proto";
+import "rpc_delete_payment.proto";
+
+import "rpc_create_person.proto";
+import "rpc_get_person.proto";
+import "rpc_list_persons.proto";
+import "rpc_update_person.proto";
+import "rpc_delete_person.proto";
+
+import "rpc_create_account.proto";
+import "rpc_get_account.proto";
+import "rpc_list_accounts.proto";
+import "rpc_update_account.proto";
 import "rpc_update_account_privacy.proto";
-import "rpc_list_returns_log_by_person_id.proto";
+
 import "rpc_login.proto";
+import "rpc_list_sessions.proto";
 import "rpc_refresh_token.proto";
+import "rpc_block_session.proto";
+
+import "rpc_list_returns_log_by_person_id.proto";
 
 option go_package = "github.com/itsscb/df/pb";
 
@@ -162,6 +167,20 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     rpc CreatePerson (CreatePersonRequest) returns (CreatePersonResponse) {
         option (google.api.http) = {
             post: "/v1/persons/create_person"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc UpdatePerson (UpdatePersonRequest) returns (UpdatePersonResponse) {
+        option (google.api.http) = {
+            patch: "/v1/persons/update_person"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

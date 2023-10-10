@@ -71,3 +71,11 @@ SELECT
     sqlc.arg(creator),
     sqlc.arg(person_id)
 FROM providers;
+
+-- name: GetReturnIDsByPersonID :many
+SELECT "id" FROM "returns"
+WHERE "person_id" = sqlc.arg(person_id);
+
+-- name: DeleteReturnsByPersonID :exec
+DELETE FROM "returns"
+WHERE "person_id" = sqlc.arg(person_id);

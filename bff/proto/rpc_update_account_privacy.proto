@@ -24,7 +24,7 @@ message UpdateAccountPrivacyRequest {
         example: "1",
         format: "int64"
       }];
-    optional bool privacy_accepted = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    bool privacy_accepted = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         example: "false"
     }];
 }

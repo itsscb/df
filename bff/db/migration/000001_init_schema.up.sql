@@ -136,10 +136,6 @@ ALTER TABLE "sessions" ADD FOREIGN KEY ("email") REFERENCES "accounts" ("email")
 
 ALTER TABLE "persons" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
-ALTER TABLE "documents" ADD FOREIGN KEY ("person_id") REFERENCES "persons" ("id");
-
-ALTER TABLE "documents" ADD FOREIGN KEY ("mail_id") REFERENCES "mails" ("id");
-
 ALTER TABLE "payments" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
 ALTER TABLE "returns" ADD FOREIGN KEY ("person_id") REFERENCES "persons" ("id");

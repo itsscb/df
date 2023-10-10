@@ -24,11 +24,20 @@ LIMIT $1
 OFFSET $2;
 
 -- name: ListReturnsLogsByPersonID :many
-SELECT rl.*
-FROM "returns" AS r
-INNER JOIN "returnsLog" AS rl
-    ON r.id = rl.return_id
-WHERE r.person_id = sqlc.arg(id);
+SELECT * FROM "returnsLog"
+WHERE "return_id" IN (
+    SELECT "id"
+    FROM "returns"
+    WHERE "person_id" = sqlc.arg(person_id)
+);
+
+-- name: DeleteReturnsLogsByPersonID :exec
+DELETE FROM "returnsLog"
+WHERE "return_id" IN (
+    SELECT "id" 
+    FROM "returns"
+    WHERE "person_id" = sqlc.arg(person_id)
+);
 
 -- name: UpdateReturnsLog :one
 UPDATE "returnsLog"

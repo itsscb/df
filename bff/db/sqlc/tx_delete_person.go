@@ -2,14 +2,31 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 func (store *SQLStore) DeletePersonTx(ctx context.Context, id uint64) error {
 	err := store.execTx(ctx, func(q *Queries) error {
 
-		// TODO: #82 Add removal of db.returnsLog entries.
+		err := q.DeleteDocumentsByPersonID(ctx, sql.NullInt64{
+			Valid: true,
+			Int64: int64(id),
+		})
+		if err != nil {
+			return err
+		}
 
-		err := q.DeletePerson(ctx, id)
+		err = q.DeleteReturnsLogsByPersonID(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		err = q.DeleteReturnsByPersonID(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		err = q.DeletePerson(ctx, id)
 		if err != nil {
 			return err
 		}

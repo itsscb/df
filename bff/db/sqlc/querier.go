@@ -6,6 +6,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/google/uuid"
 )
@@ -25,6 +26,7 @@ type Querier interface {
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	DeleteAccount(ctx context.Context, id uint64) error
 	DeleteDocument(ctx context.Context, id uint64) error
+	DeleteDocumentsByPersonID(ctx context.Context, personID sql.NullInt64) error
 	// -- name: UpdateMail :one
 	// UPDATE mails
 	// SET
@@ -43,7 +45,9 @@ type Querier interface {
 	DeletePerson(ctx context.Context, id uint64) error
 	DeleteProvider(ctx context.Context, id uint64) error
 	DeleteReturn(ctx context.Context, id uint64) error
+	DeleteReturnsByPersonID(ctx context.Context, personID uint64) error
 	DeleteReturnsLog(ctx context.Context, id uint64) error
+	DeleteReturnsLogsByPersonID(ctx context.Context, personID uint64) error
 	GetAccount(ctx context.Context, id uint64) (Account, error)
 	GetAccountByEmail(ctx context.Context, email string) (Account, error)
 	GetAccountForUpdate(ctx context.Context, id uint64) (Account, error)
@@ -53,6 +57,7 @@ type Querier interface {
 	GetPerson(ctx context.Context, id uint64) (Person, error)
 	GetProvider(ctx context.Context, id uint64) (Provider, error)
 	GetReturn(ctx context.Context, id uint64) (Return, error)
+	GetReturnIDsByPersonID(ctx context.Context, personID uint64) ([]uint64, error)
 	GetReturns(ctx context.Context, id uint64) ([]Return, error)
 	GetReturnsLog(ctx context.Context, id uint64) (ReturnsLog, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
@@ -65,7 +70,7 @@ type Querier interface {
 	ListProviders(ctx context.Context, arg ListProvidersParams) ([]Provider, error)
 	ListReturns(ctx context.Context, arg ListReturnsParams) ([]Return, error)
 	ListReturnsLogs(ctx context.Context, arg ListReturnsLogsParams) ([]ReturnsLog, error)
-	ListReturnsLogsByPersonID(ctx context.Context, id uint64) ([]ReturnsLog, error)
+	ListReturnsLogsByPersonID(ctx context.Context, personID uint64) ([]ReturnsLog, error)
 	ListSessions(ctx context.Context, email string) ([]Session, error)
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
 	UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPrivacyParams) (Account, error)

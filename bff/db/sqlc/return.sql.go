@@ -121,6 +121,16 @@ func (q *Queries) DeleteReturn(ctx context.Context, id uint64) error {
 	return err
 }
 
+const deleteReturnsByPersonID = `-- name: DeleteReturnsByPersonID :exec
+DELETE FROM "returns"
+WHERE "person_id" = $1
+`
+
+func (q *Queries) DeleteReturnsByPersonID(ctx context.Context, personID uint64) error {
+	_, err := q.db.ExecContext(ctx, deleteReturnsByPersonID, personID)
+	return err
+}
+
 const getReturn = `-- name: GetReturn :one
 SELECT id, person_id, provider_id, name, description, category, email, status, creator, created, changer, changed FROM returns
 WHERE "id" = $1 LIMIT 1
@@ -144,6 +154,34 @@ func (q *Queries) GetReturn(ctx context.Context, id uint64) (Return, error) {
 		&i.Changed,
 	)
 	return i, err
+}
+
+const getReturnIDsByPersonID = `-- name: GetReturnIDsByPersonID :many
+SELECT "id" FROM "returns"
+WHERE "person_id" = $1
+`
+
+func (q *Queries) GetReturnIDsByPersonID(ctx context.Context, personID uint64) ([]uint64, error) {
+	rows, err := q.db.QueryContext(ctx, getReturnIDsByPersonID, personID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []uint64{}
+	for rows.Next() {
+		var id uint64
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		items = append(items, id)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listReturns = `-- name: ListReturns :many

@@ -577,6 +577,44 @@
         ]
       }
     },
+    "/v1/persons/update_person": {
+      "patch": {
+        "operationId": "df_UpdatePerson",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePersonResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Update an Person",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePersonRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/returns_log/list_returns_log/{personId}": {
       "get": {
         "operationId": "df_ListReturnsLog",
@@ -1655,6 +1693,64 @@
       },
       "description": "Returns the updated Payment",
       "title": "Updated Payment"
+    },
+    "pbUpdatePersonRequest": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "firstname": "John",
+        "lastname": "Doe",
+        "phone": "",
+        "street": "Death Star 3",
+        "zip": "0816",
+        "city": "Montana",
+        "country": "Canada",
+        "birthday": "1992-10-05T00:00:00Z"
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1990-10-05T00:00:00Z"
+        }
+      },
+      "description": "Update an Person",
+      "title": "Update Person",
+      "required": [
+        "id"
+      ]
+    },
+    "pbUpdatePersonResponse": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "$ref": "#/definitions/pbPerson"
+        }
+      },
+      "description": "Returns the updated Person",
+      "title": "Updated Person"
     },
     "protobufAny": {
       "type": "object",

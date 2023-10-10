@@ -29,6 +29,7 @@ const (
 	Df_UpdateAccount_FullMethodName        = "/pb.df/UpdateAccount"
 	Df_UpdateAccountPrivacy_FullMethodName = "/pb.df/UpdateAccountPrivacy"
 	Df_CreatePerson_FullMethodName         = "/pb.df/CreatePerson"
+	Df_UpdatePerson_FullMethodName         = "/pb.df/UpdatePerson"
 	Df_GetPerson_FullMethodName            = "/pb.df/GetPerson"
 	Df_DeletePerson_FullMethodName         = "/pb.df/DeletePerson"
 	Df_ListPersons_FullMethodName          = "/pb.df/ListPersons"
@@ -54,6 +55,7 @@ type DfClient interface {
 	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error)
 	CreatePerson(ctx context.Context, in *CreatePersonRequest, opts ...grpc.CallOption) (*CreatePersonResponse, error)
+	UpdatePerson(ctx context.Context, in *UpdatePersonRequest, opts ...grpc.CallOption) (*UpdatePersonResponse, error)
 	GetPerson(ctx context.Context, in *GetPersonRequest, opts ...grpc.CallOption) (*GetPersonResponse, error)
 	DeletePerson(ctx context.Context, in *DeletePersonRequest, opts ...grpc.CallOption) (*DeletePersonResponse, error)
 	ListPersons(ctx context.Context, in *ListPersonsRequest, opts ...grpc.CallOption) (*ListPersonsResponse, error)
@@ -163,6 +165,15 @@ func (c *dfClient) CreatePerson(ctx context.Context, in *CreatePersonRequest, op
 	return out, nil
 }
 
+func (c *dfClient) UpdatePerson(ctx context.Context, in *UpdatePersonRequest, opts ...grpc.CallOption) (*UpdatePersonResponse, error) {
+	out := new(UpdatePersonResponse)
+	err := c.cc.Invoke(ctx, Df_UpdatePerson_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *dfClient) GetPerson(ctx context.Context, in *GetPersonRequest, opts ...grpc.CallOption) (*GetPersonResponse, error) {
 	out := new(GetPersonResponse)
 	err := c.cc.Invoke(ctx, Df_GetPerson_FullMethodName, in, out, opts...)
@@ -258,6 +269,7 @@ type DfServer interface {
 	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error)
 	UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error)
 	CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error)
+	UpdatePerson(context.Context, *UpdatePersonRequest) (*UpdatePersonResponse, error)
 	GetPerson(context.Context, *GetPersonRequest) (*GetPersonResponse, error)
 	DeletePerson(context.Context, *DeletePersonRequest) (*DeletePersonResponse, error)
 	ListPersons(context.Context, *ListPersonsRequest) (*ListPersonsResponse, error)
@@ -303,6 +315,9 @@ func (UnimplementedDfServer) UpdateAccountPrivacy(context.Context, *UpdateAccoun
 }
 func (UnimplementedDfServer) CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePerson not implemented")
+}
+func (UnimplementedDfServer) UpdatePerson(context.Context, *UpdatePersonRequest) (*UpdatePersonResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePerson not implemented")
 }
 func (UnimplementedDfServer) GetPerson(context.Context, *GetPersonRequest) (*GetPersonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPerson not implemented")
@@ -524,6 +539,24 @@ func _Df_CreatePerson_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_UpdatePerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePersonRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).UpdatePerson(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_UpdatePerson_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).UpdatePerson(ctx, req.(*UpdatePersonRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Df_GetPerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetPersonRequest)
 	if err := dec(in); err != nil {
@@ -732,6 +765,10 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreatePerson",
 			Handler:    _Df_CreatePerson_Handler,
+		},
+		{
+			MethodName: "UpdatePerson",
+			Handler:    _Df_UpdatePerson_Handler,
 		},
 		{
 			MethodName: "GetPerson",

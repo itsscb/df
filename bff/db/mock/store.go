@@ -10,6 +10,7 @@ package mockdb
 
 import (
 	context "context"
+	sql "database/sql"
 	reflect "reflect"
 
 	uuid "github.com/google/uuid"
@@ -276,6 +277,20 @@ func (mr *MockStoreMockRecorder) DeleteDocument(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDocument", reflect.TypeOf((*MockStore)(nil).DeleteDocument), arg0, arg1)
 }
 
+// DeleteDocumentsByPersonID mocks base method.
+func (m *MockStore) DeleteDocumentsByPersonID(arg0 context.Context, arg1 sql.NullInt64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteDocumentsByPersonID", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteDocumentsByPersonID indicates an expected call of DeleteDocumentsByPersonID.
+func (mr *MockStoreMockRecorder) DeleteDocumentsByPersonID(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDocumentsByPersonID", reflect.TypeOf((*MockStore)(nil).DeleteDocumentsByPersonID), arg0, arg1)
+}
+
 // DeleteMail mocks base method.
 func (m *MockStore) DeleteMail(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
@@ -360,6 +375,20 @@ func (mr *MockStoreMockRecorder) DeleteReturn(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteReturn", reflect.TypeOf((*MockStore)(nil).DeleteReturn), arg0, arg1)
 }
 
+// DeleteReturnsByPersonID mocks base method.
+func (m *MockStore) DeleteReturnsByPersonID(arg0 context.Context, arg1 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteReturnsByPersonID", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteReturnsByPersonID indicates an expected call of DeleteReturnsByPersonID.
+func (mr *MockStoreMockRecorder) DeleteReturnsByPersonID(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteReturnsByPersonID", reflect.TypeOf((*MockStore)(nil).DeleteReturnsByPersonID), arg0, arg1)
+}
+
 // DeleteReturnsLog mocks base method.
 func (m *MockStore) DeleteReturnsLog(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
@@ -372,6 +401,20 @@ func (m *MockStore) DeleteReturnsLog(arg0 context.Context, arg1 uint64) error {
 func (mr *MockStoreMockRecorder) DeleteReturnsLog(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteReturnsLog", reflect.TypeOf((*MockStore)(nil).DeleteReturnsLog), arg0, arg1)
+}
+
+// DeleteReturnsLogsByPersonID mocks base method.
+func (m *MockStore) DeleteReturnsLogsByPersonID(arg0 context.Context, arg1 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteReturnsLogsByPersonID", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteReturnsLogsByPersonID indicates an expected call of DeleteReturnsLogsByPersonID.
+func (mr *MockStoreMockRecorder) DeleteReturnsLogsByPersonID(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteReturnsLogsByPersonID", reflect.TypeOf((*MockStore)(nil).DeleteReturnsLogsByPersonID), arg0, arg1)
 }
 
 // GetAccount mocks base method.
@@ -507,6 +550,21 @@ func (m *MockStore) GetReturn(arg0 context.Context, arg1 uint64) (db.Return, err
 func (mr *MockStoreMockRecorder) GetReturn(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReturn", reflect.TypeOf((*MockStore)(nil).GetReturn), arg0, arg1)
+}
+
+// GetReturnIDsByPersonID mocks base method.
+func (m *MockStore) GetReturnIDsByPersonID(arg0 context.Context, arg1 uint64) ([]uint64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetReturnIDsByPersonID", arg0, arg1)
+	ret0, _ := ret[0].([]uint64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetReturnIDsByPersonID indicates an expected call of GetReturnIDsByPersonID.
+func (mr *MockStoreMockRecorder) GetReturnIDsByPersonID(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReturnIDsByPersonID", reflect.TypeOf((*MockStore)(nil).GetReturnIDsByPersonID), arg0, arg1)
 }
 
 // GetReturns mocks base method.

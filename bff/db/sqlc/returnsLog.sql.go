@@ -64,6 +64,20 @@ func (q *Queries) DeleteReturnsLog(ctx context.Context, id uint64) error {
 	return err
 }
 
+const deleteReturnsLogsByPersonID = `-- name: DeleteReturnsLogsByPersonID :exec
+DELETE FROM "returnsLog"
+WHERE "return_id" IN (
+    SELECT "id" 
+    FROM "returns"
+    WHERE "person_id" = $1
+)
+`
+
+func (q *Queries) DeleteReturnsLogsByPersonID(ctx context.Context, personID uint64) error {
+	_, err := q.db.ExecContext(ctx, deleteReturnsLogsByPersonID, personID)
+	return err
+}
+
 const getReturnsLog = `-- name: GetReturnsLog :one
 SELECT id, return_id, mail_id, status, creator, created, changer, changed FROM "returnsLog"
 WHERE "id" = $1 LIMIT 1
@@ -130,15 +144,16 @@ func (q *Queries) ListReturnsLogs(ctx context.Context, arg ListReturnsLogsParams
 }
 
 const listReturnsLogsByPersonID = `-- name: ListReturnsLogsByPersonID :many
-SELECT rl.id, rl.return_id, rl.mail_id, rl.status, rl.creator, rl.created, rl.changer, rl.changed
-FROM "returns" AS r
-INNER JOIN "returnsLog" AS rl
-    ON r.id = rl.return_id
-WHERE r.person_id = $1
+SELECT id, return_id, mail_id, status, creator, created, changer, changed FROM "returnsLog"
+WHERE "return_id" IN (
+    SELECT "id"
+    FROM "returns"
+    WHERE "person_id" = $1
+)
 `
 
-func (q *Queries) ListReturnsLogsByPersonID(ctx context.Context, id uint64) ([]ReturnsLog, error) {
-	rows, err := q.db.QueryContext(ctx, listReturnsLogsByPersonID, id)
+func (q *Queries) ListReturnsLogsByPersonID(ctx context.Context, personID uint64) ([]ReturnsLog, error) {
+	rows, err := q.db.QueryContext(ctx, listReturnsLogsByPersonID, personID)
 	if err != nil {
 		return nil, err
 	}
