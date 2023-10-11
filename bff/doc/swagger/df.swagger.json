@@ -26,8 +26,49 @@
     "application/json"
   ],
   "paths": {
+    "/documents/upload": {
+      "post": {
+        "summary": "Upload Document [only HTTP]",
+        "description": "Testing via swagger is not possible. Try ```curl -X POST -H \"Authorization: Bearer {token}\" -F \"file=@/path/to/file\" \"http://{serverURI}/documents/upload\"```",
+        "operationId": "df_UploadDocument",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUploadDocumentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Upload a Document [only HTTP]",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUploadDocumentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/accounts/create_account": {
       "post": {
+        "summary": "Create Account",
         "operationId": "df_CreateAccount",
         "responses": {
           "200": {
@@ -61,6 +102,7 @@
     },
     "/v1/accounts/get_account/{id}": {
       "get": {
+        "summary": "Get Account by account_id",
         "operationId": "df_GetAccount",
         "responses": {
           "200": {
@@ -97,6 +139,7 @@
     },
     "/v1/accounts/list_accounts": {
       "get": {
+        "summary": "List Accounts [admin only]",
         "operationId": "df_ListAccounts",
         "responses": {
           "200": {
@@ -140,6 +183,7 @@
     },
     "/v1/accounts/update_account": {
       "patch": {
+        "summary": "Update Account",
         "operationId": "df_UpdateAccount",
         "responses": {
           "200": {
@@ -178,6 +222,7 @@
     },
     "/v1/accounts/update_account_privacy": {
       "patch": {
+        "summary": "Update Account Privacy Settings",
         "operationId": "df_UpdateAccountPrivacy",
         "responses": {
           "200": {
@@ -249,6 +294,7 @@
     },
     "/v1/payments/create_payment": {
       "post": {
+        "summary": "Create Payment",
         "operationId": "df_CreatePayment",
         "responses": {
           "200": {
@@ -287,6 +333,7 @@
     },
     "/v1/payments/delete_payment/{id}": {
       "delete": {
+        "summary": "Delete Payment by ID",
         "operationId": "df_DeletePayment",
         "responses": {
           "200": {
@@ -323,6 +370,7 @@
     },
     "/v1/payments/get_payment/{id}": {
       "get": {
+        "summary": "Get Payment by ID",
         "operationId": "df_GetPayment",
         "responses": {
           "200": {
@@ -359,6 +407,7 @@
     },
     "/v1/payments/list_payments/{accountId}": {
       "get": {
+        "summary": "List Payments by account_id",
         "operationId": "df_ListPayments",
         "responses": {
           "200": {
@@ -395,6 +444,7 @@
     },
     "/v1/payments/update_payment": {
       "patch": {
+        "summary": "Update Payment",
         "operationId": "df_UpdatePayment",
         "responses": {
           "200": {
@@ -433,6 +483,7 @@
     },
     "/v1/persons/create_person": {
       "post": {
+        "summary": "Create Person",
         "operationId": "df_CreatePerson",
         "responses": {
           "200": {
@@ -471,6 +522,7 @@
     },
     "/v1/persons/delete_person/{id}": {
       "delete": {
+        "summary": "Delete Person by ID",
         "operationId": "df_DeletePerson",
         "responses": {
           "200": {
@@ -507,6 +559,7 @@
     },
     "/v1/persons/get_person/{id}": {
       "get": {
+        "summary": "Get Person by ID",
         "operationId": "df_GetPerson",
         "responses": {
           "200": {
@@ -543,6 +596,7 @@
     },
     "/v1/persons/list_persons/{accountId}": {
       "get": {
+        "summary": "List Persons by account_id",
         "operationId": "df_ListPersons",
         "responses": {
           "200": {
@@ -579,6 +633,7 @@
     },
     "/v1/persons/update_person": {
       "patch": {
+        "summary": "Update Person",
         "operationId": "df_UpdatePerson",
         "responses": {
           "200": {
@@ -617,6 +672,7 @@
     },
     "/v1/returns_log/list_returns_log/{personId}": {
       "get": {
+        "summary": "List ReturnsLog by person_id",
         "operationId": "df_ListReturnsLog",
         "responses": {
           "200": {
@@ -653,6 +709,7 @@
     },
     "/v1/sessions/block_session": {
       "patch": {
+        "summary": "Block Session by ID",
         "operationId": "df_BlockSession",
         "responses": {
           "200": {
@@ -691,6 +748,7 @@
     },
     "/v1/sessions/list_sessions/{accountId}": {
       "get": {
+        "summary": "List Sessions by account_id",
         "operationId": "df_ListSessions",
         "responses": {
           "200": {
@@ -1113,6 +1171,63 @@
         }
       },
       "title": "Delete Person Response"
+    },
+    "pbDocument": {
+      "type": "object",
+      "properties": {
+        "personId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "mailId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "validatedBy": {
+          "type": "string"
+        },
+        "validDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "changer": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "title": "Document"
     },
     "pbGetAccountResponse": {
       "type": "object",
@@ -1751,6 +1866,41 @@
       },
       "description": "Returns the updated Person",
       "title": "Updated Person"
+    },
+    "pbUploadDocumentRequest": {
+      "type": "object",
+      "example": {
+        "file": "10101010101010010100101010010101",
+        "person_id": "1"
+      },
+      "properties": {
+        "file": {
+          "type": "string",
+          "format": "byte"
+        },
+        "personId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "mailId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "description": "Upload a Document [only HTTP]",
+      "title": "UploadDocument [only HTTP]",
+      "required": [
+        "file"
+      ]
+    },
+    "pbUploadDocumentResponse": {
+      "type": "object",
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/pbDocument"
+        }
+      },
+      "title": "UploadDocument Response"
     },
     "protobufAny": {
       "type": "object",

@@ -11,10 +11,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/itsscb/df/bff/api"
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/gapi"
+	"github.com/itsscb/df/bff/gw"
 	"github.com/itsscb/df/bff/pb"
 	"github.com/itsscb/df/bff/util"
 	_ "github.com/lib/pq"
@@ -109,10 +111,15 @@ func runGRPCServer(config util.Config, store db.Store) {
 }
 
 func runGatewayServer(config util.Config, store db.Store, swaggerFS http.FileSystem) {
-	server, err := gapi.NewServer(config, store)
+	server, err := gw.NewServer(config, store, swaggerFS)
 	if err != nil {
 		log.Fatal("cannot create server")
 	}
+
+	// server, err := gapi.NewServer(config, store)
+	// if err != nil {
+	// 	log.Fatal("cannot create server")
+	// }
 
 	jsonOption := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
 		MarshalOptions: protojson.MarshalOptions{
@@ -129,16 +136,15 @@ func runGatewayServer(config util.Config, store db.Store, swaggerFS http.FileSys
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	err = pb.RegisterDfHandlerServer(ctx, grpcMux, server)
+	err = pb.RegisterDfHandlerServer(ctx, grpcMux, &server.Grpc)
 	if err != nil {
 		log.Fatal("cannot register handler server")
 	}
 
-	mux := http.NewServeMux()
-	mux.Handle("/", grpcMux)
-
-	swaggerHandler := http.StripPrefix("/swagger/", http.FileServer(swaggerFS))
-	mux.Handle("/swagger/", swaggerHandler)
+	mux := gin.New()
+	mux.Group("v1/*{grpc_gateway}").Any("", gin.WrapH(grpcMux))
+	mux.POST("documents/upload", server.UploadDocument)
+	mux.StaticFS("/swagger/", swaggerFS)
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {

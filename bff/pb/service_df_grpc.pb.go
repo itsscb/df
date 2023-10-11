@@ -39,6 +39,7 @@ const (
 	Df_ListPayments_FullMethodName         = "/pb.df/ListPayments"
 	Df_UpdatePayment_FullMethodName        = "/pb.df/UpdatePayment"
 	Df_ListReturnsLog_FullMethodName       = "/pb.df/ListReturnsLog"
+	Df_UploadDocument_FullMethodName       = "/pb.df/UploadDocument"
 )
 
 // DfClient is the client API for Df service.
@@ -65,6 +66,7 @@ type DfClient interface {
 	ListPayments(ctx context.Context, in *ListPaymentsRequest, opts ...grpc.CallOption) (*ListPaymentsResponse, error)
 	UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error)
 	ListReturnsLog(ctx context.Context, in *ListReturnsLogRequest, opts ...grpc.CallOption) (*ListReturnsLogResponse, error)
+	UploadDocument(ctx context.Context, in *UploadDocumentRequest, opts ...grpc.CallOption) (*UploadDocumentResponse, error)
 }
 
 type dfClient struct {
@@ -255,6 +257,15 @@ func (c *dfClient) ListReturnsLog(ctx context.Context, in *ListReturnsLogRequest
 	return out, nil
 }
 
+func (c *dfClient) UploadDocument(ctx context.Context, in *UploadDocumentRequest, opts ...grpc.CallOption) (*UploadDocumentResponse, error) {
+	out := new(UploadDocumentResponse)
+	err := c.cc.Invoke(ctx, Df_UploadDocument_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DfServer is the server API for Df service.
 // All implementations must embed UnimplementedDfServer
 // for forward compatibility
@@ -279,6 +290,7 @@ type DfServer interface {
 	ListPayments(context.Context, *ListPaymentsRequest) (*ListPaymentsResponse, error)
 	UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error)
 	ListReturnsLog(context.Context, *ListReturnsLogRequest) (*ListReturnsLogResponse, error)
+	UploadDocument(context.Context, *UploadDocumentRequest) (*UploadDocumentResponse, error)
 	mustEmbedUnimplementedDfServer()
 }
 
@@ -345,6 +357,9 @@ func (UnimplementedDfServer) UpdatePayment(context.Context, *UpdatePaymentReques
 }
 func (UnimplementedDfServer) ListReturnsLog(context.Context, *ListReturnsLogRequest) (*ListReturnsLogResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListReturnsLog not implemented")
+}
+func (UnimplementedDfServer) UploadDocument(context.Context, *UploadDocumentRequest) (*UploadDocumentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadDocument not implemented")
 }
 func (UnimplementedDfServer) mustEmbedUnimplementedDfServer() {}
 
@@ -719,6 +734,24 @@ func _Df_ListReturnsLog_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_UploadDocument_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadDocumentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).UploadDocument(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_UploadDocument_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).UploadDocument(ctx, req.(*UploadDocumentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Df_ServiceDesc is the grpc.ServiceDesc for Df service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -805,6 +838,10 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListReturnsLog",
 			Handler:    _Df_ListReturnsLog_Handler,
+		},
+		{
+			MethodName: "UploadDocument",
+			Handler:    _Df_UploadDocument_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

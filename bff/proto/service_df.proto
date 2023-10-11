@@ -30,6 +30,8 @@ import "rpc_block_session.proto";
 
 import "rpc_list_returns_log_by_person_id.proto";
 
+import "rpc_upload_document.proto";
+
 option go_package = "github.com/itsscb/df/pb";
 
 
@@ -81,6 +83,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             get: "/v1/sessions/list_sessions/{account_id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List Sessions by account_id"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -95,6 +98,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Block Session by ID"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -109,6 +113,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             // get: "/v1/accounts/{id=id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get Account by account_id"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -122,6 +127,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             get: "/v1/accounts/list_accounts"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List Accounts [admin only]"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -135,13 +141,17 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             post: "/v1/accounts/create_account"
             body: "*"
         };
-    };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Create Account"
+        };
+        };
     rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
         option (google.api.http) = {
             patch: "/v1/accounts/update_account"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Account"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -156,6 +166,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Account Privacy Settings"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -170,6 +181,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Create Person"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -184,6 +196,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Person"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -197,6 +210,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             get: "/v1/persons/get_person/{id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get Person by ID"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -210,6 +224,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             delete: "/v1/persons/delete_person/{id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Delete Person by ID"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -223,6 +238,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             get: "/v1/persons/list_persons/{account_id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List Persons by account_id"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -237,6 +253,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Create Payment"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -250,6 +267,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             get: "/v1/payments/get_payment/{id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get Payment by ID"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -263,6 +281,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             delete: "/v1/payments/delete_payment/{id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Delete Payment by ID"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -276,6 +295,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             get: "/v1/payments/list_payments/{account_id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List Payments by account_id"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -290,6 +310,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Payment"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -303,6 +324,23 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             get: "/v1/returns_log/list_returns_log/{person_id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List ReturnsLog by person_id"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc UploadDocument (UploadDocumentRequest) returns (UploadDocumentResponse) {
+        option (google.api.http) = {
+            post: "/documents/upload"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Upload Document [only HTTP]"
+            description: "Testing via swagger is not possible. Try ```curl -X POST -H \"Authorization: Bearer {token}\" -F \"file=@/path/to/file\" \"http://{serverURI}/documents/upload\"```"
             security: {
                 security_requirement: {
                     key: "BearerAuth";

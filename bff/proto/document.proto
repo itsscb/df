@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message Document {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Document";
+        };
+    };
+    optional uint64 person_id = 1;
+    optional uint64 mail_id = 2;
+    string name = 3;
+    string type = 4;
+    string path = 5;
+    string url = 6;
+    bool valid = 7;
+    string validated_by = 8;
+    google.protobuf.Timestamp valid_date = 9 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"2023-10-05T00:00:00Z\""
+  }];
+    string creator = 10;
+    google.protobuf.Timestamp created = 11 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"2023-10-05T00:00:00Z\""
+  }];
+    string changer = 12;
+    google.protobuf.Timestamp changed = 13 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"2023-10-05T00:00:00Z\""
+  }];
+    uint64 id = 14;
+}
