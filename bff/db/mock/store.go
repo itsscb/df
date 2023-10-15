@@ -16,6 +16,7 @@ import (
 	uuid "github.com/google/uuid"
 	db "github.com/itsscb/df/bff/db/sqlc"
 	gomock "go.uber.org/mock/gomock"
+	codes "google.golang.org/grpc/codes"
 )
 
 // MockStore is a mock of Store interface.
@@ -99,6 +100,21 @@ func (mr *MockStoreMockRecorder) CreateAccountTx(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccountTx", reflect.TypeOf((*MockStore)(nil).CreateAccountTx), arg0, arg1)
 }
 
+// CreateDocument mocks base method.
+func (m *MockStore) CreateDocument(arg0 context.Context, arg1 db.CreateDocumentParams) (db.Document, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDocument", arg0, arg1)
+	ret0, _ := ret[0].(db.Document)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateDocument indicates an expected call of CreateDocument.
+func (mr *MockStoreMockRecorder) CreateDocument(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDocument", reflect.TypeOf((*MockStore)(nil).CreateDocument), arg0, arg1)
+}
+
 // CreateDocumentMail mocks base method.
 func (m *MockStore) CreateDocumentMail(arg0 context.Context, arg1 db.CreateDocumentMailParams) (db.Document, error) {
 	m.ctrl.T.Helper()
@@ -112,6 +128,22 @@ func (m *MockStore) CreateDocumentMail(arg0 context.Context, arg1 db.CreateDocum
 func (mr *MockStoreMockRecorder) CreateDocumentMail(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDocumentMail", reflect.TypeOf((*MockStore)(nil).CreateDocumentMail), arg0, arg1)
+}
+
+// CreateDocumentTx mocks base method.
+func (m *MockStore) CreateDocumentTx(arg0 context.Context, arg1 db.CreateDocumentTxParams) (db.Document, int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDocumentTx", arg0, arg1)
+	ret0, _ := ret[0].(db.Document)
+	ret1, _ := ret[1].(int)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateDocumentTx indicates an expected call of CreateDocumentTx.
+func (mr *MockStoreMockRecorder) CreateDocumentTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDocumentTx", reflect.TypeOf((*MockStore)(nil).CreateDocumentTx), arg0, arg1)
 }
 
 // CreateDocumentUpload mocks base method.
@@ -275,6 +307,21 @@ func (m *MockStore) DeleteDocument(arg0 context.Context, arg1 uint64) error {
 func (mr *MockStoreMockRecorder) DeleteDocument(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDocument", reflect.TypeOf((*MockStore)(nil).DeleteDocument), arg0, arg1)
+}
+
+// DeleteDocumentTx mocks base method.
+func (m *MockStore) DeleteDocumentTx(arg0 context.Context, arg1 uint64) (codes.Code, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteDocumentTx", arg0, arg1)
+	ret0, _ := ret[0].(codes.Code)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteDocumentTx indicates an expected call of DeleteDocumentTx.
+func (mr *MockStoreMockRecorder) DeleteDocumentTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDocumentTx", reflect.TypeOf((*MockStore)(nil).DeleteDocumentTx), arg0, arg1)
 }
 
 // DeleteDocumentsByPersonID mocks base method.
@@ -475,6 +522,36 @@ func (m *MockStore) GetDocument(arg0 context.Context, arg1 uint64) (db.Document,
 func (mr *MockStoreMockRecorder) GetDocument(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDocument", reflect.TypeOf((*MockStore)(nil).GetDocument), arg0, arg1)
+}
+
+// GetDocumentByHash mocks base method.
+func (m *MockStore) GetDocumentByHash(arg0 context.Context, arg1 db.GetDocumentByHashParams) ([]uint64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDocumentByHash", arg0, arg1)
+	ret0, _ := ret[0].([]uint64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDocumentByHash indicates an expected call of GetDocumentByHash.
+func (mr *MockStoreMockRecorder) GetDocumentByHash(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDocumentByHash", reflect.TypeOf((*MockStore)(nil).GetDocumentByHash), arg0, arg1)
+}
+
+// GetDocumentByIDWithAccountID mocks base method.
+func (m *MockStore) GetDocumentByIDWithAccountID(arg0 context.Context, arg1 db.GetDocumentByIDWithAccountIDParams) (db.Document, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDocumentByIDWithAccountID", arg0, arg1)
+	ret0, _ := ret[0].(db.Document)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDocumentByIDWithAccountID indicates an expected call of GetDocumentByIDWithAccountID.
+func (mr *MockStoreMockRecorder) GetDocumentByIDWithAccountID(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDocumentByIDWithAccountID", reflect.TypeOf((*MockStore)(nil).GetDocumentByIDWithAccountID), arg0, arg1)
 }
 
 // GetMail mocks base method.

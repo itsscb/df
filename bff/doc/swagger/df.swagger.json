@@ -259,6 +259,43 @@
         ]
       }
     },
+    "/v1/documents/delete_document/{id}": {
+      "delete": {
+        "summary": "Delete Document by ID",
+        "operationId": "df_DeleteDocument",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeleteDocumentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/login": {
       "post": {
         "operationId": "df_Login",
@@ -1137,6 +1174,23 @@
       },
       "description": "Returns the created Person",
       "title": "Created Person"
+    },
+    "pbDeleteDocumentResponse": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "deleted": true
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "title": "Delete Document Response"
     },
     "pbDeletePaymentResponse": {
       "type": "object",

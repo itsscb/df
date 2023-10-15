@@ -66,7 +66,7 @@ CREATE TABLE "documents" (
   "name" varchar NOT NULL,
   "type" varchar NOT NULL,
   "path" varchar NOT NULL,
-  "url" varchar NOT NULL,
+  "hash" varchar NOT NULL,
   "valid" boolean NOT NULL DEFAULT false,
   "valid_date" timestamptz,
   "validated_by" varchar,

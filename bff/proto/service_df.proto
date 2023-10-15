@@ -31,6 +31,7 @@ import "rpc_block_session.proto";
 import "rpc_list_returns_log_by_person_id.proto";
 
 import "rpc_upload_document.proto";
+import "rpc_delete_document.proto";
 
 option go_package = "github.com/itsscb/df/pb";
 
@@ -346,6 +347,20 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
                     key: "BearerAuth";
                     value: {}
                 }
+            }
+        };
+    };
+    rpc DeleteDocument (DeleteDocumentRequest) returns (DeleteDocumentResponse) {
+        option (google.api.http) = {
+            delete: "/v1/documents/delete_document/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Delete Document by ID"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
             }
         };
     };

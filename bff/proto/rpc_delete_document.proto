@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message DeleteDocumentRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Delete Document";
+          description: "Delete a Document";
+          required: [
+            "id"
+          ];
+        };
+        example: "{\"id\": \"1\"}"
+    };
+    uint64 id = 1;
+}
+
+message DeleteDocumentResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Delete Document Response";
+        };
+        example: "{\"id\": \"1\", \"deleted\": true}"
+    };
+    uint64 id = 1;
+    bool deleted = 2;
+}

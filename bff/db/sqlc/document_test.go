@@ -24,7 +24,7 @@ func createRandomDocumentUpload(t *testing.T) Document {
 		Name:    util.RandomString(20),
 		Type:    util.RandomString(5),
 		Path:    util.RandomString(50),
-		Url:     util.RandomString(60),
+		Hash:    util.RandomString(60),
 		Creator: creator,
 		Changer: creator,
 	}
@@ -37,7 +37,7 @@ func createRandomDocumentUpload(t *testing.T) Document {
 	require.Equal(t, arg.Name, document.Name)
 	require.Equal(t, arg.Type, document.Type)
 	require.Equal(t, arg.Path, document.Path)
-	require.Equal(t, arg.Url, document.Url)
+	require.Equal(t, arg.Hash, document.Hash)
 	require.Equal(t, arg.Creator, document.Creator)
 	require.Equal(t, arg.Changer, document.Changer)
 	require.Equal(t, document.Valid, false)
@@ -62,7 +62,7 @@ func TestCreateDocumentMail(t *testing.T) {
 		Name:    util.RandomString(20),
 		Type:    util.RandomString(5),
 		Path:    util.RandomString(50),
-		Url:     util.RandomString(60),
+		Hash:    util.RandomString(60),
 		Creator: util.RandomName(),
 		Changer: util.RandomName(),
 	}
@@ -75,7 +75,7 @@ func TestCreateDocumentMail(t *testing.T) {
 	require.Equal(t, arg.Name, document.Name)
 	require.Equal(t, arg.Type, document.Type)
 	require.Equal(t, arg.Path, document.Path)
-	require.Equal(t, arg.Url, document.Url)
+	require.Equal(t, arg.Hash, document.Hash)
 	require.Equal(t, arg.Creator, document.Creator)
 	require.Equal(t, arg.Changer, document.Changer)
 	require.Equal(t, document.Valid, false)
@@ -102,7 +102,7 @@ func TestGetDocument(t *testing.T) {
 	require.Equal(t, newdocument.ID, document.ID)
 	require.Equal(t, newdocument.PersonID, document.PersonID)
 	require.Equal(t, newdocument.Type, document.Type)
-	require.Equal(t, newdocument.Url, document.Url)
+	require.Equal(t, newdocument.Hash, document.Hash)
 	require.Equal(t, newdocument.Path, document.Path)
 	require.Equal(t, newdocument.Valid, document.Valid)
 	require.Equal(t, newdocument.ValidDate, document.ValidDate)
