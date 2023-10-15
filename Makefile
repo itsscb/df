@@ -40,7 +40,7 @@ network:
 	-docker network create df-network
 
 postgres:
-	docker start postgres || docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret --network df-network -d postgres:15-alpine
+	docker start df-bff_postgres_1 || docker run --name df-bff_postgres_1 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret --network df-network -d postgres:15-alpine
 
 migratenew:
 	docker run --name migratenew --privileged=true --rm -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ create -ext sql -dir migrations -seq $(name)
