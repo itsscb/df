@@ -29,7 +29,7 @@
     "/documents/upload": {
       "post": {
         "summary": "Upload Document [only HTTP]",
-        "description": "Testing via swagger is not possible. Try ```curl -X POST -H \"Authorization: Bearer {token}\" -F \"file=@/path/to/file\" \"http://{serverURI}/documents/upload\"```",
+        "description": "Testing via swagger is not possible. Try ```curl -X POST -H \"Authorization: Bearer {token}\" -F \"file=@/path/to/file\" -F \"person_id=1\" \"http://{serverURI}/documents/upload\"```",
         "operationId": "df_UploadDocument",
         "responses": {
           "200": {
@@ -1870,7 +1870,6 @@
     "pbUploadDocumentRequest": {
       "type": "object",
       "example": {
-        "file": "10101010101010010100101010010101",
         "person_id": "1"
       },
       "properties": {

@@ -17,7 +17,7 @@ message UploadDocumentRequest {
             "file"
             ];
         };
-        example: "{\"file\": \"10101010101010010100101010010101\", \"person_id\": \"1\" }";
+        example: "{\"person_id\": \"1\" }";
     };
     bytes file = 1;
     optional uint64 person_id = 2;

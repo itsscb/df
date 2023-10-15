@@ -340,7 +340,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             summary: "Upload Document [only HTTP]"
-            description: "Testing via swagger is not possible. Try ```curl -X POST -H \"Authorization: Bearer {token}\" -F \"file=@/path/to/file\" \"http://{serverURI}/documents/upload\"```"
+            description: "Testing via swagger is not possible. Try ```curl -X POST -H \"Authorization: Bearer {token}\" -F \"file=@/path/to/file\" -F \"person_id=1\" \"http://{serverURI}/documents/upload\"```"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
