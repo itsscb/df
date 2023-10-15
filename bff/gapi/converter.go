@@ -30,7 +30,8 @@ func convertAccount(account db.Account) *pb.Account {
 
 func convertPerson(person db.Person) *pb.Person {
 	return &pb.Person{
-		AccountId: person.AccountID,
+		Id:        person.ID,
+		AccountId: uint64(person.AccountID),
 		Firstname: person.Firstname,
 		Lastname:  person.Lastname,
 		Street:    person.Street,
@@ -48,12 +49,44 @@ func convertPerson(person db.Person) *pb.Person {
 func convertSession(session db.Session) *pb.Session {
 	return &pb.Session{
 		Id:           session.ID.String(),
-		Email:        session.Email,
+		AccountId:    session.AccountID,
 		ClientIp:     session.ClientIp,
 		UserAgent:    session.UserAgent,
 		RefreshToken: session.RefreshToken,
 		ExpiresAt:    timestamppb.New(session.ExpiresAt),
 		CreatedAt:    timestamppb.New(session.CreatedAt),
 		IsBlocked:    session.IsBlocked,
+	}
+}
+
+func convertPayment(payment db.Payment) *pb.Payment {
+	return &pb.Payment{
+		Id:              payment.ID,
+		AccountId:       uint64(payment.AccountID),
+		PaymentCategory: payment.PaymentCategory,
+		Bankname:        &payment.Bankname.String,
+		IBAN:            &payment.IBAN.String,
+		BIC:             &payment.BIC.String,
+		PaypalAccount:   &payment.PaypalAccount.String,
+		PaypalId:        &payment.PaypalID.String,
+		PaymentSystem:   &payment.PaymentSystem.String,
+		Type:            payment.Type,
+		Creator:         payment.Creator,
+		Created:         timestamppb.New(payment.Created),
+		Changer:         payment.Changer,
+		Changed:         timestamppb.New(payment.Changed),
+	}
+}
+
+func convertReturnsLog(returnsLog db.ReturnsLog) *pb.ReturnsLog {
+	return &pb.ReturnsLog{
+		Id:       returnsLog.ID,
+		ReturnId: returnsLog.ReturnID,
+		MailId:   returnsLog.MailID,
+		Status:   returnsLog.Status,
+		Creator:  returnsLog.Creator,
+		Changer:  returnsLog.Changer,
+		Created:  timestamppb.New(returnsLog.Created),
+		Changed:  timestamppb.New(returnsLog.Changed),
 	}
 }

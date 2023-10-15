@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -29,17 +31,18 @@ func (server *Server) CreatePerson(ctx context.Context, req *pb.CreatePersonRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("create_person (get_account)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get account")
 	}
 
-	if authPayload.Email != account.Email {
+	if authPayload.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
 	}
 
 	arg := db.CreatePersonTxParams{
-		AccountID: req.GetAccountId(),
+		AccountID: account.ID,
 		Firstname: req.GetFirstname(),
 		Lastname:  req.GetLastname(),
 		Birthday:  req.GetBirthday().AsTime(),
@@ -47,12 +50,13 @@ func (server *Server) CreatePerson(ctx context.Context, req *pb.CreatePersonRequ
 		Street:    req.GetStreet(),
 		Country:   req.GetCountry(),
 		Zip:       req.GetZip(),
-		Creator:   authPayload.Email,
-		Changer:   authPayload.Email,
+		Creator:   account.Email,
+		Changer:   account.Email,
 	}
 
 	person, err := server.store.CreatePersonTx(ctx, arg)
 	if err != nil {
+		slog.Error("create_person (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.String("person", fmt.Sprintf("%s, %s", req.GetLastname(), req.GetFirstname())), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to create person")
 	}
 

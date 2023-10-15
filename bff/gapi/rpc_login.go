@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -27,6 +28,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 			return nil, status.Error(codes.NotFound, "account not found")
 
 		}
+		slog.Error("login (get_account)", slog.String("invoked_by", req.GetEmail()), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
@@ -37,25 +39,28 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 
 	id, err := server.tokenMaker.NewTokenID()
 	if err != nil {
+		slog.Error("login (token_id)", slog.String("invoked_by", req.GetEmail()), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to create token id")
 	}
 
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
-		account.Email,
+		account.ID,
 		id,
 		server.config.RefreshTokenDuration,
 	)
 	if err != nil {
+		slog.Error("login (refresh_token)", slog.String("invoked_by", req.GetEmail()), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to create refresh token")
 
 	}
 
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
-		account.Email,
+		account.ID,
 		id,
 		server.config.AccessTokenDuration,
 	)
 	if err != nil {
+		slog.Error("login (access_token)", slog.String("invoked_by", req.GetEmail()), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to create access token")
 	}
 
@@ -63,7 +68,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 
 	_, err = server.store.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
-		Email:        account.Email,
+		AccountID:    account.ID,
 		RefreshToken: refreshToken,
 		UserAgent:    mtdt.UserAgent,
 		ClientIp:     mtdt.ClientIP,
@@ -71,6 +76,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 		ExpiresAt:    refreshPayload.ExpiredAt,
 	})
 	if err != nil {
+		slog.Error("login (db)", slog.String("invoked_by", req.GetEmail()), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to create session")
 
 	}
@@ -81,7 +87,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 		AccessTokenExpiresAt:  timestamppb.New(accessPayload.ExpiredAt),
 		RefreshToken:          refreshToken,
 		RefreshTokenExpiresAt: timestamppb.New(refreshPayload.ExpiredAt),
-		Email:                 account.Email,
+		AccountId:             account.ID,
 	}
 	return rsp, nil
 }

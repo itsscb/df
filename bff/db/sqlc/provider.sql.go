@@ -61,7 +61,7 @@ DELETE FROM providers
 WHERE "id" = $1
 `
 
-func (q *Queries) DeleteProvider(ctx context.Context, id int64) error {
+func (q *Queries) DeleteProvider(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deleteProvider, id)
 	return err
 }
@@ -71,7 +71,7 @@ SELECT id, name, description, category, email, creator, created, changer, change
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetProvider(ctx context.Context, id int64) (Provider, error) {
+func (q *Queries) GetProvider(ctx context.Context, id uint64) (Provider, error) {
 	row := q.db.QueryRowContext(ctx, getProvider, id)
 	var i Provider
 	err := row.Scan(
@@ -147,7 +147,7 @@ RETURNING id, name, description, category, email, creator, created, changer, cha
 `
 
 type UpdateProviderParams struct {
-	ID          int64          `json:"id"`
+	ID          uint64         `json:"id"`
 	Changer     string         `json:"changer"`
 	Name        sql.NullString `json:"name"`
 	Description sql.NullString `json:"description"`

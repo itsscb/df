@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	"github.com/itsscb/df/bff/pb"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -27,10 +28,11 @@ func (server *Server) GetAccount(ctx context.Context, req *pb.GetAccountRequest)
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
+		slog.Error("get_account (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
-	if authPayload.Email != account.Email {
+	if authPayload.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}

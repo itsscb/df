@@ -27,7 +27,7 @@ func (q *Queries) BlockSession(ctx context.Context, id uuid.UUID) error {
 const createSession = `-- name: CreateSession :one
 INSERT INTO sessions (
   id,
-  email,
+  account_id,
   refresh_token,
   user_agent,
   client_ip,
@@ -35,12 +35,12 @@ INSERT INTO sessions (
   expires_at
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7
-) RETURNING id, email, user_agent, client_ip, refresh_token, is_blocked, expires_at, created_at
+) RETURNING id, account_id, user_agent, client_ip, refresh_token, is_blocked, expires_at, created_at
 `
 
 type CreateSessionParams struct {
 	ID           uuid.UUID `json:"id"`
-	Email        string    `json:"email"`
+	AccountID    uint64    `json:"account_id"`
 	RefreshToken string    `json:"refresh_token"`
 	UserAgent    string    `json:"user_agent"`
 	ClientIp     string    `json:"client_ip"`
@@ -51,7 +51,7 @@ type CreateSessionParams struct {
 func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error) {
 	row := q.db.QueryRowContext(ctx, createSession,
 		arg.ID,
-		arg.Email,
+		arg.AccountID,
 		arg.RefreshToken,
 		arg.UserAgent,
 		arg.ClientIp,
@@ -61,7 +61,7 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 	var i Session
 	err := row.Scan(
 		&i.ID,
-		&i.Email,
+		&i.AccountID,
 		&i.UserAgent,
 		&i.ClientIp,
 		&i.RefreshToken,
@@ -73,7 +73,7 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 }
 
 const getSession = `-- name: GetSession :one
-SELECT id, email, user_agent, client_ip, refresh_token, is_blocked, expires_at, created_at FROM sessions
+SELECT id, account_id, user_agent, client_ip, refresh_token, is_blocked, expires_at, created_at FROM sessions
 WHERE id = $1 LIMIT 1
 `
 
@@ -82,7 +82,7 @@ func (q *Queries) GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	var i Session
 	err := row.Scan(
 		&i.ID,
-		&i.Email,
+		&i.AccountID,
 		&i.UserAgent,
 		&i.ClientIp,
 		&i.RefreshToken,
@@ -91,4 +91,41 @@ func (q *Queries) GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const listSessions = `-- name: ListSessions :many
+SELECT id, account_id, user_agent, client_ip, refresh_token, is_blocked, expires_at, created_at FROM sessions
+WHERE account_id = $1 AND is_blocked = false AND expires_at > now()
+`
+
+func (q *Queries) ListSessions(ctx context.Context, accountID uint64) ([]Session, error) {
+	rows, err := q.db.QueryContext(ctx, listSessions, accountID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Session{}
+	for rows.Next() {
+		var i Session
+		if err := rows.Scan(
+			&i.ID,
+			&i.AccountID,
+			&i.UserAgent,
+			&i.ClientIp,
+			&i.RefreshToken,
+			&i.IsBlocked,
+			&i.ExpiresAt,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

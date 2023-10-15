@@ -26,14 +26,16 @@
     "application/json"
   ],
   "paths": {
-    "/v1/block_session": {
-      "patch": {
-        "operationId": "df_BlockSession",
+    "/documents/upload": {
+      "post": {
+        "summary": "Upload Document [only HTTP]",
+        "description": "Testing via swagger is not possible. Try ```curl -X POST -H \"Authorization: Bearer {token}\" -F \"file=@/path/to/file\" -F \"person_id=1\" \"http://{serverURI}/documents/upload\"```",
+        "operationId": "df_UploadDocument",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbBlockSessionResponse"
+              "$ref": "#/definitions/pbUploadDocumentResponse"
             }
           },
           "default": {
@@ -46,11 +48,11 @@
         "parameters": [
           {
             "name": "body",
-            "description": "Block a Session",
+            "description": "Upload a Document [only HTTP]",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbBlockSessionRequest"
+              "$ref": "#/definitions/pbUploadDocumentRequest"
             }
           }
         ],
@@ -64,8 +66,9 @@
         ]
       }
     },
-    "/v1/create_account": {
+    "/v1/accounts/create_account": {
       "post": {
+        "summary": "Create Account",
         "operationId": "df_CreateAccount",
         "responses": {
           "200": {
@@ -97,46 +100,9 @@
         ]
       }
     },
-    "/v1/create_person": {
-      "post": {
-        "operationId": "df_CreatePerson",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/pbCreatePersonResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": "Create an Person",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/pbCreatePersonRequest"
-            }
-          }
-        ],
-        "tags": [
-          "df"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/v1/get_account": {
+    "/v1/accounts/get_account/{id}": {
       "get": {
+        "summary": "Get Account by account_id",
         "operationId": "df_GetAccount",
         "responses": {
           "200": {
@@ -155,10 +121,10 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
             "required": true,
             "type": "string",
-            "format": "int64"
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -171,8 +137,9 @@
         ]
       }
     },
-    "/v1/list_accounts": {
+    "/v1/accounts/list_accounts": {
       "get": {
+        "summary": "List Accounts [admin only]",
         "operationId": "df_ListAccounts",
         "responses": {
           "200": {
@@ -192,16 +159,16 @@
           {
             "name": "pageId",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           {
             "name": "pageSize",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           }
         ],
         "tags": [
@@ -214,14 +181,15 @@
         ]
       }
     },
-    "/v1/list_sessions": {
-      "get": {
-        "operationId": "df_ListSessions",
+    "/v1/accounts/update_account": {
+      "patch": {
+        "summary": "Update Account",
+        "operationId": "df_UpdateAccount",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbListSessionsResponse"
+              "$ref": "#/definitions/pbUpdateAccountResponse"
             }
           },
           "default": {
@@ -233,10 +201,89 @@
         },
         "parameters": [
           {
-            "name": "email",
-            "in": "query",
+            "name": "body",
+            "description": "Update an Account",
+            "in": "body",
             "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/accounts/update_account_privacy": {
+      "patch": {
+        "summary": "Update Account Privacy Settings",
+        "operationId": "df_UpdateAccountPrivacy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountPrivacyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Update the Privacy Consent of an Account",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountPrivacyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/documents/delete_document/{id}": {
+      "delete": {
+        "summary": "Delete Document by ID",
+        "operationId": "df_DeleteDocument",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeleteDocumentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -282,7 +329,498 @@
         ]
       }
     },
-    "/v1/refresh_token": {
+    "/v1/payments/create_payment": {
+      "post": {
+        "summary": "Create Payment",
+        "operationId": "df_CreatePayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreatePaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Create an Payment",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreatePaymentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/payments/delete_payment/{id}": {
+      "delete": {
+        "summary": "Delete Payment by ID",
+        "operationId": "df_DeletePayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeletePaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/payments/get_payment/{id}": {
+      "get": {
+        "summary": "Get Payment by ID",
+        "operationId": "df_GetPayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetPaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/payments/list_payments/{accountId}": {
+      "get": {
+        "summary": "List Payments by account_id",
+        "operationId": "df_ListPayments",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListPaymentsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/payments/update_payment": {
+      "patch": {
+        "summary": "Update Payment",
+        "operationId": "df_UpdatePayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Update an Payment",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePaymentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/create_person": {
+      "post": {
+        "summary": "Create Person",
+        "operationId": "df_CreatePerson",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreatePersonResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Create an Person",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreatePersonRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/delete_person/{id}": {
+      "delete": {
+        "summary": "Delete Person by ID",
+        "operationId": "df_DeletePerson",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeletePersonResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/get_person/{id}": {
+      "get": {
+        "summary": "Get Person by ID",
+        "operationId": "df_GetPerson",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetPersonResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/list_persons/{accountId}": {
+      "get": {
+        "summary": "List Persons by account_id",
+        "operationId": "df_ListPersons",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListPersonsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/update_person": {
+      "patch": {
+        "summary": "Update Person",
+        "operationId": "df_UpdatePerson",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePersonResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Update an Person",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePersonRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/returns_log/list_returns_log/{personId}": {
+      "get": {
+        "summary": "List ReturnsLog by person_id",
+        "operationId": "df_ListReturnsLog",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListReturnsLogResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/sessions/block_session": {
+      "patch": {
+        "summary": "Block Session by ID",
+        "operationId": "df_BlockSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbBlockSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Block a Session",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbBlockSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/sessions/list_sessions/{accountId}": {
+      "get": {
+        "summary": "List Sessions by account_id",
+        "operationId": "df_ListSessions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListSessionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/sessions/refresh_token": {
       "post": {
         "operationId": "df_RefreshToken",
         "responses": {
@@ -314,82 +852,6 @@
           "df"
         ]
       }
-    },
-    "/v1/update_account": {
-      "patch": {
-        "operationId": "df_UpdateAccount",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/pbUpdateAccountResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": "Update an Account",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/pbUpdateAccountRequest"
-            }
-          }
-        ],
-        "tags": [
-          "df"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/v1/update_account_privacy": {
-      "patch": {
-        "operationId": "df_UpdateAccountPrivacy",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/pbUpdateAccountPrivacyResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": "Update the Privacy Consent of an Account",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/pbUpdateAccountPrivacyRequest"
-            }
-          }
-        ],
-        "tags": [
-          "df"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
     }
   },
   "definitions": {
@@ -416,7 +878,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "email": {
           "type": "string"
@@ -591,6 +1053,64 @@
       "description": "Returns the created Account",
       "title": "Created Account"
     },
+    "pbCreatePaymentRequest": {
+      "type": "object",
+      "example": {
+        "account_id": "1",
+        "payment_category": "TBD: paypal",
+        "paypal_account": "john.doe@example.com",
+        "paypal_id": "this-is-a-paypal-id",
+        "payment_system": "TBD: paypal system",
+        "type": "TBD: some type"
+      },
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "paymentCategory": {
+          "type": "string"
+        },
+        "bankname": {
+          "type": "string"
+        },
+        "IBAN": {
+          "type": "string"
+        },
+        "BIC": {
+          "type": "string"
+        },
+        "paypalAccount": {
+          "type": "string"
+        },
+        "paypalId": {
+          "type": "string"
+        },
+        "paymentSystem": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "description": "Create an Payment",
+      "title": "Create Payment",
+      "required": [
+        "accountId",
+        "paymentCategory",
+        "type"
+      ]
+    },
+    "pbCreatePaymentResponse": {
+      "type": "object",
+      "properties": {
+        "payment": {
+          "$ref": "#/definitions/pbPayment"
+        }
+      },
+      "description": "Returns the created Payment",
+      "title": "Created Payment"
+    },
     "pbCreatePersonRequest": {
       "type": "object",
       "example": {
@@ -606,7 +1126,7 @@
       "properties": {
         "accountId": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "firstname": {
           "type": "string"
@@ -635,6 +1155,7 @@
       "description": "Create an Person",
       "title": "Create Person",
       "required": [
+        "accountId",
         "firstname",
         "lastname",
         "street",
@@ -654,6 +1175,114 @@
       "description": "Returns the created Person",
       "title": "Created Person"
     },
+    "pbDeleteDocumentResponse": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "deleted": true
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "title": "Delete Document Response"
+    },
+    "pbDeletePaymentResponse": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "deleted": true
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "title": "Delete Payment Response"
+    },
+    "pbDeletePersonResponse": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "deleted": true
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "title": "Delete Person Response"
+    },
+    "pbDocument": {
+      "type": "object",
+      "properties": {
+        "personId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "mailId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "validatedBy": {
+          "type": "string"
+        },
+        "validDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "changer": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "title": "Document"
+    },
     "pbGetAccountResponse": {
       "type": "object",
       "properties": {
@@ -664,10 +1293,30 @@
       "description": "Returns the Account",
       "title": "GetAccount Response"
     },
+    "pbGetPaymentResponse": {
+      "type": "object",
+      "properties": {
+        "payment": {
+          "$ref": "#/definitions/pbPayment"
+        }
+      },
+      "description": "Returns the Payment",
+      "title": "GetPayment Response"
+    },
+    "pbGetPersonResponse": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "$ref": "#/definitions/pbPerson"
+        }
+      },
+      "description": "Returns the Person",
+      "title": "GetPerson Response"
+    },
     "pbListAccountsResponse": {
       "type": "object",
       "properties": {
-        "account": {
+        "accounts": {
           "type": "array",
           "items": {
             "type": "object",
@@ -678,10 +1327,52 @@
       "description": "Returns the Account",
       "title": "ListAccounts Response"
     },
+    "pbListPaymentsResponse": {
+      "type": "object",
+      "properties": {
+        "payments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbPayment"
+          }
+        }
+      },
+      "description": "Returns the Payment",
+      "title": "ListPayments Response"
+    },
+    "pbListPersonsResponse": {
+      "type": "object",
+      "properties": {
+        "persons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbPerson"
+          }
+        }
+      },
+      "description": "Returns the Person",
+      "title": "ListPersons Response"
+    },
+    "pbListReturnsLogResponse": {
+      "type": "object",
+      "properties": {
+        "returnsLog": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbReturnsLog"
+          }
+        }
+      },
+      "description": "Returns the ReturnsLog",
+      "title": "ListReturnsLog Response"
+    },
     "pbListSessionsResponse": {
       "type": "object",
       "properties": {
-        "session": {
+        "sessions": {
           "type": "array",
           "items": {
             "type": "object",
@@ -701,7 +1392,6 @@
       "properties": {
         "email": {
           "type": "string",
-          "format": "email",
           "example": "john.doe@example.com"
         },
         "password": {
@@ -741,13 +1431,80 @@
           "type": "string",
           "format": "date-time"
         },
-        "email": {
+        "accountId": {
           "type": "string",
-          "format": "email",
-          "example": "john.doe@example.com"
+          "format": "uint64",
+          "example": "1"
         }
       },
       "title": "Login Response"
+    },
+    "pbPayment": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "account_id": "1",
+        "payment_category": "TBD: paypal",
+        "paypal_account": "john.doe@example.com",
+        "paypal_id": "this-is-a-paypal-id",
+        "payment_system": "TBD: paypal system",
+        "type": "TBD: some type",
+        "creator": "john.doe@example.com",
+        "created": "2023-10-05T02:30:53Z",
+        "changer": "john.doe@example.com",
+        "changed": "2023-10-05T02:30:53Z"
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "paymentCategory": {
+          "type": "string"
+        },
+        "bankname": {
+          "type": "string"
+        },
+        "IBAN": {
+          "type": "string"
+        },
+        "BIC": {
+          "type": "string"
+        },
+        "paypalAccount": {
+          "type": "string"
+        },
+        "paypalId": {
+          "type": "string"
+        },
+        "paymentSystem": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "changer": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        }
+      },
+      "title": "Payment"
     },
     "pbPerson": {
       "type": "object",
@@ -770,9 +1527,13 @@
         "changed": "2023-10-05T02:30:53Z"
       },
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
         "accountId": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "firstname": {
           "type": "string"
@@ -852,11 +1613,66 @@
       },
       "title": "Refresh Token Response"
     },
-    "pbSession": {
+    "pbReturnsLog": {
       "type": "object",
       "example": {
         "id": "1",
         "email": "john.doe@example.com",
+        "firstname": "John",
+        "lastname": "Doe",
+        "phone": "",
+        "street": "Death Star 2",
+        "zip": "0815",
+        "city": "New York",
+        "country": "USA",
+        "birthday": "1990-10-05T00:00:00Z",
+        "privacy_accepted": false,
+        "privacy_accepted_date": "0001-01-01T00:00:00Z",
+        "creator": "john.doe@example.com",
+        "created": "2023-10-05T02:30:53Z",
+        "changer": "john.doe@example.com",
+        "changed": "2023-10-05T02:30:53Z"
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "returnId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "mailId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "status": {
+          "type": "string"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "changer": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        }
+      },
+      "title": "ReturnsLog"
+    },
+    "pbSession": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "account_id": "1",
         "refresh_token": "v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw",
         "expires_at": "2023-10-05T02:30:53Z",
         "created_at": "2023-10-05T01:20:11Z",
@@ -868,8 +1684,9 @@
         "id": {
           "type": "string"
         },
-        "email": {
-          "type": "string"
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
         },
         "userAgent": {
           "type": "string"
@@ -933,13 +1750,13 @@
     "pbUpdateAccountRequest": {
       "type": "object",
       "example": {
-        "id": "195",
+        "id": "1",
         "street": "Death Star 2"
       },
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "email": {
           "type": "string"
@@ -989,6 +1806,154 @@
       },
       "description": "Returns the updated Account",
       "title": "Updated Account"
+    },
+    "pbUpdatePaymentRequest": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "payment_category": "TBD: paypal",
+        "paypal_account": "john.doe@example.com",
+        "paypal_id": "this-is-a-paypal-id",
+        "payment_system": "TBD: paypal system",
+        "type": "TBD: some type"
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "paymentCategory": {
+          "type": "string"
+        },
+        "bankname": {
+          "type": "string"
+        },
+        "IBAN": {
+          "type": "string"
+        },
+        "BIC": {
+          "type": "string"
+        },
+        "paypalAccount": {
+          "type": "string"
+        },
+        "paypalId": {
+          "type": "string"
+        },
+        "paymentSystem": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "description": "Update an Payment",
+      "title": "Update Payment",
+      "required": [
+        "id"
+      ]
+    },
+    "pbUpdatePaymentResponse": {
+      "type": "object",
+      "properties": {
+        "payment": {
+          "$ref": "#/definitions/pbPayment"
+        }
+      },
+      "description": "Returns the updated Payment",
+      "title": "Updated Payment"
+    },
+    "pbUpdatePersonRequest": {
+      "type": "object",
+      "example": {
+        "id": "1",
+        "firstname": "John",
+        "lastname": "Doe",
+        "phone": "",
+        "street": "Death Star 3",
+        "zip": "0816",
+        "city": "Montana",
+        "country": "Canada",
+        "birthday": "1992-10-05T00:00:00Z"
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time",
+          "example": "1990-10-05T00:00:00Z"
+        }
+      },
+      "description": "Update an Person",
+      "title": "Update Person",
+      "required": [
+        "id"
+      ]
+    },
+    "pbUpdatePersonResponse": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "$ref": "#/definitions/pbPerson"
+        }
+      },
+      "description": "Returns the updated Person",
+      "title": "Updated Person"
+    },
+    "pbUploadDocumentRequest": {
+      "type": "object",
+      "example": {
+        "person_id": "1"
+      },
+      "properties": {
+        "file": {
+          "type": "string",
+          "format": "byte"
+        },
+        "personId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "mailId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "description": "Upload a Document [only HTTP]",
+      "title": "UploadDocument [only HTTP]",
+      "required": [
+        "file"
+      ]
+    },
+    "pbUploadDocumentResponse": {
+      "type": "object",
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/pbDocument"
+        }
+      },
+      "title": "UploadDocument Response"
     },
     "protobufAny": {
       "type": "object",

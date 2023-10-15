@@ -34,8 +34,6 @@ OFFSET $2;
 -- name: UpdateReturn :one
 UPDATE returns
 SET
-    "person_id" = COALESCE(sqlc.narg(person_id), "person_id"),
-    "provider_id" = COALESCE(sqlc.narg(provider_id), "provider_id"),
     "name" = COALESCE(sqlc.narg(name), "name"),
     "description" = COALESCE(sqlc.narg(description), "description"),
     "category" = COALESCE(sqlc.narg(category), "category"),
@@ -73,3 +71,11 @@ SELECT
     sqlc.arg(creator),
     sqlc.arg(person_id)
 FROM providers;
+
+-- name: GetReturnIDsByPersonID :many
+SELECT "id" FROM "returns"
+WHERE "person_id" = sqlc.arg(person_id);
+
+-- name: DeleteReturnsByPersonID :exec
+DELETE FROM "returns"
+WHERE "person_id" = sqlc.arg(person_id);

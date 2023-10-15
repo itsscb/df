@@ -14,13 +14,14 @@ message ListAccountsRequest {
           title: "ListAccounts";
           description: "Returns a List of Accounts";
           required: [
-            "id"
+            "page_id",
+            "page_size"
             ];
         };
         example: "{\"page_id\": 1, \"page_size\": 10 }";
     };
-    int32 page_id = 1;
-    int32 page_size = 2;
+    uint32 page_id = 1;
+    uint32 page_size = 2;
 }
 
 message ListAccountsResponse {
@@ -30,6 +31,6 @@ message ListAccountsResponse {
           description: "Returns the Account";
         };
     };
-    repeated Account account = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    repeated Account accounts = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       }];
 }

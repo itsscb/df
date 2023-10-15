@@ -29,7 +29,7 @@ INSERT INTO persons (
 `
 
 type CreatePersonParams struct {
-	AccountID int64     `json:"account_id"`
+	AccountID uint64    `json:"account_id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
 	Birthday  time.Time `json:"birthday"`
@@ -78,7 +78,7 @@ DELETE FROM persons
 WHERE "id" = $1
 `
 
-func (q *Queries) DeletePerson(ctx context.Context, id int64) error {
+func (q *Queries) DeletePerson(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deletePerson, id)
 	return err
 }
@@ -88,7 +88,7 @@ SELECT id, account_id, firstname, lastname, birthday, city, zip, street, country
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetPerson(ctx context.Context, id int64) (Person, error) {
+func (q *Queries) GetPerson(ctx context.Context, id uint64) (Person, error) {
 	row := q.db.QueryRowContext(ctx, getPerson, id)
 	var i Person
 	err := row.Scan(
@@ -114,7 +114,7 @@ SELECT id, person_id, provider_id, name, description, category, email, status, c
 WHERE "person_id" = $1
 `
 
-func (q *Queries) GetReturns(ctx context.Context, id int64) ([]Return, error) {
+func (q *Queries) GetReturns(ctx context.Context, id uint64) ([]Return, error) {
 	rows, err := q.db.QueryContext(ctx, getReturns, id)
 	if err != nil {
 		return nil, err
@@ -152,18 +152,12 @@ func (q *Queries) GetReturns(ctx context.Context, id int64) ([]Return, error) {
 
 const listPersons = `-- name: ListPersons :many
 SELECT id, account_id, firstname, lastname, birthday, city, zip, street, country, creator, created, changer, changed FROM persons
+WHERE "account_id" = $1
 ORDER BY "lastname", "firstname"
-LIMIT $1
-OFFSET $2
 `
 
-type ListPersonsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
-func (q *Queries) ListPersons(ctx context.Context, arg ListPersonsParams) ([]Person, error) {
-	rows, err := q.db.QueryContext(ctx, listPersons, arg.Limit, arg.Offset)
+func (q *Queries) ListPersons(ctx context.Context, accountID uint64) ([]Person, error) {
+	rows, err := q.db.QueryContext(ctx, listPersons, accountID)
 	if err != nil {
 		return nil, err
 	}
@@ -202,14 +196,13 @@ func (q *Queries) ListPersons(ctx context.Context, arg ListPersonsParams) ([]Per
 const updatePerson = `-- name: UpdatePerson :one
 UPDATE persons
 SET
-    "account_id" = COALESCE($3, "account_id"),
-    "firstname" = COALESCE($4, "firstname"),
-    "lastname" = COALESCE($5, "lastname"),
-    "birthday" = COALESCE($6, "birthday"),
-    "city" = COALESCE($7, "city"),
-    "zip" = COALESCE($8, "zip"),
-    "street" = COALESCE($9, "street"),
-    "country" = COALESCE($10, "country"),
+    "firstname" = COALESCE($3, "firstname"),
+    "lastname" = COALESCE($4, "lastname"),
+    "birthday" = COALESCE($5, "birthday"),
+    "city" = COALESCE($6, "city"),
+    "zip" = COALESCE($7, "zip"),
+    "street" = COALESCE($8, "street"),
+    "country" = COALESCE($9, "country"),
     "changer" = $2,
     "changed" = now()
 WHERE "id" = $1
@@ -217,9 +210,8 @@ RETURNING id, account_id, firstname, lastname, birthday, city, zip, street, coun
 `
 
 type UpdatePersonParams struct {
-	ID        int64          `json:"id"`
+	ID        uint64         `json:"id"`
 	Changer   string         `json:"changer"`
-	AccountID sql.NullInt64  `json:"account_id"`
 	Firstname sql.NullString `json:"firstname"`
 	Lastname  sql.NullString `json:"lastname"`
 	Birthday  sql.NullTime   `json:"birthday"`
@@ -233,7 +225,6 @@ func (q *Queries) UpdatePerson(ctx context.Context, arg UpdatePersonParams) (Per
 	row := q.db.QueryRowContext(ctx, updatePerson,
 		arg.ID,
 		arg.Changer,
-		arg.AccountID,
 		arg.Firstname,
 		arg.Lastname,
 		arg.Birthday,

@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "payment.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message CreatePaymentRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Create Payment";
+          description: "Create an Payment";
+          required: [
+            "account_id",
+            "payment_category",
+            "type"
+            ];
+        };
+        example: "{\"account_id\": \"1\", \"payment_category\": \"TBD: paypal\", \"paypal_account\": \"john.doe@example.com\", \"paypal_id\": \"this-is-a-paypal-id\", \"payment_system\": \"TBD: paypal system\", \"type\": \"TBD: some type\"}";
+    };
+    uint64 account_id = 1;
+    string payment_category = 2;
+    optional string bankname = 3;
+    optional string IBAN = 4;
+    optional string BIC = 5;
+    optional string paypal_account = 6;
+    optional string paypal_id = 7;
+    optional string payment_system = 8;
+    string type = 9;
+}
+
+message CreatePaymentResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Created Payment";
+          description: "Returns the created Payment";
+        };
+    };
+    Payment payment = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

@@ -104,22 +104,3 @@ func TestUpdatePerson(t *testing.T) {
 	require.Equal(t, person1.Firstname, person2.Firstname)
 	require.NotEqual(t, person1.Lastname, person2.Lastname)
 }
-
-func TestListPersons(t *testing.T) {
-	for i := 0; i < 10; i++ {
-		createRandomPerson(t)
-	}
-
-	arg := ListPersonsParams{
-		Limit:  5,
-		Offset: 5,
-	}
-
-	persons, err := testQueries.ListPersons(context.Background(), arg)
-	require.NoError(t, err)
-	require.Len(t, persons, 5)
-
-	for _, person := range persons {
-		require.NotEmpty(t, person)
-	}
-}

@@ -1,7 +1,7 @@
 -- name: CreateSession :one
 INSERT INTO sessions (
   id,
-  email,
+  account_id,
   refresh_token,
   user_agent,
   client_ip,
@@ -20,3 +20,8 @@ UPDATE sessions
 SET
     "is_blocked" = true
 WHERE "id" = sqlc.arg(id);
+
+
+-- name: ListSessions :many
+SELECT * FROM sessions
+WHERE account_id = sqlc.arg(account_id) AND is_blocked = false AND expires_at > now();

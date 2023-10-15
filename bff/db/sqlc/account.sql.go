@@ -106,7 +106,7 @@ DELETE FROM accounts
 WHERE "id" = $1
 `
 
-func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {
+func (q *Queries) DeleteAccount(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deleteAccount, id)
 	return err
 }
@@ -116,7 +116,7 @@ SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privac
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
+func (q *Queries) GetAccount(ctx context.Context, id uint64) (Account, error) {
 	row := q.db.QueryRowContext(ctx, getAccount, id)
 	var i Account
 	err := row.Scan(
@@ -179,7 +179,7 @@ WHERE "id" = $1 LIMIT 1
 FOR NO KEY UPDATE
 `
 
-func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, error) {
+func (q *Queries) GetAccountForUpdate(ctx context.Context, id uint64) (Account, error) {
 	row := q.db.QueryRowContext(ctx, getAccountForUpdate, id)
 	var i Account
 	err := row.Scan(
@@ -259,43 +259,6 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 	return items, nil
 }
 
-const listSessions = `-- name: ListSessions :many
-SELECT id, email, user_agent, client_ip, refresh_token, is_blocked, expires_at, created_at FROM sessions
-WHERE email = $1 AND is_blocked = false AND expires_at > now()
-`
-
-func (q *Queries) ListSessions(ctx context.Context, email string) ([]Session, error) {
-	rows, err := q.db.QueryContext(ctx, listSessions, email)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []Session{}
-	for rows.Next() {
-		var i Session
-		if err := rows.Scan(
-			&i.ID,
-			&i.Email,
-			&i.UserAgent,
-			&i.ClientIp,
-			&i.RefreshToken,
-			&i.IsBlocked,
-			&i.ExpiresAt,
-			&i.CreatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts
 SET
@@ -316,7 +279,7 @@ RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, pri
 `
 
 type UpdateAccountParams struct {
-	ID           int64          `json:"id"`
+	ID           uint64         `json:"id"`
 	Changer      string         `json:"changer"`
 	Passwordhash sql.NullString `json:"passwordhash"`
 	Firstname    sql.NullString `json:"firstname"`
@@ -384,7 +347,7 @@ type UpdateAccountPrivacyParams struct {
 	PrivacyAccepted     sql.NullBool `json:"privacy_accepted"`
 	PrivacyAcceptedDate sql.NullTime `json:"privacy_accepted_date"`
 	Changer             string       `json:"changer"`
-	ID                  int64        `json:"id"`
+	ID                  uint64       `json:"id"`
 }
 
 func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPrivacyParams) (Account, error) {

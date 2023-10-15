@@ -23,11 +23,25 @@ ORDER BY "status"
 LIMIT $1
 OFFSET $2;
 
+-- name: ListReturnsLogsByPersonID :many
+SELECT * FROM "returnsLog"
+WHERE "return_id" IN (
+    SELECT "id"
+    FROM "returns"
+    WHERE "person_id" = sqlc.arg(person_id)
+);
+
+-- name: DeleteReturnsLogsByPersonID :exec
+DELETE FROM "returnsLog"
+WHERE "return_id" IN (
+    SELECT "id" 
+    FROM "returns"
+    WHERE "person_id" = sqlc.arg(person_id)
+);
+
 -- name: UpdateReturnsLog :one
 UPDATE "returnsLog"
 SET
-    "return_id" = COALESCE(sqlc.narg(return_id), "return_id"),
-    "mail_id" = COALESCE(sqlc.narg(mail_id), "mail_id"),
     "status" = COALESCE(sqlc.narg(status), "status"),
     "changer" = $1,
     "changed" = now()

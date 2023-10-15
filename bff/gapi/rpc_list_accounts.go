@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
@@ -24,8 +25,8 @@ func (server *Server) ListAccounts(ctx context.Context, req *pb.ListAccountsRequ
 	}
 
 	arg := db.ListAccountsParams{
-		Limit:  req.GetPageSize(),
-		Offset: (req.GetPageId() - 1) * req.GetPageSize(),
+		Limit:  int32(req.GetPageSize()),
+		Offset: int32((req.GetPageId() - 1) * req.GetPageSize()),
 	}
 
 	dbAccounts, err := server.store.ListAccounts(ctx, arg)
@@ -33,6 +34,7 @@ func (server *Server) ListAccounts(ctx context.Context, req *pb.ListAccountsRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "no accounts found")
 		}
+		slog.Error("list_accounts (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int("page_id", int(req.GetPageId())), slog.Int("page_size", int(req.GetPageSize())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get accounts")
 	}
 
@@ -46,7 +48,7 @@ func (server *Server) ListAccounts(ctx context.Context, req *pb.ListAccountsRequ
 	}
 
 	rsp := &pb.ListAccountsResponse{
-		Account: accounts,
+		Accounts: accounts,
 	}
 
 	return rsp, nil

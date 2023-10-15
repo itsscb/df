@@ -60,7 +60,7 @@ func (server *Server) authorizeUser(ctx context.Context) (*token.Payload, error)
 }
 
 func (server *Server) isAdmin(ctx context.Context, payload *token.Payload) bool {
-	acc, err := server.store.GetAccountByEmail(ctx, payload.Email)
+	acc, err := server.store.GetAccount(ctx, payload.AccountID)
 	if err != nil {
 		fmt.Printf("could not verify admin: %#v", err)
 		return false

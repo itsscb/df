@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
+	"google.golang.org/grpc/codes"
 )
 
 type Store interface {
@@ -12,6 +14,9 @@ type Store interface {
 	UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error)
 	UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAccountPrivacyTxParams) (Account, error)
 	CreatePersonTx(ctx context.Context, arg CreatePersonTxParams) (Person, error)
+	DeletePersonTx(ctx context.Context, id uint64) error
+	CreateDocumentTx(ctx context.Context, arg CreateDocumentTxParams) (doc Document, code int, err error)
+	DeleteDocumentTx(ctx context.Context, id uint64) (code codes.Code, err error)
 }
 
 // Store provides all functions to execute db queries and transactions

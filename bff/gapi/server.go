@@ -32,12 +32,15 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	}
 
 	logLevel := slog.LevelError
+	var logSource bool
 	if config.Environment == "development" {
 		logLevel = slog.LevelDebug
+		logSource = true
 	}
 
 	opts := slog.HandlerOptions{
-		Level: logLevel,
+		Level:     logLevel,
+		AddSource: logSource,
 	}
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &opts))
 

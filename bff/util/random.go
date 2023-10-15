@@ -9,8 +9,8 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz"
 const numbers = "0123456789"
 
 // RandomInt generates a random number between min and max
-func RandomInt(min, max int64) int64 {
-	return min + rand.Int63n(max-min+1)
+func RandomInt(min, max int64) uint64 {
+	return uint64(min + rand.Int63n(max-min+1))
 }
 
 // RandomString generates a random string of length n

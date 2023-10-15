@@ -6,7 +6,7 @@ import (
 )
 
 type CreatePersonTxParams struct {
-	AccountID int64     `json:"account_id"`
+	AccountID uint64    `json:"account_id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
 	Birthday  time.Time `json:"birthday"`

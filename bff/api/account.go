@@ -63,7 +63,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 }
 
 type getAccountRequest struct {
-	ID int64 `uri:"id" binding:"required,min=1" json:"id"`
+	ID uint64 `uri:"id" binding:"required,min=1" json:"id"`
 }
 
 func (server *Server) getAccount(ctx *gin.Context) {
@@ -86,7 +86,7 @@ func (server *Server) getAccount(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if account.Email != authPayload.Email {
+	if account.ID != authPayload.AccountID {
 		err := errors.New("account doesn't belong to the authenticated user")
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
@@ -110,7 +110,7 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
-	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
+	account, err := server.store.GetAccount(ctx, authPayload.AccountID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
@@ -142,8 +142,8 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 }
 
 type updateAccountPrivacyRequest struct {
-	ID              int64 `binding:"required" json:"ID"`
-	PrivacyAccepted *bool `binding:"required" json:"privacy_accepted"`
+	ID              uint64 `binding:"required" json:"ID"`
+	PrivacyAccepted *bool  `binding:"required" json:"privacy_accepted"`
 }
 
 func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
@@ -160,7 +160,7 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if account.Email != authPayload.Email {
+	if account.ID != authPayload.AccountID {
 		err := errors.New("account doesn't belong to the authenticated user")
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
@@ -168,7 +168,7 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 
 	account, err = server.store.UpdateAccountPrivacyTx(ctx, db.UpdateAccountPrivacyTxParams{
 		ID:              req.ID,
-		Changer:         authPayload.Email,
+		Changer:         account.Email,
 		PrivacyAccepted: req.PrivacyAccepted,
 	})
 	if err != nil {
@@ -180,7 +180,7 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 }
 
 type updateAccountRequest struct {
-	ID          int64     `binding:"required" json:"ID"`
+	ID          uint64    `binding:"required" json:"ID"`
 	NewPassword string    `json:"new_password"`
 	Firstname   string    `json:"firstname"`
 	Lastname    string    `json:"lastname"`
@@ -207,7 +207,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if account.Email != authPayload.Email {
+	if account.ID != authPayload.AccountID {
 		err := errors.New("account doesn't belong to the authenticated user")
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
@@ -215,7 +215,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 
 	arg := db.UpdateAccountTxParams{
 		ID:      req.ID,
-		Changer: authPayload.Email,
+		Changer: account.Email,
 		Passwordhash: sql.NullString{
 			String: req.NewPassword,
 			Valid:  req.NewPassword != "",

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 	"time"
 
 	"github.com/itsscb/df/bff/pb"
@@ -31,6 +32,7 @@ func (server *Server) RefreshToken(ctx context.Context, req *pb.RefreshTokenRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "session not found")
 		}
+		slog.Error("refresh_token (get_account)", slog.Int64("invoked_by", int64(refreshPayload.AccountID)), slog.String("refresh_token", req.GetRefreshToken()), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "cannot find session")
 	}
 
@@ -38,7 +40,7 @@ func (server *Server) RefreshToken(ctx context.Context, req *pb.RefreshTokenRequ
 		return nil, status.Error(codes.PermissionDenied, "session is blocked")
 	}
 
-	if session.Email != refreshPayload.Email {
+	if session.AccountID != refreshPayload.AccountID {
 		return nil, status.Error(codes.PermissionDenied, "invalid account session")
 
 	}
@@ -54,14 +56,16 @@ func (server *Server) RefreshToken(ctx context.Context, req *pb.RefreshTokenRequ
 
 	id, err := server.tokenMaker.NewTokenID()
 	if err != nil {
+		slog.Error("refresh_token (token_id)", slog.Int64("invoked_by", int64(refreshPayload.AccountID)), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to create session token")
 	}
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
-		refreshPayload.Email,
+		refreshPayload.AccountID,
 		id,
 		server.config.AccessTokenDuration,
 	)
 	if err != nil {
+		slog.Error("refresh_token (access_token)", slog.Int64("invoked_by", int64(refreshPayload.AccountID)), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to create session token")
 	}
 

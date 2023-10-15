@@ -21,14 +21,12 @@ INSERT INTO payments (
 
 -- name: ListPayments :many
 SELECT * FROM payments
-ORDER BY "payment_category"
-LIMIT $1
-OFFSET $2;
+WHERE "account_id" = sqlc.arg(account_id)
+ORDER BY "payment_category";
 
 -- name: UpdatePayment :one
 UPDATE payments
 SET
-    "account_id" = COALESCE(sqlc.narg(account_id), "account_id"),
     "payment_category" = COALESCE(sqlc.narg(payment_category), "payment_category"),
     "bankname" = COALESCE(sqlc.narg(bankname), "bankname"),
     "IBAN" = COALESCE(sqlc.narg(IBAN), "IBAN"),
@@ -37,9 +35,9 @@ SET
     "paypal_id" = COALESCE(sqlc.narg(paypal_id), "paypal_id"),
     "payment_system" = COALESCE(sqlc.narg(payment_system), "payment_system"),
     "type" = COALESCE(sqlc.narg(type), "type"),
-    "changer" = $2,
+    "changer" = sqlc.arg(changer),
     "changed" = now()
-WHERE "id" = $1
+WHERE "id" = sqlc.arg(id)
 RETURNING *;
 
 -- name: DeletePayment :exec

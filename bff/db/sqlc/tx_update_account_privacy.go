@@ -7,7 +7,7 @@ import (
 )
 
 type UpdateAccountPrivacyTxParams struct {
-	ID              int64  `json:"ID"`
+	ID              uint64 `json:"ID"`
 	Changer         string `json:"changer"`
 	PrivacyAccepted *bool  `json:"privacy_accepted"`
 }

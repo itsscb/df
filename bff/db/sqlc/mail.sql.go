@@ -89,7 +89,7 @@ WHERE "id" = $1
 //
 // WHERE "id" = $1
 // RETURNING *;
-func (q *Queries) DeleteMail(ctx context.Context, id int64) error {
+func (q *Queries) DeleteMail(ctx context.Context, id uint64) error {
 	_, err := q.db.ExecContext(ctx, deleteMail, id)
 	return err
 }
@@ -99,7 +99,7 @@ SELECT id, "from", "to", cc, timestamp, subject, body, creator, created, changer
 WHERE "id" = $1 LIMIT 1
 `
 
-func (q *Queries) GetMail(ctx context.Context, id int64) (Mail, error) {
+func (q *Queries) GetMail(ctx context.Context, id uint64) (Mail, error) {
 	row := q.db.QueryRowContext(ctx, getMail, id)
 	var i Mail
 	err := row.Scan(

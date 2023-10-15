@@ -6,7 +6,7 @@ import (
 )
 
 type UpdateAccountTxParams struct {
-	ID           int64          `json:"ID"`
+	ID           uint64         `json:"ID"`
 	Changer      string         `json:"changer"`
 	Passwordhash sql.NullString `json:"passwordhash"`
 	Firstname    sql.NullString `json:"firstname"`

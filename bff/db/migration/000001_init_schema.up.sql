@@ -35,7 +35,7 @@ CREATE TABLE "accounts" (
 
 CREATE TABLE "sessions" (
   "id" uuid UNIQUE PRIMARY KEY NOT NULL,
-  "email" varchar NOT NULL,
+  "account_id" bigint NOT NULL,
   "user_agent" varchar NOT NULL,
   "client_ip" varchar NOT NULL,
   "refresh_token" varchar NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE "documents" (
   "name" varchar NOT NULL,
   "type" varchar NOT NULL,
   "path" varchar NOT NULL,
-  "url" varchar NOT NULL,
+  "hash" varchar NOT NULL,
   "valid" boolean NOT NULL DEFAULT false,
   "valid_date" timestamptz,
   "validated_by" varchar,
@@ -114,7 +114,7 @@ CREATE TABLE "returns" (
   "description" text NOT NULL,
   "category" varchar NOT NULL,
   "email" varchar NOT NULL,
-  "status" varchar NOT NULL,
+  "status" varchar NOT NULL DEFAULT 'created',
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
@@ -125,20 +125,16 @@ CREATE TABLE "returnsLog" (
   "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
   "return_id" bigint NOT NULL,
   "mail_id" bigint NOT NULL,
-  "status" varchar,
+  "status" varchar NOT NULL DEFAULT 'created',
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
   "changed" timestamptz NOT NULL DEFAULT (now())
 );
 
-ALTER TABLE "sessions" ADD FOREIGN KEY ("email") REFERENCES "accounts" ("email");
+ALTER TABLE "sessions" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
 ALTER TABLE "persons" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
-
-ALTER TABLE "documents" ADD FOREIGN KEY ("person_id") REFERENCES "persons" ("id");
-
-ALTER TABLE "documents" ADD FOREIGN KEY ("mail_id") REFERENCES "mails" ("id");
 
 ALTER TABLE "payments" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 

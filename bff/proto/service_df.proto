@@ -5,16 +5,33 @@ package pb;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-import "rpc_create_account.proto";
+import "rpc_create_payment.proto";
+import "rpc_get_payment.proto";
+import "rpc_list_payments.proto";
+import "rpc_update_payment.proto";
+import "rpc_delete_payment.proto";
+
 import "rpc_create_person.proto";
-import "rpc_update_account.proto";
+import "rpc_get_person.proto";
+import "rpc_list_persons.proto";
+import "rpc_update_person.proto";
+import "rpc_delete_person.proto";
+
+import "rpc_create_account.proto";
 import "rpc_get_account.proto";
 import "rpc_list_accounts.proto";
-import "rpc_list_sessions.proto";
-import "rpc_block_session.proto";
+import "rpc_update_account.proto";
 import "rpc_update_account_privacy.proto";
+
 import "rpc_login.proto";
+import "rpc_list_sessions.proto";
 import "rpc_refresh_token.proto";
+import "rpc_block_session.proto";
+
+import "rpc_list_returns_log_by_person_id.proto";
+
+import "rpc_upload_document.proto";
+import "rpc_delete_document.proto";
 
 option go_package = "github.com/itsscb/df/pb";
 
@@ -58,16 +75,31 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {
         option (google.api.http) = {
-            post: "/v1/refresh_token"
+            post: "/v1/sessions/refresh_token"
             body: "*"
+        };
+    };
+    rpc ListSessions (ListSessionsRequest) returns (ListSessionsResponse) {
+        option (google.api.http) = {
+            get: "/v1/sessions/list_sessions/{account_id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List Sessions by account_id"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
         };
     };
     rpc BlockSession (BlockSessionRequest) returns (BlockSessionResponse) {
         option (google.api.http) = {
-            patch: "/v1/block_session"
+            patch: "/v1/sessions/block_session"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Block Session by ID"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -78,24 +110,11 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc GetAccount (GetAccountRequest) returns (GetAccountResponse) {
         option (google.api.http) = {
-            get: "/v1/get_account"
+            get: "/v1/accounts/get_account/{id}"
             // get: "/v1/accounts/{id=id}"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            security: {
-              security_requirement: {
-                key: "BearerAuth";
-                value: {}
-              }
-            }
-        };
-    };
-
-    rpc ListSessions (ListSessionsRequest) returns (ListSessionsResponse) {
-        option (google.api.http) = {
-            get: "/v1/list_sessions"
-        };
-        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get Account by account_id"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -106,9 +125,10 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc ListAccounts (ListAccountsRequest) returns (ListAccountsResponse) {
         option (google.api.http) = {
-            get: "/v1/list_accounts"
+            get: "/v1/accounts/list_accounts"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List Accounts [admin only]"
             security: {
               security_requirement: {
                 key: "BearerAuth";
@@ -119,16 +139,20 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse) {
         option (google.api.http) = {
-            post: "/v1/create_account"
-            body: "*"
-        };
-    };
-    rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
-        option (google.api.http) = {
-            patch: "/v1/update_account"
+            post: "/v1/accounts/create_account"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Create Account"
+        };
+        };
+    rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
+        option (google.api.http) = {
+            patch: "/v1/accounts/update_account"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Account"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -139,10 +163,11 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc UpdateAccountPrivacy (UpdateAccountPrivacyRequest) returns (UpdateAccountPrivacyResponse) {
         option (google.api.http) = {
-            patch: "/v1/update_account_privacy"
+            patch: "/v1/accounts/update_account_privacy"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Account Privacy Settings"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
@@ -153,15 +178,189 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     };
     rpc CreatePerson (CreatePersonRequest) returns (CreatePersonResponse) {
         option (google.api.http) = {
-            post: "/v1/create_person"
+            post: "/v1/persons/create_person"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Create Person"
             security: {
                 security_requirement: {
                     key: "BearerAuth";
                     value: {}
                 }
+            }
+        };
+    };
+    rpc UpdatePerson (UpdatePersonRequest) returns (UpdatePersonResponse) {
+        option (google.api.http) = {
+            patch: "/v1/persons/update_person"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Person"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc GetPerson (GetPersonRequest) returns (GetPersonResponse) {
+        option (google.api.http) = {
+            get: "/v1/persons/get_person/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get Person by ID"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc DeletePerson (DeletePersonRequest) returns (DeletePersonResponse) {
+        option (google.api.http) = {
+            delete: "/v1/persons/delete_person/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Delete Person by ID"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc ListPersons (ListPersonsRequest) returns (ListPersonsResponse) {
+        option (google.api.http) = {
+            get: "/v1/persons/list_persons/{account_id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List Persons by account_id"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse) {
+        option (google.api.http) = {
+            post: "/v1/payments/create_payment"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Create Payment"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc GetPayment (GetPaymentRequest) returns (GetPaymentResponse) {
+        option (google.api.http) = {
+            get: "/v1/payments/get_payment/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get Payment by ID"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc DeletePayment (DeletePaymentRequest) returns (DeletePaymentResponse) {
+        option (google.api.http) = {
+            delete: "/v1/payments/delete_payment/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Delete Payment by ID"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc ListPayments (ListPaymentsRequest) returns (ListPaymentsResponse) {
+        option (google.api.http) = {
+            get: "/v1/payments/list_payments/{account_id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List Payments by account_id"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc UpdatePayment (UpdatePaymentRequest) returns (UpdatePaymentResponse) {
+        option (google.api.http) = {
+            patch: "/v1/payments/update_payment"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Payment"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc ListReturnsLog (ListReturnsLogRequest) returns (ListReturnsLogResponse) {
+        option (google.api.http) = {
+            get: "/v1/returns_log/list_returns_log/{person_id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List ReturnsLog by person_id"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc UploadDocument (UploadDocumentRequest) returns (UploadDocumentResponse) {
+        option (google.api.http) = {
+            post: "/documents/upload"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Upload Document [only HTTP]"
+            description: "Testing via swagger is not possible. Try ```curl -X POST -H \"Authorization: Bearer {token}\" -F \"file=@/path/to/file\" -F \"person_id=1\" \"http://{serverURI}/documents/upload\"```"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc DeleteDocument (DeleteDocumentRequest) returns (DeleteDocumentResponse) {
+        option (google.api.http) = {
+            delete: "/v1/documents/delete_document/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Delete Document by ID"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
             }
         };
     };
