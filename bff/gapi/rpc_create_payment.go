@@ -30,11 +30,11 @@ func (server *Server) CreatePayment(ctx context.Context, req *pb.CreatePaymentRe
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
-		slog.Error("create_payment (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
+		slog.Error("create_payment (get_account)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get account")
 	}
 
-	if authPayload.Email != account.Email {
+	if authPayload.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
@@ -68,13 +68,13 @@ func (server *Server) CreatePayment(ctx context.Context, req *pb.CreatePaymentRe
 			String: req.GetPaymentSystem(),
 		},
 		Type:    req.GetType(),
-		Creator: authPayload.Email,
-		Changer: authPayload.Email,
+		Creator: account.Email,
+		Changer: account.Email,
 	}
 
 	payment, err := server.store.CreatePayment(ctx, arg)
 	if err != nil {
-		slog.Error("create_payment (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("payment_category", req.GetPaymentCategory()), slog.String("error", err.Error()))
+		slog.Error("create_payment (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("payment_category", req.GetPaymentCategory()), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to create payment")
 	}
 

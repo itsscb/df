@@ -35,7 +35,7 @@ CREATE TABLE "accounts" (
 
 CREATE TABLE "sessions" (
   "id" uuid UNIQUE PRIMARY KEY NOT NULL,
-  "email" varchar NOT NULL,
+  "account_id" bigint NOT NULL,
   "user_agent" varchar NOT NULL,
   "client_ip" varchar NOT NULL,
   "refresh_token" varchar NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE "returnsLog" (
   "changed" timestamptz NOT NULL DEFAULT (now())
 );
 
-ALTER TABLE "sessions" ADD FOREIGN KEY ("email") REFERENCES "accounts" ("email");
+ALTER TABLE "sessions" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
 ALTER TABLE "persons" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 

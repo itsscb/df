@@ -24,16 +24,16 @@ func (server *Server) UpdatePerson(ctx context.Context, req *pb.UpdatePersonRequ
 		return nil, invalidArgumentError(violations)
 	}
 
-	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
+	account, err := server.store.GetAccount(ctx, authPayload.AccountID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
-		slog.Error("update_person (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_person (get_account)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
-	if authPayload.Email != account.Email {
+	if authPayload.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
@@ -44,7 +44,7 @@ func (server *Server) UpdatePerson(ctx context.Context, req *pb.UpdatePersonRequ
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "person not found")
 		}
-		slog.Error("update_person (get_person)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_person (get_person)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get person")
 	}
 
@@ -84,12 +84,12 @@ func (server *Server) UpdatePerson(ctx context.Context, req *pb.UpdatePersonRequ
 			Valid: req.GetBirthday().IsValid(),
 			Time:  req.GetBirthday().AsTime(),
 		},
-		Changer: authPayload.Email,
+		Changer: account.Email,
 	}
 
 	person, err := server.store.UpdatePerson(ctx, arg)
 	if err != nil {
-		slog.Error("update_person (get_person)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_person (get_person)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("person_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to update person")
 	}
 

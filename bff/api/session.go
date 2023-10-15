@@ -24,7 +24,7 @@ type loginAccountResponse struct {
 	AccessTokenExpiresAt  time.Time `json:"access_token_expires_at"`
 	RefreshToken          string    `json:"refresh_token"`
 	RefreshTokenExpiresAt time.Time `json:"refresh_token_expires_at"`
-	Email                 string    `json:"email"`
+	AccountID             uint64    `json:"account_id"`
 }
 
 func (server *Server) loginAccount(ctx *gin.Context) {
@@ -55,13 +55,13 @@ func (server *Server) loginAccount(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(errors.New("failed to create session token")))
 	}
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
-		account.Email,
+		account.ID,
 		id,
 		server.config.RefreshTokenDuration,
 	)
 
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
-		account.Email,
+		account.ID,
 		id,
 		server.config.AccessTokenDuration,
 	)
@@ -73,7 +73,7 @@ func (server *Server) loginAccount(ctx *gin.Context) {
 
 	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
-		Email:        account.Email,
+		AccountID:    refreshPayload.AccountID,
 		RefreshToken: refreshToken,
 		UserAgent:    ctx.Request.UserAgent(),
 		ClientIp:     ctx.ClientIP(),
@@ -91,7 +91,7 @@ func (server *Server) loginAccount(ctx *gin.Context) {
 		AccessTokenExpiresAt:  accessPayload.ExpiredAt,
 		RefreshToken:          refreshToken,
 		RefreshTokenExpiresAt: refreshPayload.ExpiredAt,
-		Email:                 account.Email,
+		AccountID:             refreshPayload.AccountID,
 	}
 	ctx.JSON(http.StatusOK, rsp)
 }
@@ -130,7 +130,7 @@ func (server *Server) blockSession(ctx *gin.Context) {
 		return
 	}
 
-	if session.Email != payload.Email {
+	if session.AccountID != payload.AccountID {
 		ctx.JSON(http.StatusUnauthorized, errorResponse(errors.New("unauthorized")))
 		return
 	}

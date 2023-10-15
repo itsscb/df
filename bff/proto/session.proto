@@ -12,10 +12,10 @@ message Session {
         json_schema: {
           title: "Session";
         };
-        example: "{\"id\": \"1\",\"email\": \"john.doe@example.com\", \"refresh_token\": \"v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw\", \"expires_at\": \"2023-10-05T02:30:53Z\", \"created_at\": \"2023-10-05T01:20:11Z\", \"client_ip\": \"10.56.0.12\", \"user_agent\": \"Mozilla Firefox\", \"is_blocked\": false}";
+        example: "{\"id\": \"1\",\"account_id\": \"1\", \"refresh_token\": \"v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw\", \"expires_at\": \"2023-10-05T02:30:53Z\", \"created_at\": \"2023-10-05T01:20:11Z\", \"client_ip\": \"10.56.0.12\", \"user_agent\": \"Mozilla Firefox\", \"is_blocked\": false}";
     };
     string id = 1;
-    string email = 2;
+    uint64 account_id = 2;
     string user_agent = 3;
     string client_ip = 4;
     bool is_blocked = 5;

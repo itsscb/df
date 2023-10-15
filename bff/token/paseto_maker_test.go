@@ -12,7 +12,7 @@ func TestPasetoMaker(t *testing.T) {
 	maker, err := NewPasetoMaker(devPrivateKeyHex)
 	require.NoError(t, err)
 
-	email := util.RandomEmail()
+	account_id := util.RandomInt(100, 10000)
 	duration := time.Minute * 2
 
 	issuedAt := time.Now()
@@ -20,7 +20,7 @@ func TestPasetoMaker(t *testing.T) {
 
 	id, err := maker.NewTokenID()
 	require.NoError(t, err)
-	token, payload, err := maker.CreateToken(email, id, duration)
+	token, payload, err := maker.CreateToken(account_id, id, duration)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
 	require.NotEmpty(t, payload)
@@ -30,7 +30,7 @@ func TestPasetoMaker(t *testing.T) {
 	require.NotEmpty(t, token)
 
 	require.NotZero(t, payload.ID)
-	require.Equal(t, email, payload.Email)
+	require.Equal(t, account_id, payload.AccountID)
 	require.WithinDuration(t, issuedAt, payload.IssuedAt, time.Second)
 	require.WithinDuration(t, expiredAt, payload.ExpiredAt, time.Second)
 }
@@ -41,7 +41,7 @@ func TestExpiredPasetoToken(t *testing.T) {
 
 	id, err := maker.NewTokenID()
 	require.NoError(t, err)
-	token, payload, err := maker.CreateToken(util.RandomEmail(), id, -time.Minute)
+	token, payload, err := maker.CreateToken(util.RandomInt(100, 10000), id, -time.Minute)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
 	require.NotEmpty(t, payload)

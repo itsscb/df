@@ -20,7 +20,6 @@ message LoginRequest {
         example: "{\"email\": \"john.doe@example.com\", \"password\": \"MayTheForceBeWithYou!\"}";
     };
     string email = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        format: "email",
         example: "\"john.doe@example.com\""
       }];
     string password = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -47,8 +46,7 @@ message LoginResponse {
         example: "\"v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw\""
       }];
     google.protobuf.Timestamp refresh_token_expires_at = 5;
-    string email = 6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        format: "email",
-        example: "\"john.doe@example.com\""
+    uint64 account_id = 6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        example: "\"1\""
       }];
 }

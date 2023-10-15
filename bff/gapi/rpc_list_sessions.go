@@ -23,16 +23,16 @@ func (server *Server) ListSessions(ctx context.Context, req *pb.ListSessionsRequ
 		return nil, invalidArgumentError(violations)
 	}
 
-	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
+	account, err := server.store.GetAccount(ctx, authPayload.AccountID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
-		slog.Error("list_sessions (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
+		slog.Error("list_sessions (get_account)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
-	if authPayload.Email != account.Email {
+	if authPayload.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
@@ -44,12 +44,12 @@ func (server *Server) ListSessions(ctx context.Context, req *pb.ListSessionsRequ
 		}
 	}
 
-	dbSessions, err := server.store.ListSessions(ctx, account.Email)
+	dbSessions, err := server.store.ListSessions(ctx, account.ID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "no accounts found")
 		}
-		slog.Error("list_sessions (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
+		slog.Error("list_sessions (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get accounts")
 	}
 

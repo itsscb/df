@@ -49,7 +49,7 @@ func convertPerson(person db.Person) *pb.Person {
 func convertSession(session db.Session) *pb.Session {
 	return &pb.Session{
 		Id:           session.ID.String(),
-		Email:        session.Email,
+		AccountId:    session.AccountID,
 		ClientIp:     session.ClientIp,
 		UserAgent:    session.UserAgent,
 		RefreshToken: session.RefreshToken,

@@ -1,6 +1,8 @@
 package token
 
 import (
+	"fmt"
+	"strconv"
 	"time"
 
 	"aidanwoods.dev/go-paseto"
@@ -35,8 +37,8 @@ func (maker *PasetoMaker) NewTokenID() (uuid.UUID, error) {
 }
 
 // CreateToken creates a new token for a specific username and duration
-func (maker *PasetoMaker) CreateToken(email string, id uuid.UUID, duration time.Duration) (string, *Payload, error) {
-	payload, err := NewPayload(email, id, duration)
+func (maker *PasetoMaker) CreateToken(account_id uint64, id uuid.UUID, duration time.Duration) (string, *Payload, error) {
+	payload, err := NewPayload(account_id, id, duration)
 	if err != nil {
 		return "", payload, err
 	}
@@ -46,7 +48,7 @@ func (maker *PasetoMaker) CreateToken(email string, id uuid.UUID, duration time.
 	token.SetIssuedAt(payload.IssuedAt)
 	token.SetExpiration(payload.ExpiredAt)
 	token.SetString("id", id.String())
-	token.SetString("email", payload.Email)
+	token.SetString("account_id", fmt.Sprintf("%d", payload.AccountID))
 
 	signed := token.V4Sign(maker.privateKey, nil)
 	return signed, payload, err
@@ -71,7 +73,12 @@ func (maker *PasetoMaker) VerifyToken(token string) (*Payload, error) {
 		return nil, ErrInvalidToken
 	}
 
-	payload.Email, err = t.GetString("email")
+	account_id, err := t.GetString("account_id")
+	if err != nil {
+		return nil, ErrInvalidToken
+	}
+
+	payload.AccountID, err = strconv.ParseUint(account_id, 10, 64)
 	if err != nil {
 		return nil, ErrInvalidToken
 	}

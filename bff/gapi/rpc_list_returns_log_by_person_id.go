@@ -23,16 +23,16 @@ func (server *Server) ListReturnsLog(ctx context.Context, req *pb.ListReturnsLog
 		return nil, invalidArgumentError(violations)
 	}
 
-	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
+	account, err := server.store.GetAccount(ctx, authPayload.AccountID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
-		slog.Error("list_returns_log_by_person_id (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetPersonId())), slog.String("error", err.Error()))
+		slog.Error("list_returns_log_by_person_id (get_account)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("person_id", int64(req.GetPersonId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
-	if authPayload.Email != account.Email {
+	if authPayload.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
@@ -49,7 +49,7 @@ func (server *Server) ListReturnsLog(ctx context.Context, req *pb.ListReturnsLog
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Error(codes.NotFound, "no returns_logs found")
 		}
-		slog.Error("list_returns_log_by_person_id (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("person_id", int64(req.GetPersonId())), slog.String("error", err.Error()))
+		slog.Error("list_returns_log_by_person_id (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("person_id", int64(req.GetPersonId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.NotFound, "failed to get returns_logs")
 	}
 

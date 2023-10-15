@@ -25,16 +25,16 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 		return nil, invalidArgumentError(violations)
 	}
 
-	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
+	account, err := server.store.GetAccount(ctx, authPayload.AccountID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
-		slog.Error("update_payment (get_account)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_payment (get_account)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get account")
 	}
 
-	if authPayload.Email != account.Email {
+	if authPayload.AccountID != account.ID {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
@@ -45,7 +45,7 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "payment not found")
 		}
-		slog.Error("update_payment (get_payment)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_payment (get_payment)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to get payment")
 	}
 
@@ -89,12 +89,12 @@ func (server *Server) UpdatePayment(ctx context.Context, req *pb.UpdatePaymentRe
 			Valid:  req.GetType() != "",
 			String: req.GetType(),
 		},
-		Changer: authPayload.Email,
+		Changer: account.Email,
 	}
 
 	payment, err := server.store.UpdatePayment(ctx, arg)
 	if err != nil {
-		slog.Error("update_payment (get_payment)", slog.String("invoked_by", authPayload.Email), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_payment (get_payment)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("payment_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to update payment")
 	}
 

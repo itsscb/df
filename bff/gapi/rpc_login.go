@@ -44,7 +44,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 	}
 
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
-		account.Email,
+		account.ID,
 		id,
 		server.config.RefreshTokenDuration,
 	)
@@ -55,7 +55,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 	}
 
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
-		account.Email,
+		account.ID,
 		id,
 		server.config.AccessTokenDuration,
 	)
@@ -68,7 +68,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 
 	_, err = server.store.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
-		Email:        account.Email,
+		AccountID:    account.ID,
 		RefreshToken: refreshToken,
 		UserAgent:    mtdt.UserAgent,
 		ClientIp:     mtdt.ClientIP,
@@ -87,7 +87,7 @@ func (server *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 		AccessTokenExpiresAt:  timestamppb.New(accessPayload.ExpiredAt),
 		RefreshToken:          refreshToken,
 		RefreshTokenExpiresAt: timestamppb.New(refreshPayload.ExpiredAt),
-		Email:                 account.Email,
+		AccountId:             account.ID,
 	}
 	return rsp, nil
 }

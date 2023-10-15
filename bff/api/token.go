@@ -48,7 +48,7 @@ func (server *Server) renewAccessToken(ctx *gin.Context) {
 		return
 	}
 
-	if session.Email != refreshPayload.Email {
+	if session.AccountID != refreshPayload.AccountID {
 		err := fmt.Errorf("incorrect session user")
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
@@ -71,7 +71,7 @@ func (server *Server) renewAccessToken(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(errors.New("failed to create session token")))
 	}
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
-		refreshPayload.Email,
+		refreshPayload.AccountID,
 		id,
 		server.config.AccessTokenDuration,
 	)

@@ -26,15 +26,20 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Email != req.GetEmail() {
+	if authPayload.AccountID != req.GetId() {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
 	}
 
+	account, err := server.store.GetAccount(ctx, req.GetId())
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "account not found")
+	}
+
 	arg := db.UpdateAccountTxParams{
 		ID:      req.GetId(),
-		Changer: authPayload.Email,
+		Changer: account.Email,
 		Email: sql.NullString{
 			Valid:  req.GetEmail() != "",
 			String: req.GetEmail(),
@@ -76,7 +81,7 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 	if req.Password != nil {
 		hashedPassword, err := util.HashPassword(req.GetPassword())
 		if err != nil {
-			slog.Error("update_account (hash_password)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
+			slog.Error("update_account (hash_password)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
 			return nil, status.Error(codes.Internal, "failed to hash password")
 		}
 
@@ -86,9 +91,9 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 		}
 	}
 
-	account, err := server.store.UpdateAccountTx(ctx, arg)
+	account, err = server.store.UpdateAccountTx(ctx, arg)
 	if err != nil {
-		slog.Error("update_account (db)", slog.String("invoked_by", authPayload.Email), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_account (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to update account")
 	}
 

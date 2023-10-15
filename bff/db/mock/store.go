@@ -763,7 +763,7 @@ func (mr *MockStoreMockRecorder) ListReturnsLogsByPersonID(arg0, arg1 any) *gomo
 }
 
 // ListSessions mocks base method.
-func (m *MockStore) ListSessions(arg0 context.Context, arg1 string) ([]db.Session, error) {
+func (m *MockStore) ListSessions(arg0 context.Context, arg1 uint64) ([]db.Session, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListSessions", arg0, arg1)
 	ret0, _ := ret[0].([]db.Session)

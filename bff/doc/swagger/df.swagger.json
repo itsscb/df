@@ -1338,7 +1338,6 @@
       "properties": {
         "email": {
           "type": "string",
-          "format": "email",
           "example": "john.doe@example.com"
         },
         "password": {
@@ -1378,10 +1377,10 @@
           "type": "string",
           "format": "date-time"
         },
-        "email": {
+        "accountId": {
           "type": "string",
-          "format": "email",
-          "example": "john.doe@example.com"
+          "format": "uint64",
+          "example": "1"
         }
       },
       "title": "Login Response"
@@ -1619,7 +1618,7 @@
       "type": "object",
       "example": {
         "id": "1",
-        "email": "john.doe@example.com",
+        "account_id": "1",
         "refresh_token": "v4.public.eyJlbWFpbCI6ImEyQGIuZGUiLCJleHAiOiIyMDIzLTEwLTA2VDAxOjAyOjA5KzAyOjAwIiwiaWF0IjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCIsImlkIjoiNWUxZDY3ZGEtN2M5Yi00MzY1LWE0ZDUtM2NjMGEwNTEyNDFlIiwibmJmIjoiMjAyMy0xMC0wNVQwMTowMjowOSswMjowMCJ9BoX36w0po1vvHSjsBP_KWeFxV1xRbQayqbJuIoK2jKqy1Bt2RoHyJbLoCEO15CRT5DnQ6P0AHlBzjsXt61aDDw",
         "expires_at": "2023-10-05T02:30:53Z",
         "created_at": "2023-10-05T01:20:11Z",
@@ -1631,8 +1630,9 @@
         "id": {
           "type": "string"
         },
-        "email": {
-          "type": "string"
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
         },
         "userAgent": {
           "type": "string"

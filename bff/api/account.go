@@ -86,7 +86,7 @@ func (server *Server) getAccount(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if account.Email != authPayload.Email {
+	if account.ID != authPayload.AccountID {
 		err := errors.New("account doesn't belong to the authenticated user")
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
@@ -110,7 +110,7 @@ func (server *Server) listAccounts(ctx *gin.Context) {
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
-	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
+	account, err := server.store.GetAccount(ctx, authPayload.AccountID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
@@ -160,7 +160,7 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if account.Email != authPayload.Email {
+	if account.ID != authPayload.AccountID {
 		err := errors.New("account doesn't belong to the authenticated user")
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
@@ -168,7 +168,7 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 
 	account, err = server.store.UpdateAccountPrivacyTx(ctx, db.UpdateAccountPrivacyTxParams{
 		ID:              req.ID,
-		Changer:         authPayload.Email,
+		Changer:         account.Email,
 		PrivacyAccepted: req.PrivacyAccepted,
 	})
 	if err != nil {
@@ -207,7 +207,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if account.Email != authPayload.Email {
+	if account.ID != authPayload.AccountID {
 		err := errors.New("account doesn't belong to the authenticated user")
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
@@ -215,7 +215,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 
 	arg := db.UpdateAccountTxParams{
 		ID:      req.ID,
-		Changer: authPayload.Email,
+		Changer: account.Email,
 		Passwordhash: sql.NullString{
 			String: req.NewPassword,
 			Valid:  req.NewPassword != "",

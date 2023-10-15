@@ -34,7 +34,7 @@ func (server *Server) UploadDocument(ctx *gin.Context) {
 		return
 	}
 
-	account, err := server.store.GetAccountByEmail(ctx, authPayload.Email)
+	account, err := server.store.GetAccount(ctx, authPayload.AccountID)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, errorResponse(errors.New("account not found")))
 		return
