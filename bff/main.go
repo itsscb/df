@@ -144,6 +144,7 @@ func runGatewayServer(config util.Config, store db.Store, swaggerFS http.FileSys
 	mux := gin.New()
 	mux.Group("v1/*{grpc_gateway}").Any("", gin.WrapH(grpcMux))
 	mux.POST("documents/upload", server.UploadDocument)
+	mux.POST("query", server.Query)
 	mux.StaticFS("/swagger/", swaggerFS)
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)

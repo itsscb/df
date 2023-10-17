@@ -108,6 +108,12 @@ type Provider struct {
 	Changed     time.Time `json:"changed"`
 }
 
+type Query struct {
+	ID    uint64 `json:"id"`
+	Name  string `json:"name"`
+	Query string `json:"query"`
+}
+
 type Return struct {
 	ID          uint64    `json:"id"`
 	PersonID    uint64    `json:"person_id"`

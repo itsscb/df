@@ -17,6 +17,7 @@ type Store interface {
 	DeletePersonTx(ctx context.Context, id uint64) error
 	CreateDocumentTx(ctx context.Context, arg CreateDocumentTxParams) (doc Document, code int, err error)
 	DeleteDocumentTx(ctx context.Context, id uint64) (code codes.Code, err error)
+	Query(ctx context.Context, statement string, args ...interface{}) (result []map[string]interface{}, err error)
 }
 
 // Store provides all functions to execute db queries and transactions
