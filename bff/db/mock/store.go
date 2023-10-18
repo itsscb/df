@@ -1018,3 +1018,17 @@ func (mr *MockStoreMockRecorder) ValidateDocument(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateDocument", reflect.TypeOf((*MockStore)(nil).ValidateDocument), arg0, arg1)
 }
+
+// VerifyAccountEmail mocks base method.
+func (m *MockStore) VerifyAccountEmail(arg0 context.Context, arg1 db.VerifyAccountEmailParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyAccountEmail", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// VerifyAccountEmail indicates an expected call of VerifyAccountEmail.
+func (mr *MockStoreMockRecorder) VerifyAccountEmail(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyAccountEmail", reflect.TypeOf((*MockStore)(nil).VerifyAccountEmail), arg0, arg1)
+}

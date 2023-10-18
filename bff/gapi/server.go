@@ -6,6 +6,7 @@ import (
 	"os"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
+	"github.com/itsscb/df/bff/mail"
 	"github.com/itsscb/df/bff/pb"
 	"github.com/itsscb/df/bff/token"
 	"github.com/itsscb/df/bff/util"
@@ -17,6 +18,7 @@ type Server struct {
 	store      db.Store
 	config     util.Config
 	tokenMaker token.Maker
+	mailSender mail.EmailSender
 }
 
 func NewServer(config util.Config, store db.Store) (*Server, error) {
@@ -25,10 +27,13 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
 	}
 
+	mailSender := mail.NewGmailSender("df", config.SMTPMail, config.SMTPPassword)
+
 	server := &Server{
 		store:      store,
 		config:     config,
 		tokenMaker: tokenMaker,
+		mailSender: mailSender,
 	}
 
 	logLevel := slog.LevelError

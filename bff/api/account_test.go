@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 	"time"
 
@@ -22,8 +23,44 @@ import (
 
 var timestamp = time.Now()
 
+type eqCreateAccountTxParamsMatcher struct {
+	arg      db.CreateAccountTxParams
+	password string
+	user     db.Account
+}
+
+func (expected eqCreateAccountTxParamsMatcher) Matches(x interface{}) bool {
+	actualArg, ok := x.(db.CreateAccountTxParams)
+	if !ok {
+		return false
+	}
+
+	err := util.CheckPassword(expected.password, actualArg.Passwordhash)
+	if err != nil {
+		return false
+	}
+
+	expected.arg.Passwordhash = actualArg.Passwordhash
+	if !reflect.DeepEqual(expected.arg.CreateAccountParams, actualArg.CreateAccountParams) {
+		return false
+	}
+
+	err = actualArg.AfterCreate(expected.user)
+	return err == nil
+}
+
+func (e eqCreateAccountTxParamsMatcher) String() string {
+	return fmt.Sprintf("matches arg %v and password %v", e.arg, e.password)
+}
+
+func EqCreateAccountTxParams(arg db.CreateAccountTxParams, password string, user db.Account) gomock.Matcher {
+	return eqCreateAccountTxParamsMatcher{arg, password, user}
+}
+
 func TestCreateAccountAPI(t *testing.T) {
-	account := randomAccount()
+	account, password := randomAccount()
+
+	// fn := func(db.Account) error { return nil}
 
 	testCases := []struct {
 		name          string
@@ -53,24 +90,32 @@ func TestCreateAccountAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.CreateAccountTxParams{
-					Passwordhash:    account.Passwordhash,
-					PrivacyAccepted: account.PrivacyAccepted,
-					Firstname:       account.Firstname,
-					Lastname:        account.Lastname,
-					Birthday:        account.Birthday,
-					Email:           account.Email,
-					City:            account.City,
-					Zip:             account.Zip,
-					Street:          account.Street,
-					Country:         account.Country,
-					Phone:           account.Phone,
-					Creator:         account.Email,
+					CreateAccountParams: db.CreateAccountParams{
+						Passwordhash:    account.Passwordhash,
+						PrivacyAccepted: account.PrivacyAccepted,
+						Firstname:       account.Firstname,
+						Lastname:        account.Lastname,
+						Birthday:        account.Birthday,
+						Email:           account.Email,
+						City:            account.City,
+						Zip:             account.Zip,
+						Street:          account.Street,
+						Country:         account.Country,
+						Phone:           account.Phone,
+						Creator:         account.Email,
+					},
+					AfterCreate: func(a db.Account) error { return nil },
 				}
 
 				store.EXPECT().
-					CreateAccountTx(gomock.Any(), gomock.Eq(arg)).
+					CreateAccountTx(gomock.Any(), EqCreateAccountTxParams(arg, password, account)).
 					Times(1).
 					Return(account, nil)
+
+				// store.EXPECT().
+				// 	CreateAccountTx(gomock.Any(), gomock.Eq(arg)).
+				// 	Times(1).
+				// 	Return(account, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
@@ -184,7 +229,7 @@ func TestCreateAccountAPI(t *testing.T) {
 }
 
 func TestGetAccountAPI(t *testing.T) {
-	account := randomAccount()
+	account, _ := randomAccount()
 
 	testCases := []struct {
 		name          string
@@ -315,7 +360,7 @@ func TestGetAccountAPI(t *testing.T) {
 }
 
 func TestUpdateAccountTxAPI(t *testing.T) {
-	account := randomAccount()
+	account, _ := randomAccount()
 	newLastname := util.RandomName()
 
 	testCases := []struct {
@@ -472,7 +517,7 @@ func TestListAccountsAPI(t *testing.T) {
 	n := 5
 	accounts := make([]db.Account, n)
 	for i := 0; i < n; i++ {
-		accounts[i] = randomAccount()
+		accounts[i], _ = randomAccount()
 	}
 	account := accounts[1]
 
@@ -624,7 +669,7 @@ func TestListAccountsAPI(t *testing.T) {
 }
 
 func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
-	account := randomAccount()
+	account, _ := randomAccount()
 
 	testCases := []struct {
 		name          string
@@ -832,7 +877,7 @@ func TestUpdateAccountPrivacyTxAPI(t *testing.T) {
 	}
 }
 
-func randomAccount() db.Account {
+func randomAccount() (db.Account, string) {
 	password := util.RandomString(6)
 	hashedPassword, _ := util.HashPassword(password)
 
@@ -866,7 +911,7 @@ func randomAccount() db.Account {
 		Birthday: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
 
-	return acc
+	return acc, password
 }
 
 func requireBodyMatchAccount(t *testing.T, body *bytes.Buffer, account db.Account) {

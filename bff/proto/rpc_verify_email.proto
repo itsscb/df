@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message VerifyEmailRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "VerifyEmail";
+          required: [
+            "account_id",
+            "secret_key"
+            ];
+        };
+        example: "{\"id\": \"1\", \"secret_key\": \"thisisasecretkey\" }";
+    };
+    uint64 account_id = 1;
+    string secret_key = 2;
+}
+
+message VerifyEmailResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "VerifyEmail Response";
+        };
+    };
+    bool verified = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

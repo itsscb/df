@@ -84,6 +84,7 @@ type Querier interface {
 	UpdateReturn(ctx context.Context, arg UpdateReturnParams) (Return, error)
 	UpdateReturnsLog(ctx context.Context, arg UpdateReturnsLogParams) (ReturnsLog, error)
 	ValidateDocument(ctx context.Context, arg ValidateDocumentParams) (Document, error)
+	VerifyAccountEmail(ctx context.Context, arg VerifyAccountEmailParams) error
 }
 
 var _ Querier = (*Queries)(nil)

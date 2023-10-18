@@ -33,24 +33,27 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	}
 
 	arg := db.CreateAccountTxParams{
-		Passwordhash: req.Passwordhash,
-		PrivacyAccepted: sql.NullBool{
-			Valid: true,
-			Bool:  req.PrivacyAccepted,
+		CreateAccountParams: db.CreateAccountParams{
+			Passwordhash: req.Passwordhash,
+			PrivacyAccepted: sql.NullBool{
+				Valid: true,
+				Bool:  req.PrivacyAccepted,
+			},
+			Firstname: req.Firstname,
+			Lastname:  req.Lastname,
+			Birthday:  req.Birthday,
+			Email:     req.Email,
+			City:      req.City,
+			Zip:       req.Zip,
+			Street:    req.Street,
+			Country:   req.Country,
+			Creator:   req.Email,
+			Phone: sql.NullString{
+				Valid:  req.Phone != "",
+				String: req.Phone,
+			},
 		},
-		Firstname: req.Firstname,
-		Lastname:  req.Lastname,
-		Birthday:  req.Birthday,
-		Email:     req.Email,
-		City:      req.City,
-		Zip:       req.Zip,
-		Street:    req.Street,
-		Country:   req.Country,
-		Creator:   req.Email,
-		Phone: sql.NullString{
-			Valid:  req.Phone != "",
-			String: req.Phone,
-		},
+		AfterCreate: func(a db.Account) error { return nil },
 	}
 
 	account, err := server.store.CreateAccountTx(ctx, arg)

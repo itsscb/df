@@ -852,6 +852,44 @@
           "df"
         ]
       }
+    },
+    "/v1/verify_email/{accountId}/{secretKey}": {
+      "get": {
+        "summary": "Verify Email with account_id and secret_key",
+        "operationId": "df_VerifyEmail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbVerifyEmailResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "secretKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "df"
+        ]
+      }
     }
   },
   "definitions": {
@@ -1954,6 +1992,15 @@
         }
       },
       "title": "UploadDocument Response"
+    },
+    "pbVerifyEmailResponse": {
+      "type": "object",
+      "properties": {
+        "verified": {
+          "type": "boolean"
+        }
+      },
+      "title": "VerifyEmail Response"
     },
     "protobufAny": {
       "type": "object",

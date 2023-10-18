@@ -20,6 +20,7 @@ INSERT INTO accounts (
     "lastname",
     "birthday",
     "email",
+    "secret_key",
     "phone",
     "city",
     "zip",
@@ -41,8 +42,9 @@ INSERT INTO accounts (
     $11,
     $12,
     $13,
-    $13
-) RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed
+    $14,
+    $14
+) RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed
 `
 
 type CreateAccountParams struct {
@@ -53,6 +55,7 @@ type CreateAccountParams struct {
 	Lastname            string         `json:"lastname"`
 	Birthday            time.Time      `json:"birthday"`
 	Email               string         `json:"email"`
+	SecretKey           sql.NullString `json:"secret_key"`
 	Phone               sql.NullString `json:"phone"`
 	City                string         `json:"city"`
 	Zip                 string         `json:"zip"`
@@ -70,6 +73,7 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		arg.Lastname,
 		arg.Birthday,
 		arg.Email,
+		arg.SecretKey,
 		arg.Phone,
 		arg.City,
 		arg.Zip,
@@ -88,6 +92,9 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		&i.PrivacyAccepted,
 		&i.PrivacyAcceptedDate,
 		&i.Email,
+		&i.SecretKey,
+		&i.EmailVerified,
+		&i.EmailVerifiedTime,
 		&i.Phone,
 		&i.City,
 		&i.Zip,
@@ -112,7 +119,7 @@ func (q *Queries) DeleteAccount(ctx context.Context, id uint64) error {
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
+SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
 WHERE "id" = $1 LIMIT 1
 `
 
@@ -129,6 +136,9 @@ func (q *Queries) GetAccount(ctx context.Context, id uint64) (Account, error) {
 		&i.PrivacyAccepted,
 		&i.PrivacyAcceptedDate,
 		&i.Email,
+		&i.SecretKey,
+		&i.EmailVerified,
+		&i.EmailVerifiedTime,
 		&i.Phone,
 		&i.City,
 		&i.Zip,
@@ -143,7 +153,7 @@ func (q *Queries) GetAccount(ctx context.Context, id uint64) (Account, error) {
 }
 
 const getAccountByEmail = `-- name: GetAccountByEmail :one
-SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
+SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
 WHERE "email" = $1 LIMIT 1
 `
 
@@ -160,6 +170,9 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (Account,
 		&i.PrivacyAccepted,
 		&i.PrivacyAcceptedDate,
 		&i.Email,
+		&i.SecretKey,
+		&i.EmailVerified,
+		&i.EmailVerifiedTime,
 		&i.Phone,
 		&i.City,
 		&i.Zip,
@@ -174,7 +187,7 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (Account,
 }
 
 const getAccountForUpdate = `-- name: GetAccountForUpdate :one
-SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
+SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
 WHERE "id" = $1 LIMIT 1
 FOR NO KEY UPDATE
 `
@@ -192,6 +205,9 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id uint64) (Account, 
 		&i.PrivacyAccepted,
 		&i.PrivacyAcceptedDate,
 		&i.Email,
+		&i.SecretKey,
+		&i.EmailVerified,
+		&i.EmailVerifiedTime,
 		&i.Phone,
 		&i.City,
 		&i.Zip,
@@ -206,7 +222,7 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id uint64) (Account, 
 }
 
 const listAccounts = `-- name: ListAccounts :many
-SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
+SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
 ORDER BY "lastname", "firstname"
 LIMIT $1
 OFFSET $2
@@ -236,6 +252,9 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 			&i.PrivacyAccepted,
 			&i.PrivacyAcceptedDate,
 			&i.Email,
+			&i.SecretKey,
+			&i.EmailVerified,
+			&i.EmailVerifiedTime,
 			&i.Phone,
 			&i.City,
 			&i.Zip,
@@ -275,7 +294,7 @@ SET
     "changer" = $2,
     "changed" = now()
 WHERE "id" = $1
-RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed
+RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed
 `
 
 type UpdateAccountParams struct {
@@ -319,6 +338,9 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		&i.PrivacyAccepted,
 		&i.PrivacyAcceptedDate,
 		&i.Email,
+		&i.SecretKey,
+		&i.EmailVerified,
+		&i.EmailVerifiedTime,
 		&i.Phone,
 		&i.City,
 		&i.Zip,
@@ -340,7 +362,7 @@ SET
     "changer" = $3,
     "changed" = now()
 WHERE "id" = $4
-RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, phone, city, zip, street, country, creator, created, changer, changed
+RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed
 `
 
 type UpdateAccountPrivacyParams struct {
@@ -368,6 +390,9 @@ func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPri
 		&i.PrivacyAccepted,
 		&i.PrivacyAcceptedDate,
 		&i.Email,
+		&i.SecretKey,
+		&i.EmailVerified,
+		&i.EmailVerifiedTime,
 		&i.Phone,
 		&i.City,
 		&i.Zip,
@@ -379,4 +404,24 @@ func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPri
 		&i.Changed,
 	)
 	return i, err
+}
+
+const verifyAccountEmail = `-- name: VerifyAccountEmail :exec
+UPDATE accounts
+SET
+    "email_verified" = $1,
+    "email_verified_time" = $2,
+    "secret_key" = ''
+WHERE "id" = $3
+`
+
+type VerifyAccountEmailParams struct {
+	EmailVerified     sql.NullBool `json:"email_verified"`
+	EmailVerifiedTime sql.NullTime `json:"email_verified_time"`
+	ID                uint64       `json:"id"`
+}
+
+func (q *Queries) VerifyAccountEmail(ctx context.Context, arg VerifyAccountEmailParams) error {
+	_, err := q.db.ExecContext(ctx, verifyAccountEmail, arg.EmailVerified, arg.EmailVerifiedTime, arg.ID)
+	return err
 }
