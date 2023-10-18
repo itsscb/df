@@ -15,7 +15,10 @@ type Config struct {
 	LogOutput            string        `mapstructure:"LOG_OUTPUT"`
 	TokenPrivateKeyHex   string        `mapstructure:"TOKEN_PRIVATEKEY_HEX"`
 	MigrationURL         string        `mapstructure:"MIGRATION_URL"`
-	MigrationRetries  	 int		   `mapstructure:"MIGRATION_RETRIES"`
+	SMTPAddress          string        `mapstructure:"SMTP_ADDRESS"`
+	SMTPPassword         string        `mapstructure:"SMTP_PASSWORD"`
+	SMTPMail             string        `mapstructure:"SMTP_MAIL"`
+	MigrationRetries     int           `mapstructure:"MIGRATION_RETRIES"`
 	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
 }

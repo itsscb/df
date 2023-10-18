@@ -33,6 +33,8 @@ import "rpc_list_returns_log_by_person_id.proto";
 import "rpc_upload_document.proto";
 import "rpc_delete_document.proto";
 
+import "rpc_verify_email.proto";
+
 option go_package = "github.com/itsscb/df/pb";
 
 
@@ -362,6 +364,14 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
                 value: {}
               }
             }
+        };
+    };
+    rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
+        option (google.api.http) = {
+            get: "/v1/verify_email/{account_id}/{secret_key}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Verify Email with account_id and secret_key"
         };
     };
 };

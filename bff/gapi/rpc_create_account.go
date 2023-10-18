@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"log/slog"
 
 	db "github.com/itsscb/df/bff/db/sqlc"
@@ -28,23 +29,28 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 	}
 
 	arg := db.CreateAccountTxParams{
-		Passwordhash: hashedPassword,
-		PrivacyAccepted: sql.NullBool{
-			Valid: true,
-			Bool:  req.GetPrivacyAccepted(),
+		CreateAccountParams: db.CreateAccountParams{
+			Passwordhash: hashedPassword,
+			PrivacyAccepted: sql.NullBool{
+				Valid: true,
+				Bool:  req.GetPrivacyAccepted(),
+			},
+			Firstname: req.GetFirstname(),
+			Lastname:  req.GetLastname(),
+			Birthday:  req.GetBirthday().AsTime(),
+			Email:     req.GetEmail(),
+			City:      req.GetCity(),
+			Zip:       req.GetZip(),
+			Street:    req.GetStreet(),
+			Country:   req.GetCountry(),
+			Creator:   req.GetEmail(),
+			Phone: sql.NullString{
+				Valid:  req.GetPhone() != "",
+				String: req.GetPhone(),
+			},
 		},
-		Firstname: req.GetFirstname(),
-		Lastname:  req.GetLastname(),
-		Birthday:  req.GetBirthday().AsTime(),
-		Email:     req.GetEmail(),
-		City:      req.GetCity(),
-		Zip:       req.GetZip(),
-		Street:    req.GetStreet(),
-		Country:   req.GetCountry(),
-		Creator:   req.GetEmail(),
-		Phone: sql.NullString{
-			Valid:  req.GetPhone() != "",
-			String: req.GetPhone(),
+		AfterCreate: func(a db.Account) error {
+			return server.mailSender.SendEmail("Verify your E-Mail Address", fmt.Sprintf("Hello %s %s,</br></br>please verify your E-Mail Addres by clicking on the following link:</br><a href=\"http://localhost:8080/v1/verify_email/%d/%s\">Verification Link</a></br></br></br>Your Team of DF", req.GetFirstname(), req.GetLastname(), a.ID, a.SecretKey.String), []string{req.GetEmail()}, nil, nil, nil)
 		},
 	}
 

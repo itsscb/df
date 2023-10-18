@@ -20,6 +20,7 @@ INSERT INTO accounts (
     "lastname",
     "birthday",
     "email",
+    "secret_key",
     "phone",
     "city",
     "zip",
@@ -35,6 +36,7 @@ INSERT INTO accounts (
     sqlc.arg(lastname),
     sqlc.arg(birthday),
     sqlc.arg(email),
+    sqlc.arg(secret_key),
     sqlc.arg(phone),
     sqlc.arg(city),
     sqlc.arg(zip),
@@ -77,6 +79,14 @@ SET
     "changed" = now()
 WHERE "id" = sqlc.arg(id)
 RETURNING *;
+
+-- name: VerifyAccountEmail :exec
+UPDATE accounts
+SET
+    "email_verified" = sqlc.arg(email_verified),
+    "email_verified_time" = sqlc.arg(email_verified_time),
+    "secret_key" = ''
+WHERE "id" = sqlc.arg(id);
 
 -- name: DeleteAccount :exec
 DELETE FROM accounts

@@ -52,10 +52,10 @@ migratedown:
 	docker run --name migratedown --privileged=true --rm -v $(PWD)/bff/db/migration:/migrations --network host migrate/migrate -path=/migrations/ -database $(DB_URL) down
 
 createdb:
-	docker exec -it postgres createdb --username=root --owner=root df
+	docker exec -it df-bff_postgres_1 createdb --username=root --owner=root df
 
 dropdb:
-	docker exec -it postgres dropdb df
+	docker exec -it df-bff_postgres_1 dropdb df
 
 sqlc:
 	cd bff && \
