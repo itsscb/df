@@ -11,8 +11,8 @@ import (
 type Store interface {
 	Querier
 	CreateAccountTx(ctx context.Context, arg CreateAccountTxParams) (Account, error)
-	UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error)
-	UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAccountPrivacyTxParams) (Account, error)
+	UpdateAccountInfoTx(ctx context.Context, arg UpdateAccountInfoTxParams) (AccountInfo, error)
+	UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAccountPrivacyTxParams) (AccountInfo, error)
 	CreatePersonTx(ctx context.Context, arg CreatePersonTxParams) (Person, error)
 	DeletePersonTx(ctx context.Context, id uint64) error
 	CreateDocumentTx(ctx context.Context, arg CreateDocumentTxParams) (doc Document, code int, err error)

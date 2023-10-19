@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS "mails";
 DROP TABLE IF EXISTS "persons";
 DROP TABLE IF EXISTS "providers";
 DROP TABLE IF EXISTS "sessions";
-DROP TABLE IF EXISTS "accounts_data";
+DROP TABLE IF EXISTS "account_info";
 DROP TABLE IF EXISTS "accounts";
 
 

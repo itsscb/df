@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package pb;
 
-import "google/protobuf/timestamp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 import "account.proto";
@@ -16,33 +15,13 @@ message CreateAccountRequest {
           description: "Create an Account";
           required: [
             "email",
-            "password",
-            "firstname",
-            "lastname",
-            "street",
-            "city",
-            "zip",
-            "country",
-            "birthday"
+            "password"
             ];
         };
-        example: "{\"email\": \"john.doe@example.com\", \"password\": \"MayTheForceBeWithYou!\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"street\": \"Main Street 1\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:00Z\"}";
+        example: "{\"email\": \"john.doe@example.com\", \"password\": \"MayTheForceBeWithYou!\"}";
     };
     string email = 1;
     string password = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string street = 5;
-    string city = 6;
-    string zip = 7;
-    string country = 8;
-    string phone = 9;
-    google.protobuf.Timestamp birthday = 10 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        example: "\"1990-10-05T00:00:00Z\""
-    }];
-    optional bool privacy_accepted = 11 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        example: "true"
-    }];
 }
 
 message CreateAccountResponse {

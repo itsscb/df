@@ -12,17 +12,9 @@ import (
 )
 
 type createAccountRequest struct {
-	Passwordhash    string    `binding:"required" json:"passwordhash"`
-	PrivacyAccepted bool      `json:"privacy_accepted"`
-	Firstname       string    `binding:"required" json:"firstname"`
-	Lastname        string    `binding:"required" json:"lastname"`
-	Birthday        time.Time `binding:"required" json:"birthday"`
-	Email           string    `binding:"required" json:"email"`
-	Phone           string    `json:"phone"`
-	City            string    `binding:"required" json:"city"`
-	Zip             string    `binding:"required" json:"zip"`
-	Street          string    `binding:"required" json:"street"`
-	Country         string    `binding:"required" json:"country"`
+	Passwordhash string `binding:"required" json:"passwordhash"`
+	Email        string `binding:"required" json:"email"`
+	SecretKey    string `binding:"required" json:"secret_key"`
 }
 
 func (server *Server) createAccount(ctx *gin.Context) {
@@ -35,22 +27,10 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	arg := db.CreateAccountTxParams{
 		CreateAccountParams: db.CreateAccountParams{
 			Passwordhash: req.Passwordhash,
-			PrivacyAccepted: sql.NullBool{
-				Valid: true,
-				Bool:  req.PrivacyAccepted,
-			},
-			Firstname: req.Firstname,
-			Lastname:  req.Lastname,
-			Birthday:  req.Birthday,
-			Email:     req.Email,
-			City:      req.City,
-			Zip:       req.Zip,
-			Street:    req.Street,
-			Country:   req.Country,
-			Creator:   req.Email,
-			Phone: sql.NullString{
-				Valid:  req.Phone != "",
-				String: req.Phone,
+			Email:        req.Email,
+			SecretKey: sql.NullString{
+				Valid:  req.SecretKey != "",
+				String: req.SecretKey,
 			},
 		},
 		AfterCreate: func(a db.Account) error { return nil },
@@ -169,7 +149,7 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 		return
 	}
 
-	account, err = server.store.UpdateAccountPrivacyTx(ctx, db.UpdateAccountPrivacyTxParams{
+	account_info, err := server.store.UpdateAccountPrivacyTx(ctx, db.UpdateAccountPrivacyTxParams{
 		ID:              req.ID,
 		Changer:         account.Email,
 		PrivacyAccepted: req.PrivacyAccepted,
@@ -179,10 +159,10 @@ func (server *Server) updateAccountPrivacy(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, account)
+	ctx.JSON(http.StatusOK, account_info)
 }
 
-type updateAccountRequest struct {
+type updateAccountInfoRequest struct {
 	ID          uint64    `binding:"required" json:"ID"`
 	NewPassword string    `json:"new_password"`
 	Firstname   string    `json:"firstname"`
@@ -196,8 +176,8 @@ type updateAccountRequest struct {
 	Country     string    `json:"country"`
 }
 
-func (server *Server) updateAccount(ctx *gin.Context) {
-	var req updateAccountRequest
+func (server *Server) updateAccountInfo(ctx *gin.Context) {
+	var req updateAccountInfoRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -216,13 +196,9 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.UpdateAccountTxParams{
-		ID:      req.ID,
-		Changer: account.Email,
-		Passwordhash: sql.NullString{
-			String: req.NewPassword,
-			Valid:  req.NewPassword != "",
-		},
+	arg := db.UpdateAccountInfoTxParams{
+		AccountID: req.ID,
+		Changer:   account.Email,
 		Firstname: sql.NullString{
 			String: req.Firstname,
 			Valid:  req.Firstname != "",
@@ -234,10 +210,6 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		Birthday: sql.NullTime{
 			Time:  req.Birthday,
 			Valid: req.Birthday != time.Time{},
-		},
-		Email: sql.NullString{
-			String: req.Email,
-			Valid:  req.Email != "",
 		},
 		City: sql.NullString{
 			String: req.City,
@@ -261,11 +233,11 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		},
 	}
 
-	account, err = server.store.UpdateAccountTx(ctx, arg)
+	account_info, err := server.store.UpdateAccountInfoTx(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, account)
+	ctx.JSON(http.StatusOK, account_info)
 }

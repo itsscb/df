@@ -22,9 +22,8 @@ CREATE TABLE "accounts" (
   "email_verified_time" timestamptz
 );
 
-CREATE TABLE "accounts_data" (
-  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
-  "account_id" bigint NOT NULL,
+CREATE TABLE "account_info" (
+  "account_id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
   "birthday" timestamptz NOT NULL,
@@ -141,7 +140,7 @@ CREATE TABLE "returnsLog" (
 );
 
 
-ALTER TABLE "accounts_data" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
+ALTER TABLE "account_info" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
 ALTER TABLE "sessions" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 

@@ -2,8 +2,6 @@ package gapi
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 	"fmt"
 	"log/slog"
 
@@ -31,26 +29,10 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 	arg := db.CreateAccountTxParams{
 		CreateAccountParams: db.CreateAccountParams{
 			Passwordhash: hashedPassword,
-			PrivacyAccepted: sql.NullBool{
-				Valid: true,
-				Bool:  req.GetPrivacyAccepted(),
-			},
-			Firstname: req.GetFirstname(),
-			Lastname:  req.GetLastname(),
-			Birthday:  req.GetBirthday().AsTime(),
-			Email:     req.GetEmail(),
-			City:      req.GetCity(),
-			Zip:       req.GetZip(),
-			Street:    req.GetStreet(),
-			Country:   req.GetCountry(),
-			Creator:   req.GetEmail(),
-			Phone: sql.NullString{
-				Valid:  req.GetPhone() != "",
-				String: req.GetPhone(),
-			},
+			Email:        req.GetEmail(),
 		},
 		AfterCreate: func(a db.Account) error {
-			return server.mailSender.SendEmail("Verify your E-Mail Address", fmt.Sprintf("Hello %s %s,</br></br>please verify your E-Mail Addres by clicking on the following link:</br><a href=\"http://localhost:8080/v1/verify_email/%d/%s\">Verification Link</a></br></br></br>Your Team of DF", req.GetFirstname(), req.GetLastname(), a.ID, a.SecretKey.String), []string{req.GetEmail()}, nil, nil, nil)
+			return server.mailSender.SendEmail("Verify your E-Mail Address", fmt.Sprintf("Hello %s,</br></br>please verify your E-Mail Addres by clicking on the following link:</br><a href=\"http://localhost:8080/v1/verify_email/%d/%s\">Verification Link</a></br></br></br>Your Team of DF", req.GetEmail(), a.ID, a.SecretKey.String), []string{req.GetEmail()}, nil, nil, nil)
 		},
 	}
 
@@ -74,22 +56,6 @@ func validateCreateAccountRequest(req *pb.CreateAccountRequest) (violations []*e
 
 	if err := val.ValidatePassword(req.GetPassword()); err != nil {
 		violations = append(violations, fieldViolation("password", err))
-	}
-
-	if err := val.ValidateName(req.GetFirstname()); err != nil {
-		violations = append(violations, fieldViolation("first_name", err))
-	}
-
-	if err := val.ValidateName(req.GetLastname()); err != nil {
-		violations = append(violations, fieldViolation("last_name", err))
-	}
-
-	if err := val.ValidateName(req.GetCity()); err != nil {
-		violations = append(violations, fieldViolation("city", err))
-	}
-
-	if len(req.GetZip()) < 4 {
-		violations = append(violations, fieldViolation("zip", errors.New("must be at least 4 characters long")))
 	}
 
 	return violations

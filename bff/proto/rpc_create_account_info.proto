@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "account_info.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message CreateAccountInfoRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Create AccountInfo";
+          description: "Create an AccountInfo";
+          required: [
+            "account_id",
+            "firstname",
+            "lastname",
+            "street",
+            "city",
+            "zip",
+            "country",
+            "birthday"
+            ];
+        };
+        example: "{\"account_id\": \"1\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"street\": \"Main Street 1\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:00Z\"}";
+    };
+    string firstname = 3;
+    string lastname = 4;
+    string street = 5;
+    string city = 6;
+    string zip = 7;
+    string country = 8;
+    string phone = 9;
+    google.protobuf.Timestamp birthday = 10 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        example: "\"1990-10-05T00:00:00Z\""
+    }];
+    optional bool privacy_accepted = 11 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        example: "true"
+    }];
+}
+
+message CreateAccountInfoResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Created AccountInfo";
+          description: "Returns the created AccountInfo";
+        };
+    };
+    AccountInfo account_info = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

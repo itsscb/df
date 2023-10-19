@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "account_info.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message ListAccountInfoRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "ListAccountInfo";
+          description: "Returns a List of Accounts";
+          required: [
+            "page_id",
+            "page_size"
+            ];
+        };
+        example: "{\"page_id\": 1, \"page_size\": 10 }";
+    };
+    uint32 page_id = 1;
+    uint32 page_size = 2;
+}
+
+message ListAccountInfoResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "ListAccountInfo Response";
+          description: "Returns the AccountInfo";
+        };
+    };
+    repeated AccountInfo account_info = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

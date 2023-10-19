@@ -8,14 +8,13 @@ import (
 
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/pb"
-	"github.com/itsscb/df/bff/util"
 	"github.com/itsscb/df/bff/val"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRequest) (*pb.UpdateAccountResponse, error) {
+func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountInfoRequest) (*pb.UpdateAccountInfoResponse, error) {
 	authPayload, err := server.authorizeUser(ctx)
 	if err != nil {
 		return nil, unauthenticatedError(err)
@@ -26,24 +25,20 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.AccountID != req.GetId() {
+	if authPayload.AccountID != req.GetAccountId() {
 		if !server.isAdmin(ctx, authPayload) {
 			return nil, status.Error(codes.NotFound, "account not found")
 		}
 	}
 
-	account, err := server.store.GetAccount(ctx, req.GetId())
+	account, err := server.store.GetAccount(ctx, req.GetAccountId())
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "account not found")
 	}
 
-	arg := db.UpdateAccountTxParams{
-		ID:      req.GetId(),
-		Changer: account.Email,
-		Email: sql.NullString{
-			Valid:  req.GetEmail() != "",
-			String: req.GetEmail(),
-		},
+	arg := db.UpdateAccountInfoTxParams{
+		AccountID: req.GetAccountId(),
+		Changer:   account.Email,
 		Firstname: sql.NullString{
 			Valid:  req.GetFirstname() != "",
 			String: req.GetFirstname(),
@@ -78,47 +73,24 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 		},
 	}
 
-	if req.Password != nil {
-		hashedPassword, err := util.HashPassword(req.GetPassword())
-		if err != nil {
-			slog.Error("update_account (hash_password)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
-			return nil, status.Error(codes.Internal, "failed to hash password")
-		}
-
-		arg.Passwordhash = sql.NullString{
-			Valid:  true,
-			String: hashedPassword,
-		}
-	}
-
-	account, err = server.store.UpdateAccountTx(ctx, arg)
+	account_info, err := server.store.UpdateAccountInfoTx(ctx, arg)
 	if err != nil {
-		slog.Error("update_account (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_account (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to update account")
 	}
 
-	rsp := &pb.UpdateAccountResponse{
-		Account: convertAccount(account),
+	rsp := &pb.UpdateAccountInfoResponse{
+		AccountInfo: convertAccountInfo(account_info),
 	}
 
 	return rsp, nil
 }
 
-func validateUpdateAccountRequest(req *pb.UpdateAccountRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if req.GetId() < 1 {
+func validateUpdateAccountRequest(req *pb.UpdateAccountInfoRequest) (violations []*errdetails.BadRequest_FieldViolation) {
+	if req.GetAccountId() < 1 {
 		violations = append(violations, fieldViolation("id", errors.New("must be greater than 0")))
 	}
 
-	if req.GetEmail() != "" {
-		if err := val.ValidateEmail(req.GetEmail()); err != nil {
-			violations = append(violations, fieldViolation("email", err))
-		}
-	}
-	if req.GetPassword() != "" {
-		if err := val.ValidatePassword(req.GetPassword()); err != nil {
-			violations = append(violations, fieldViolation("password", err))
-		}
-	}
 	if req.GetFirstname() != "" {
 		if err := val.ValidateName(req.GetFirstname()); err != nil {
 			violations = append(violations, fieldViolation("first_name", err))

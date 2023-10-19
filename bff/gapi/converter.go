@@ -8,23 +8,30 @@ import (
 
 func convertAccount(account db.Account) *pb.Account {
 	return &pb.Account{
-		Id:                  account.ID,
-		PermissionLevel:     account.PermissionLevel,
-		Email:               account.Email,
-		Firstname:           account.Firstname,
-		Lastname:            account.Lastname,
-		City:                account.City,
-		Street:              account.Street,
-		Zip:                 account.Zip,
-		Country:             account.Country,
-		Creator:             account.Creator,
-		Changer:             account.Changer,
-		PrivacyAccepted:     account.PrivacyAccepted.Bool,
-		PrivacyAcceptedDate: timestamppb.New(account.PrivacyAcceptedDate.Time),
-		Birthday:            timestamppb.New(account.Birthday),
-		Created:             timestamppb.New(account.Created),
-		Changed:             timestamppb.New(account.Changed),
-		Phone:               account.Phone.String,
+		Id:              account.ID,
+		PermissionLevel: account.PermissionLevel,
+		Email:           account.Email,
+		SecretKey:       &account.SecretKey.String,
+	}
+}
+
+func convertAccountInfo(account_info db.AccountInfo) *pb.AccountInfo {
+	return &pb.AccountInfo{
+		AccountId:           account_info.AccountID,
+		Firstname:           account_info.Firstname,
+		Lastname:            account_info.Lastname,
+		City:                account_info.City,
+		Street:              account_info.Street,
+		Zip:                 account_info.Zip,
+		Country:             account_info.Country,
+		Creator:             account_info.Creator,
+		Changer:             account_info.Changer,
+		PrivacyAccepted:     account_info.PrivacyAccepted.Bool,
+		PrivacyAcceptedDate: timestamppb.New(account_info.PrivacyAcceptedDate.Time),
+		Birthday:            timestamppb.New(account_info.Birthday),
+		Created:             timestamppb.New(account_info.Created),
+		Changed:             timestamppb.New(account_info.Changed),
+		Phone:               account_info.Phone.String,
 	}
 }
 

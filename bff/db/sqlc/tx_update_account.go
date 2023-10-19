@@ -5,27 +5,25 @@ import (
 	"database/sql"
 )
 
-type UpdateAccountTxParams struct {
-	ID           uint64         `json:"ID"`
-	Changer      string         `json:"changer"`
-	Passwordhash sql.NullString `json:"passwordhash"`
-	Firstname    sql.NullString `json:"firstname"`
-	Lastname     sql.NullString `json:"lastname"`
-	Birthday     sql.NullTime   `json:"birthday"`
-	Email        sql.NullString `json:"email"`
-	Phone        sql.NullString `json:"phone"`
-	City         sql.NullString `json:"city"`
-	Zip          sql.NullString `json:"zip"`
-	Street       sql.NullString `json:"street"`
-	Country      sql.NullString `json:"country"`
+type UpdateAccountInfoTxParams struct {
+	AccountID uint64         `json:"account_id"`
+	Changer   string         `json:"changer"`
+	Firstname sql.NullString `json:"firstname"`
+	Lastname  sql.NullString `json:"lastname"`
+	Birthday  sql.NullTime   `json:"birthday"`
+	Phone     sql.NullString `json:"phone"`
+	City      sql.NullString `json:"city"`
+	Zip       sql.NullString `json:"zip"`
+	Street    sql.NullString `json:"street"`
+	Country   sql.NullString `json:"country"`
 }
 
-type UpdateAccountTxResult struct {
-	Account Account `json:"account"`
+type UpdateAccountInfoTxResult struct {
+	AccountInfo AccountInfo `json:"account_info"`
 }
 
-func (store *SQLStore) UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error) {
-	var result UpdateAccountTxResult
+func (store *SQLStore) UpdateAccountInfoTx(ctx context.Context, arg UpdateAccountInfoTxParams) (AccountInfo, error) {
+	var result UpdateAccountInfoTxResult
 
 	// if arg.Passwordhash.Valid {
 	// 	arg.Passwordhash.String, err = util.HashPassword(arg.Passwordhash.String)
@@ -36,9 +34,9 @@ func (store *SQLStore) UpdateAccountTx(ctx context.Context, arg UpdateAccountTxP
 
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
-		result.Account, err = q.UpdateAccount(ctx, UpdateAccountParams(arg))
+		result.AccountInfo, err = q.UpdateAccountInfo(ctx, UpdateAccountInfoParams(arg))
 		return err
 	})
 
-	return result.Account, err
+	return result.AccountInfo, err
 }

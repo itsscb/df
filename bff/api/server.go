@@ -65,8 +65,8 @@ func NewServer(config util.Config, store db.Store, swaggerFS http.FileSystem) (*
 	router.POST("/accounts", server.createAccount)
 
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
-	authRoutes.PUT("/accounts", server.updateAccount)
-	authRoutes.PUT("/accounts/privacy", server.updateAccountPrivacy)
+	authRoutes.PUT("/account", server.updateAccountInfo)
+	authRoutes.PUT("/account/privacy", server.updateAccountPrivacy)
 	authRoutes.GET("/accounts/:id", server.getAccount)
 	authRoutes.GET("/accounts", server.listAccounts)
 	authRoutes.POST("/sessions", server.blockSession)

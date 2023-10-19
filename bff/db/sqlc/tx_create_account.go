@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -26,13 +25,6 @@ func (store *SQLStore) CreateAccountTx(ctx context.Context, arg CreateAccountTxP
 	arg.SecretKey = sql.NullString{
 		Valid:  uid.String() != "",
 		String: uid.String(),
-	}
-
-	if arg.PrivacyAccepted.Bool && arg.PrivacyAccepted.Valid && !arg.PrivacyAcceptedDate.Valid {
-		arg.PrivacyAcceptedDate = sql.NullTime{
-			Valid: true,
-			Time:  time.Now(),
-		}
 	}
 
 	// arg.Passwordhash, err = util.HashPassword(arg.Passwordhash)

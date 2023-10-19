@@ -4,31 +4,31 @@ package pb;
 
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-import "account.proto";
+import "account_info.proto";
 
 option go_package = "github.com/itsscb/df/pb";
 
-message GetAccountRequest {
+message GetAccountInfoRequest {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
         json_schema: {
-          title: "GetAccount";
+          title: "GetAccountInfo";
           description: "Get AccountInfo by account_id";
           required: [
-            "id"
+            "account_id"
             ];
         };
-        example: "{\"id\": \"1\" }";
+        example: "{\"account_id\": \"1\" }";
     };
-    uint64 id = 1;
+    uint64 account_id = 1;
 }
 
-message GetAccountResponse {
+message GetAccountInfoResponse {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
         json_schema: {
-          title: "GetAccount Response";
+          title: "GetAccountInfo Response";
           description: "Returns the AccountInfo";
         };
     };
-    Account account = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    AccountInfo account_info = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       }];
 }
