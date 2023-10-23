@@ -138,6 +138,43 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 	return items, nil
 }
 
+const updateAccount = `-- name: UpdateAccount :one
+UPDATE accounts 
+SET
+    "email" = COALESCE($1, "email"),
+    "passwordhash" = COALESCE($2, "passwordhash"),
+    "secret_key" = COALESCE($3, "secret_key")
+WHERE "id" = $4
+RETURNING id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time
+`
+
+type UpdateAccountParams struct {
+	Email        sql.NullString `json:"email"`
+	Passwordhash sql.NullString `json:"passwordhash"`
+	SecretKey    sql.NullString `json:"secret_key"`
+	ID           uint64         `json:"id"`
+}
+
+func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {
+	row := q.db.QueryRowContext(ctx, updateAccount,
+		arg.Email,
+		arg.Passwordhash,
+		arg.SecretKey,
+		arg.ID,
+	)
+	var i Account
+	err := row.Scan(
+		&i.ID,
+		&i.PermissionLevel,
+		&i.Passwordhash,
+		&i.Email,
+		&i.SecretKey,
+		&i.EmailVerified,
+		&i.EmailVerifiedTime,
+	)
+	return i, err
+}
+
 const verifyAccountEmail = `-- name: VerifyAccountEmail :exec
 UPDATE accounts
 SET

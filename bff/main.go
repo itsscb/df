@@ -13,7 +13,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/itsscb/df/bff/api"
 	db "github.com/itsscb/df/bff/db/sqlc"
 	"github.com/itsscb/df/bff/gapi"
 	"github.com/itsscb/df/bff/gw"
@@ -156,17 +155,5 @@ func runGatewayServer(config util.Config, store db.Store, swaggerFS http.FileSys
 	err = http.Serve(listener, handler)
 	if err != nil {
 		log.Fatal("cannot start HTTP gateway server")
-	}
-}
-
-func runHTTPServer(config util.Config, store db.Store, swaggerFS http.FileSystem) {
-	server, err := api.NewServer(config, store, swaggerFS)
-	if err != nil {
-		log.Fatalf("could not start server: %s", err)
-	}
-
-	err = server.Start(config.HTTPServerAddress)
-	if err != nil {
-		log.Fatal("cannot start server:", err)
 	}
 }

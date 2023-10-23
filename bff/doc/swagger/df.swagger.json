@@ -69,40 +69,6 @@
     "/v1/accounts/create_account": {
       "post": {
         "summary": "Create AccountInfo",
-        "operationId": "df_CreateAccountInfo",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/pbCreateAccountInfoResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": "Create an AccountInfo",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/pbCreateAccountInfoRequest"
-            }
-          }
-        ],
-        "tags": [
-          "df"
-        ]
-      }
-    },
-    "/v1/accounts/create_account_info": {
-      "post": {
-        "summary": "Create AccountInfo",
         "operationId": "df_CreateAccount",
         "responses": {
           "200": {
@@ -131,23 +97,18 @@
         ],
         "tags": [
           "df"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
         ]
       }
     },
-    "/v1/accounts/get_account/{accountId}": {
-      "get": {
-        "summary": "Get AccountInfo by account_id",
-        "operationId": "df_GetAccountInfo",
+    "/v1/accounts/create_account_info": {
+      "post": {
+        "summary": "Create AccountInfo",
+        "operationId": "df_CreateAccountInfo",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbGetAccountInfoResponse"
+              "$ref": "#/definitions/pbCreateAccountInfoResponse"
             }
           },
           "default": {
@@ -159,11 +120,13 @@
         },
         "parameters": [
           {
-            "name": "accountId",
-            "in": "path",
+            "name": "body",
+            "description": "Create an AccountInfo",
+            "in": "body",
             "required": true,
-            "type": "string",
-            "format": "uint64"
+            "schema": {
+              "$ref": "#/definitions/pbCreateAccountInfoRequest"
+            }
           }
         ],
         "tags": [
@@ -197,6 +160,43 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/accounts/get_account_info/{accountId}": {
+      "get": {
+        "summary": "Get AccountInfo by account_id",
+        "operationId": "df_GetAccountInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetAccountInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accountId",
             "in": "path",
             "required": true,
             "type": "string",
@@ -302,6 +302,45 @@
       }
     },
     "/v1/accounts/update_account": {
+      "patch": {
+        "summary": "Update Account",
+        "operationId": "df_UpdateAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Update an Account",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/accounts/update_account_info": {
       "patch": {
         "summary": "Update AccountInfo",
         "operationId": "df_UpdateAccountInfo",
@@ -1197,6 +1236,10 @@
         "birthday": "1990-10-05T00:00:00Z"
       },
       "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
+        },
         "firstname": {
           "type": "string"
         },
@@ -1231,7 +1274,7 @@
       "description": "Create an AccountInfo",
       "title": "Create AccountInfo",
       "required": [
-        "account_id",
+        "accountId",
         "firstname",
         "lastname",
         "street",
@@ -2053,6 +2096,41 @@
         }
       },
       "title": "Update Account Info Privacy Response"
+    },
+    "pbUpdateAccountRequest": {
+      "type": "object",
+      "example": {
+        "account_id": "1",
+        "email": "john.doe@example.com"
+      },
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "description": "Update an Account",
+      "title": "Update Account",
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "pbUpdateAccountResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/pbAccount"
+        }
+      },
+      "description": "Returns the updated Account",
+      "title": "Updated Account"
     },
     "pbUpdatePaymentRequest": {
       "type": "object",

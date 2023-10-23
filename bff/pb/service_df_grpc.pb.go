@@ -26,6 +26,7 @@ const (
 	Df_GetAccount_FullMethodName           = "/pb.df/GetAccount"
 	Df_ListAccounts_FullMethodName         = "/pb.df/ListAccounts"
 	Df_CreateAccount_FullMethodName        = "/pb.df/CreateAccount"
+	Df_UpdateAccount_FullMethodName        = "/pb.df/UpdateAccount"
 	Df_GetAccountInfo_FullMethodName       = "/pb.df/GetAccountInfo"
 	Df_ListAccountInfo_FullMethodName      = "/pb.df/ListAccountInfo"
 	Df_CreateAccountInfo_FullMethodName    = "/pb.df/CreateAccountInfo"
@@ -58,21 +59,7 @@ type DfClient interface {
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
 	ListAccounts(ctx context.Context, in *ListAccountsRequest, opts ...grpc.CallOption) (*ListAccountsResponse, error)
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
-	//	rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
-	//	    option (google.api.http) = {
-	//	        patch: "/v1/accounts/update_account"
-	//	        body: "*"
-	//	    };
-	//	    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-	//	        summary: "Update Account"
-	//	        security: {
-	//	            security_requirement: {
-	//	                key: "BearerAuth";
-	//	                value: {}
-	//	            }
-	//	        }
-	//	    };
-	//	};
+	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error)
 	GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, opts ...grpc.CallOption) (*GetAccountInfoResponse, error)
 	ListAccountInfo(ctx context.Context, in *ListAccountInfoRequest, opts ...grpc.CallOption) (*ListAccountInfoResponse, error)
 	CreateAccountInfo(ctx context.Context, in *CreateAccountInfoRequest, opts ...grpc.CallOption) (*CreateAccountInfoResponse, error)
@@ -159,6 +146,15 @@ func (c *dfClient) ListAccounts(ctx context.Context, in *ListAccountsRequest, op
 func (c *dfClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error) {
 	out := new(CreateAccountResponse)
 	err := c.cc.Invoke(ctx, Df_CreateAccount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error) {
+	out := new(UpdateAccountResponse)
+	err := c.cc.Invoke(ctx, Df_UpdateAccount_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -347,21 +343,7 @@ type DfServer interface {
 	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
 	ListAccounts(context.Context, *ListAccountsRequest) (*ListAccountsResponse, error)
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
-	//	rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
-	//	    option (google.api.http) = {
-	//	        patch: "/v1/accounts/update_account"
-	//	        body: "*"
-	//	    };
-	//	    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-	//	        summary: "Update Account"
-	//	        security: {
-	//	            security_requirement: {
-	//	                key: "BearerAuth";
-	//	                value: {}
-	//	            }
-	//	        }
-	//	    };
-	//	};
+	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error)
 	GetAccountInfo(context.Context, *GetAccountInfoRequest) (*GetAccountInfoResponse, error)
 	ListAccountInfo(context.Context, *ListAccountInfoRequest) (*ListAccountInfoResponse, error)
 	CreateAccountInfo(context.Context, *CreateAccountInfoRequest) (*CreateAccountInfoResponse, error)
@@ -408,6 +390,9 @@ func (UnimplementedDfServer) ListAccounts(context.Context, *ListAccountsRequest)
 }
 func (UnimplementedDfServer) CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
+}
+func (UnimplementedDfServer) UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccount not implemented")
 }
 func (UnimplementedDfServer) GetAccountInfo(context.Context, *GetAccountInfoRequest) (*GetAccountInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccountInfo not implemented")
@@ -601,6 +586,24 @@ func _Df_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DfServer).CreateAccount(ctx, req.(*CreateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_UpdateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).UpdateAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_UpdateAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).UpdateAccount(ctx, req.(*UpdateAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -981,6 +984,10 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAccount",
 			Handler:    _Df_CreateAccount_Handler,
+		},
+		{
+			MethodName: "UpdateAccount",
+			Handler:    _Df_UpdateAccount_Handler,
 		},
 		{
 			MethodName: "GetAccountInfo",

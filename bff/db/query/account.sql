@@ -19,6 +19,15 @@ VALUES (
 )
 RETURNING *;
 
+-- name: UpdateAccount :one
+UPDATE accounts 
+SET
+    "email" = COALESCE(sqlc.narg(email), "email"),
+    "passwordhash" = COALESCE(sqlc.narg(passwordhash), "passwordhash"),
+    "secret_key" = COALESCE(sqlc.narg(secret_key), "secret_key")
+WHERE "id" = sqlc.arg(id)
+RETURNING *;
+
 -- name: ListAccounts :many
 SELECT * FROM accounts
 ORDER BY "email"

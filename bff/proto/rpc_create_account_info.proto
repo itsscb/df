@@ -27,6 +27,7 @@ message CreateAccountInfoRequest {
         };
         example: "{\"account_id\": \"1\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"street\": \"Main Street 1\", \"zip\": \"0815\", \"city\": \"New York\", \"country\": \"USA\", \"birthday\": \"1990-10-05T00:00:00Z\"}";
     };
+    uint64 account_id = 1;
     string firstname = 3;
     string lastname = 4;
     string street = 5;

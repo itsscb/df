@@ -8,10 +8,12 @@ import (
 
 func convertAccount(account db.Account) *pb.Account {
 	return &pb.Account{
-		Id:              account.ID,
-		PermissionLevel: account.PermissionLevel,
-		Email:           account.Email,
-		SecretKey:       &account.SecretKey.String,
+		Id:                account.ID,
+		PermissionLevel:   account.PermissionLevel,
+		Email:             account.Email,
+		EmailVerified:     account.EmailVerified.Bool,
+		EmailVerifiedTime: timestamppb.New(account.EmailVerifiedTime.Time),
+		SecretKey:         &account.SecretKey.String,
 	}
 }
 
