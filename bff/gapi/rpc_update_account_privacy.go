@@ -24,12 +24,12 @@ func (server *Server) UpdateAccountPrivacy(ctx context.Context, req *pb.UpdateAc
 		return nil, invalidArgumentError(violations)
 	}
 
-	account, err := server.store.GetAccount(ctx, req.GetId())
+	account, err := server.store.GetAccount(ctx, req.GetAccountId())
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "account not found")
 		}
-		slog.Error("update_account_privacy (get_account)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_account_privacy (get_account)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Errorf(codes.Internal, "failed to get account")
 	}
 
@@ -42,25 +42,25 @@ func (server *Server) UpdateAccountPrivacy(ctx context.Context, req *pb.UpdateAc
 
 	arg := db.UpdateAccountPrivacyTxParams{
 		Changer:         account.Email,
-		ID:              req.GetId(),
+		ID:              req.GetAccountId(),
 		PrivacyAccepted: &privacyAccepted,
 	}
 
-	account, err = server.store.UpdateAccountPrivacyTx(ctx, arg)
+	account_info, err := server.store.UpdateAccountPrivacyTx(ctx, arg)
 	if err != nil {
-		slog.Error("update_account_privacy (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
+		slog.Error("update_account_privacy (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetAccountId())), slog.String("error", err.Error()))
 		return nil, status.Error(codes.Internal, "failed to update account privacy")
 	}
 
 	rsp := &pb.UpdateAccountPrivacyResponse{
-		Account: convertAccount(account),
+		AccountInfo: convertAccountInfo(account_info),
 	}
 
 	return rsp, nil
 }
 
 func validateUpdateAccountPrivacyRequest(req *pb.UpdateAccountPrivacyRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if req.GetId() < 1 {
+	if req.GetAccountId() < 1 {
 		violations = append(violations, fieldViolation("id", errors.New("must be greater than 0")))
 	}
 	return violations

@@ -16,29 +16,15 @@ message Account {
     };
     uint64 id = 1;
     string email = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string street = 5;
-    string city = 6;
-    string zip = 7;
-    string country = 8;
-    google.protobuf.Timestamp birthday = 9 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      example: "\"1990-10-05T00:00:00Z\""
+    optional string secret_key = 3;
+    google.protobuf.Timestamp email_verified_time = 9 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"2023-10-05T00:00:00Z\""
   }];
-    string phone = 10;
-    bool privacy_accepted = 11;
+    bool email_verified = 10;
     google.protobuf.Timestamp privacy_accepted_date = 12 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       example: "\"2023-10-05T00:00:00Z\""
   }];
     int32 permission_level = 13 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "Default is 0 (non-priviledged)"
     }];
-    string creator = 14;
-    google.protobuf.Timestamp created = 15 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      example: "\"2023-10-05T00:00:00Z\""
-  }];
-    string changer = 16;
-    google.protobuf.Timestamp changed = 17 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      example: "\"2023-10-05T00:00:00Z\""
-  }];
 }

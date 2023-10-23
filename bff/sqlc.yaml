@@ -17,6 +17,8 @@ sql:
             go_type: "uint64"
           - column: "payments.account_id"
             go_type: "uint64"
+          - column: "account_info.account_id"
+            go_type: "uint64"
           - column: "persons.account_id"
             go_type: "uint64"
           - column: "documents.account_id"

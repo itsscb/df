@@ -23,6 +23,11 @@ import "rpc_list_accounts.proto";
 import "rpc_update_account.proto";
 import "rpc_update_account_privacy.proto";
 
+import "rpc_create_account_info.proto";
+import "rpc_get_account_info.proto";
+import "rpc_list_account_info.proto";
+import "rpc_update_account_info.proto";
+
 import "rpc_login.proto";
 import "rpc_list_sessions.proto";
 import "rpc_refresh_token.proto";
@@ -145,7 +150,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Create Account"
+            summary: "Create AccountInfo"
         };
         };
     rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
@@ -155,6 +160,65 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             summary: "Update Account"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc GetAccountInfo (GetAccountInfoRequest) returns (GetAccountInfoResponse) {
+        option (google.api.http) = {
+            get: "/v1/accounts/get_account_info/{account_id}"
+            // get: "/v1/accounts/{id=id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get AccountInfo by account_id"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc ListAccountInfo (ListAccountInfoRequest) returns (ListAccountInfoResponse) {
+        option (google.api.http) = {
+            get: "/v1/accounts/list_account_info"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "List AccountInfos [admin only]"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc CreateAccountInfo (CreateAccountInfoRequest) returns (CreateAccountInfoResponse) {
+        option (google.api.http) = {
+            post: "/v1/accounts/create_account_info"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Create AccountInfo"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+        };
+    rpc UpdateAccountInfo (UpdateAccountInfoRequest) returns (UpdateAccountInfoResponse) {
+        option (google.api.http) = {
+            patch: "/v1/accounts/update_account_info"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update AccountInfo"
             security: {
                 security_requirement: {
                     key: "BearerAuth";

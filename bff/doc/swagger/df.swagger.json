@@ -68,7 +68,7 @@
     },
     "/v1/accounts/create_account": {
       "post": {
-        "summary": "Create Account",
+        "summary": "Create AccountInfo",
         "operationId": "df_CreateAccount",
         "responses": {
           "200": {
@@ -100,6 +100,45 @@
         ]
       }
     },
+    "/v1/accounts/create_account_info": {
+      "post": {
+        "summary": "Create AccountInfo",
+        "operationId": "df_CreateAccountInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateAccountInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Create an AccountInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateAccountInfoRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/accounts/get_account/{id}": {
       "get": {
         "summary": "Get Account by account_id",
@@ -125,6 +164,87 @@
             "required": true,
             "type": "string",
             "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/accounts/get_account_info/{accountId}": {
+      "get": {
+        "summary": "Get AccountInfo by account_id",
+        "operationId": "df_GetAccountInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetAccountInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/accounts/list_account_info": {
+      "get": {
+        "summary": "List AccountInfos [admin only]",
+        "operationId": "df_ListAccountInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListAccountInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageId",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -220,6 +340,45 @@
         ]
       }
     },
+    "/v1/accounts/update_account_info": {
+      "patch": {
+        "summary": "Update AccountInfo",
+        "operationId": "df_UpdateAccountInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Update an AccountInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateAccountInfoRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/accounts/update_account_privacy": {
       "patch": {
         "summary": "Update Account Privacy Settings",
@@ -241,7 +400,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "Update the Privacy Consent of an Account",
+            "description": "Update the Privacy Consent of an AccountInfo",
             "in": "body",
             "required": true,
             "schema": {
@@ -921,6 +1080,54 @@
         "email": {
           "type": "string"
         },
+        "secretKey": {
+          "type": "string"
+        },
+        "emailVerifiedTime": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "emailVerified": {
+          "type": "boolean"
+        },
+        "privacyAcceptedDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T00:00:00Z"
+        },
+        "permissionLevel": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Default is 0 (non-priviledged)"
+        }
+      },
+      "title": "Account"
+    },
+    "pbAccountInfo": {
+      "type": "object",
+      "example": {
+        "account_id": "1",
+        "firstname": "John",
+        "lastname": "Doe",
+        "phone": "",
+        "street": "Death Star 2",
+        "zip": "0815",
+        "city": "New York",
+        "country": "USA",
+        "birthday": "1990-10-05T00:00:00Z",
+        "privacy_accepted": false,
+        "privacy_accepted_date": "0001-01-01T00:00:00Z",
+        "creator": "john.doe@example.com",
+        "created": "2023-10-05T02:30:53Z",
+        "changer": "john.doe@example.com",
+        "changed": "2023-10-05T02:30:53Z"
+      },
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
+        },
         "firstname": {
           "type": "string"
         },
@@ -977,7 +1184,7 @@
           "example": "2023-10-05T00:00:00Z"
         }
       },
-      "title": "Account"
+      "title": "AccountInfo"
     },
     "pbBlockSessionRequest": {
       "type": "object",
@@ -1016,11 +1223,10 @@
       },
       "title": "Blocked Session"
     },
-    "pbCreateAccountRequest": {
+    "pbCreateAccountInfoRequest": {
       "type": "object",
       "example": {
-        "email": "john.doe@example.com",
-        "password": "MayTheForceBeWithYou!",
+        "account_id": "1",
         "firstname": "John",
         "lastname": "Doe",
         "street": "Main Street 1",
@@ -1030,11 +1236,9 @@
         "birthday": "1990-10-05T00:00:00Z"
       },
       "properties": {
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
         },
         "firstname": {
           "type": "string"
@@ -1067,11 +1271,10 @@
           "example": true
         }
       },
-      "description": "Create an Account",
-      "title": "Create Account",
+      "description": "Create an AccountInfo",
+      "title": "Create AccountInfo",
       "required": [
-        "email",
-        "password",
+        "accountId",
         "firstname",
         "lastname",
         "street",
@@ -1079,6 +1282,37 @@
         "zip",
         "country",
         "birthday"
+      ]
+    },
+    "pbCreateAccountInfoResponse": {
+      "type": "object",
+      "properties": {
+        "accountInfo": {
+          "$ref": "#/definitions/pbAccountInfo"
+        }
+      },
+      "description": "Returns the created AccountInfo",
+      "title": "Created AccountInfo"
+    },
+    "pbCreateAccountRequest": {
+      "type": "object",
+      "example": {
+        "email": "john.doe@example.com",
+        "password": "MayTheForceBeWithYou!"
+      },
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "description": "Create an Account",
+      "title": "Create Account",
+      "required": [
+        "email",
+        "password"
       ]
     },
     "pbCreateAccountResponse": {
@@ -1321,6 +1555,16 @@
       },
       "title": "Document"
     },
+    "pbGetAccountInfoResponse": {
+      "type": "object",
+      "properties": {
+        "accountInfo": {
+          "$ref": "#/definitions/pbAccountInfo"
+        }
+      },
+      "description": "Returns the AccountInfo",
+      "title": "GetAccountInfo Response"
+    },
     "pbGetAccountResponse": {
       "type": "object",
       "properties": {
@@ -1328,7 +1572,7 @@
           "$ref": "#/definitions/pbAccount"
         }
       },
-      "description": "Returns the Account",
+      "description": "Returns the AccountInfo",
       "title": "GetAccount Response"
     },
     "pbGetPaymentResponse": {
@@ -1350,6 +1594,20 @@
       },
       "description": "Returns the Person",
       "title": "GetPerson Response"
+    },
+    "pbListAccountInfoResponse": {
+      "type": "object",
+      "properties": {
+        "accountInfo": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbAccountInfo"
+          }
+        }
+      },
+      "description": "Returns the AccountInfo",
+      "title": "ListAccountInfo Response"
     },
     "pbListAccountsResponse": {
       "type": "object",
@@ -1751,56 +2009,16 @@
       },
       "title": "Session"
     },
-    "pbUpdateAccountPrivacyRequest": {
+    "pbUpdateAccountInfoRequest": {
       "type": "object",
       "example": {
-        "id": "1",
-        "privacy_accepted": true
-      },
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64",
-          "example": 1
-        },
-        "privacyAccepted": {
-          "type": "boolean",
-          "example": false
-        }
-      },
-      "description": "Update the Privacy Consent of an Account",
-      "title": "Update Account Privacy Consent",
-      "required": [
-        "id",
-        "privacyAccepted"
-      ]
-    },
-    "pbUpdateAccountPrivacyResponse": {
-      "type": "object",
-      "properties": {
-        "account": {
-          "$ref": "#/definitions/pbAccount",
-          "title": "Updated Account"
-        }
-      },
-      "title": "Update Account Privacy Response"
-    },
-    "pbUpdateAccountRequest": {
-      "type": "object",
-      "example": {
-        "id": "1",
+        "account_id": "1",
         "street": "Death Star 2"
       },
       "properties": {
-        "id": {
+        "accountId": {
           "type": "string",
           "format": "uint64"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
         },
         "firstname": {
           "type": "string"
@@ -1829,10 +2047,79 @@
           "example": "1990-10-05T00:00:00Z"
         }
       },
+      "description": "Update an AccountInfo",
+      "title": "Update AccountInfo",
+      "required": [
+        "id"
+      ]
+    },
+    "pbUpdateAccountInfoResponse": {
+      "type": "object",
+      "properties": {
+        "accountInfo": {
+          "$ref": "#/definitions/pbAccountInfo"
+        }
+      },
+      "description": "Returns the updated Account",
+      "title": "Updated Account"
+    },
+    "pbUpdateAccountPrivacyRequest": {
+      "type": "object",
+      "example": {
+        "account_id": "1",
+        "privacy_accepted": true
+      },
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "int64",
+          "example": 1
+        },
+        "privacyAccepted": {
+          "type": "boolean",
+          "example": false
+        }
+      },
+      "description": "Update the Privacy Consent of an AccountInfo",
+      "title": "Update Account Info Privacy Consent",
+      "required": [
+        "id",
+        "privacyAccepted"
+      ]
+    },
+    "pbUpdateAccountPrivacyResponse": {
+      "type": "object",
+      "properties": {
+        "accountInfo": {
+          "$ref": "#/definitions/pbAccountInfo",
+          "title": "Updated AccountInfo"
+        }
+      },
+      "title": "Update Account Info Privacy Response"
+    },
+    "pbUpdateAccountRequest": {
+      "type": "object",
+      "example": {
+        "account_id": "1",
+        "email": "john.doe@example.com"
+      },
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
       "description": "Update an Account",
       "title": "Update Account",
       "required": [
-        "id"
+        "email",
+        "password"
       ]
     },
     "pbUpdateAccountResponse": {

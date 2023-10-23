@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	isValidName          = regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString
-	isValidAlphaSpace    = regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString
-	isValidAlphaNumSpace = regexp.MustCompile(`^[a-zA-Z0-9\s]+$`).MatchString
+	IsValidName          = regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString
+	IsValidAlphaSpace    = regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString
+	IsValidAlphaNumSpace = regexp.MustCompile(`^[a-zA-Z0-9\s]+$`).MatchString
 )
 
 func ValidateString(value string, minLength int, maxLength int) error {
@@ -24,7 +24,7 @@ func ValidateName(value string) error {
 	if err := ValidateString(value, 2, 40); err != nil {
 		return err
 	}
-	if !isValidName(value) {
+	if !IsValidName(value) {
 		return fmt.Errorf("must contain only letters or spaces")
 	}
 	return nil
@@ -56,7 +56,7 @@ func ValidateStreet(value string) error {
 		return err
 	}
 
-	if !isValidAlphaNumSpace(value) {
+	if !IsValidAlphaNumSpace(value) {
 		return fmt.Errorf("must contain only letters, numbers or spaces")
 	}
 
@@ -68,7 +68,7 @@ func ValidateAlphaSpace(value string) error {
 		return err
 	}
 
-	if !isValidAlphaSpace(value) {
+	if !IsValidAlphaSpace(value) {
 		return fmt.Errorf("must contain only letters, numbers or spaces")
 	}
 

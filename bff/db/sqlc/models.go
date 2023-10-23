@@ -12,18 +12,22 @@ import (
 )
 
 type Account struct {
-	ID                  uint64         `json:"id"`
-	PermissionLevel     int32          `json:"permission_level"`
-	Passwordhash        string         `json:"passwordhash"`
+	ID                uint64         `json:"id"`
+	PermissionLevel   int32          `json:"permission_level"`
+	Passwordhash      string         `json:"passwordhash"`
+	Email             string         `json:"email"`
+	SecretKey         sql.NullString `json:"secret_key"`
+	EmailVerified     sql.NullBool   `json:"email_verified"`
+	EmailVerifiedTime sql.NullTime   `json:"email_verified_time"`
+}
+
+type AccountInfo struct {
+	AccountID           uint64         `json:"account_id"`
 	Firstname           string         `json:"firstname"`
 	Lastname            string         `json:"lastname"`
 	Birthday            time.Time      `json:"birthday"`
 	PrivacyAccepted     sql.NullBool   `json:"privacy_accepted"`
 	PrivacyAcceptedDate sql.NullTime   `json:"privacy_accepted_date"`
-	Email               string         `json:"email"`
-	SecretKey           sql.NullString `json:"secret_key"`
-	EmailVerified       sql.NullBool   `json:"email_verified"`
-	EmailVerifiedTime   sql.NullTime   `json:"email_verified_time"`
 	Phone               sql.NullString `json:"phone"`
 	City                string         `json:"city"`
 	Zip                 string         `json:"zip"`

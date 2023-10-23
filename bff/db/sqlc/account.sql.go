@@ -8,102 +8,39 @@ package db
 import (
 	"context"
 	"database/sql"
-	"time"
 )
 
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts (
-    "passwordhash",
-    "privacy_accepted",
-    "privacy_accepted_date",
-    "firstname",
-    "lastname",
-    "birthday",
     "email",
-    "secret_key",
-    "phone",
-    "city",
-    "zip",
-    "street",
-    "country",
-    "creator",
-    "changer"
-) VALUES (
+    "passwordhash",
+    "secret_key"
+)
+VALUES (    
     $1,
     $2,
-    $3,
-    $4,
-    $5,
-    $6,
-    $7,
-    $8,
-    $9,
-    $10,
-    $11,
-    $12,
-    $13,
-    $14,
-    $14
-) RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed
+    $3
+)
+RETURNING id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time
 `
 
 type CreateAccountParams struct {
-	Passwordhash        string         `json:"passwordhash"`
-	PrivacyAccepted     sql.NullBool   `json:"privacy_accepted"`
-	PrivacyAcceptedDate sql.NullTime   `json:"privacy_accepted_date"`
-	Firstname           string         `json:"firstname"`
-	Lastname            string         `json:"lastname"`
-	Birthday            time.Time      `json:"birthday"`
-	Email               string         `json:"email"`
-	SecretKey           sql.NullString `json:"secret_key"`
-	Phone               sql.NullString `json:"phone"`
-	City                string         `json:"city"`
-	Zip                 string         `json:"zip"`
-	Street              string         `json:"street"`
-	Country             string         `json:"country"`
-	Creator             string         `json:"creator"`
+	Email        string         `json:"email"`
+	Passwordhash string         `json:"passwordhash"`
+	SecretKey    sql.NullString `json:"secret_key"`
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
-	row := q.db.QueryRowContext(ctx, createAccount,
-		arg.Passwordhash,
-		arg.PrivacyAccepted,
-		arg.PrivacyAcceptedDate,
-		arg.Firstname,
-		arg.Lastname,
-		arg.Birthday,
-		arg.Email,
-		arg.SecretKey,
-		arg.Phone,
-		arg.City,
-		arg.Zip,
-		arg.Street,
-		arg.Country,
-		arg.Creator,
-	)
+	row := q.db.QueryRowContext(ctx, createAccount, arg.Email, arg.Passwordhash, arg.SecretKey)
 	var i Account
 	err := row.Scan(
 		&i.ID,
 		&i.PermissionLevel,
 		&i.Passwordhash,
-		&i.Firstname,
-		&i.Lastname,
-		&i.Birthday,
-		&i.PrivacyAccepted,
-		&i.PrivacyAcceptedDate,
 		&i.Email,
 		&i.SecretKey,
 		&i.EmailVerified,
 		&i.EmailVerifiedTime,
-		&i.Phone,
-		&i.City,
-		&i.Zip,
-		&i.Street,
-		&i.Country,
-		&i.Creator,
-		&i.Created,
-		&i.Changer,
-		&i.Changed,
 	)
 	return i, err
 }
@@ -119,8 +56,8 @@ func (q *Queries) DeleteAccount(ctx context.Context, id uint64) error {
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
-WHERE "id" = $1 LIMIT 1
+SELECT id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time FROM accounts
+WHERE "id" = $1
 `
 
 func (q *Queries) GetAccount(ctx context.Context, id uint64) (Account, error) {
@@ -130,31 +67,17 @@ func (q *Queries) GetAccount(ctx context.Context, id uint64) (Account, error) {
 		&i.ID,
 		&i.PermissionLevel,
 		&i.Passwordhash,
-		&i.Firstname,
-		&i.Lastname,
-		&i.Birthday,
-		&i.PrivacyAccepted,
-		&i.PrivacyAcceptedDate,
 		&i.Email,
 		&i.SecretKey,
 		&i.EmailVerified,
 		&i.EmailVerifiedTime,
-		&i.Phone,
-		&i.City,
-		&i.Zip,
-		&i.Street,
-		&i.Country,
-		&i.Creator,
-		&i.Created,
-		&i.Changer,
-		&i.Changed,
 	)
 	return i, err
 }
 
 const getAccountByEmail = `-- name: GetAccountByEmail :one
-SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
-WHERE "email" = $1 LIMIT 1
+SELECT id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time FROM accounts
+WHERE "email" = $1
 `
 
 func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (Account, error) {
@@ -164,66 +87,17 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (Account,
 		&i.ID,
 		&i.PermissionLevel,
 		&i.Passwordhash,
-		&i.Firstname,
-		&i.Lastname,
-		&i.Birthday,
-		&i.PrivacyAccepted,
-		&i.PrivacyAcceptedDate,
 		&i.Email,
 		&i.SecretKey,
 		&i.EmailVerified,
 		&i.EmailVerifiedTime,
-		&i.Phone,
-		&i.City,
-		&i.Zip,
-		&i.Street,
-		&i.Country,
-		&i.Creator,
-		&i.Created,
-		&i.Changer,
-		&i.Changed,
-	)
-	return i, err
-}
-
-const getAccountForUpdate = `-- name: GetAccountForUpdate :one
-SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
-WHERE "id" = $1 LIMIT 1
-FOR NO KEY UPDATE
-`
-
-func (q *Queries) GetAccountForUpdate(ctx context.Context, id uint64) (Account, error) {
-	row := q.db.QueryRowContext(ctx, getAccountForUpdate, id)
-	var i Account
-	err := row.Scan(
-		&i.ID,
-		&i.PermissionLevel,
-		&i.Passwordhash,
-		&i.Firstname,
-		&i.Lastname,
-		&i.Birthday,
-		&i.PrivacyAccepted,
-		&i.PrivacyAcceptedDate,
-		&i.Email,
-		&i.SecretKey,
-		&i.EmailVerified,
-		&i.EmailVerifiedTime,
-		&i.Phone,
-		&i.City,
-		&i.Zip,
-		&i.Street,
-		&i.Country,
-		&i.Creator,
-		&i.Created,
-		&i.Changer,
-		&i.Changed,
 	)
 	return i, err
 }
 
 const listAccounts = `-- name: ListAccounts :many
-SELECT id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed FROM accounts
-ORDER BY "lastname", "firstname"
+SELECT id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time FROM accounts
+ORDER BY "email"
 LIMIT $1
 OFFSET $2
 `
@@ -246,24 +120,10 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 			&i.ID,
 			&i.PermissionLevel,
 			&i.Passwordhash,
-			&i.Firstname,
-			&i.Lastname,
-			&i.Birthday,
-			&i.PrivacyAccepted,
-			&i.PrivacyAcceptedDate,
 			&i.Email,
 			&i.SecretKey,
 			&i.EmailVerified,
 			&i.EmailVerifiedTime,
-			&i.Phone,
-			&i.City,
-			&i.Zip,
-			&i.Street,
-			&i.Country,
-			&i.Creator,
-			&i.Created,
-			&i.Changer,
-			&i.Changed,
 		); err != nil {
 			return nil, err
 		}
@@ -279,104 +139,27 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 }
 
 const updateAccount = `-- name: UpdateAccount :one
-UPDATE accounts
+UPDATE accounts 
 SET
-    "passwordhash" = COALESCE($3, "passwordhash"),
-    "firstname" = COALESCE($4, "firstname"),
-    "lastname" = COALESCE($5, "lastname"),
-    "birthday" = COALESCE($6, "birthday"),
-    "email" = COALESCE($7, "email"),
-    "phone" = COALESCE($8, "phone"),
-    "city" = COALESCE($9, "city"),
-    "zip" = COALESCE($10, "zip"),
-    "street" = COALESCE($11, "street"),
-    "country" = COALESCE($12, "country"),
-    "changer" = $2,
-    "changed" = now()
-WHERE "id" = $1
-RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed
+    "email" = COALESCE($1, "email"),
+    "passwordhash" = COALESCE($2, "passwordhash"),
+    "secret_key" = COALESCE($3, "secret_key")
+WHERE "id" = $4
+RETURNING id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time
 `
 
 type UpdateAccountParams struct {
-	ID           uint64         `json:"id"`
-	Changer      string         `json:"changer"`
-	Passwordhash sql.NullString `json:"passwordhash"`
-	Firstname    sql.NullString `json:"firstname"`
-	Lastname     sql.NullString `json:"lastname"`
-	Birthday     sql.NullTime   `json:"birthday"`
 	Email        sql.NullString `json:"email"`
-	Phone        sql.NullString `json:"phone"`
-	City         sql.NullString `json:"city"`
-	Zip          sql.NullString `json:"zip"`
-	Street       sql.NullString `json:"street"`
-	Country      sql.NullString `json:"country"`
+	Passwordhash sql.NullString `json:"passwordhash"`
+	SecretKey    sql.NullString `json:"secret_key"`
+	ID           uint64         `json:"id"`
 }
 
 func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {
 	row := q.db.QueryRowContext(ctx, updateAccount,
-		arg.ID,
-		arg.Changer,
-		arg.Passwordhash,
-		arg.Firstname,
-		arg.Lastname,
-		arg.Birthday,
 		arg.Email,
-		arg.Phone,
-		arg.City,
-		arg.Zip,
-		arg.Street,
-		arg.Country,
-	)
-	var i Account
-	err := row.Scan(
-		&i.ID,
-		&i.PermissionLevel,
-		&i.Passwordhash,
-		&i.Firstname,
-		&i.Lastname,
-		&i.Birthday,
-		&i.PrivacyAccepted,
-		&i.PrivacyAcceptedDate,
-		&i.Email,
-		&i.SecretKey,
-		&i.EmailVerified,
-		&i.EmailVerifiedTime,
-		&i.Phone,
-		&i.City,
-		&i.Zip,
-		&i.Street,
-		&i.Country,
-		&i.Creator,
-		&i.Created,
-		&i.Changer,
-		&i.Changed,
-	)
-	return i, err
-}
-
-const updateAccountPrivacy = `-- name: UpdateAccountPrivacy :one
-UPDATE accounts
-SET
-    "privacy_accepted" = $1,
-    "privacy_accepted_date" = $2,
-    "changer" = $3,
-    "changed" = now()
-WHERE "id" = $4
-RETURNING id, permission_level, passwordhash, firstname, lastname, birthday, privacy_accepted, privacy_accepted_date, email, secret_key, email_verified, email_verified_time, phone, city, zip, street, country, creator, created, changer, changed
-`
-
-type UpdateAccountPrivacyParams struct {
-	PrivacyAccepted     sql.NullBool `json:"privacy_accepted"`
-	PrivacyAcceptedDate sql.NullTime `json:"privacy_accepted_date"`
-	Changer             string       `json:"changer"`
-	ID                  uint64       `json:"id"`
-}
-
-func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPrivacyParams) (Account, error) {
-	row := q.db.QueryRowContext(ctx, updateAccountPrivacy,
-		arg.PrivacyAccepted,
-		arg.PrivacyAcceptedDate,
-		arg.Changer,
+		arg.Passwordhash,
+		arg.SecretKey,
 		arg.ID,
 	)
 	var i Account
@@ -384,24 +167,10 @@ func (q *Queries) UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPri
 		&i.ID,
 		&i.PermissionLevel,
 		&i.Passwordhash,
-		&i.Firstname,
-		&i.Lastname,
-		&i.Birthday,
-		&i.PrivacyAccepted,
-		&i.PrivacyAcceptedDate,
 		&i.Email,
 		&i.SecretKey,
 		&i.EmailVerified,
 		&i.EmailVerifiedTime,
-		&i.Phone,
-		&i.City,
-		&i.Zip,
-		&i.Street,
-		&i.Country,
-		&i.Creator,
-		&i.Created,
-		&i.Changer,
-		&i.Changed,
 	)
 	return i, err
 }

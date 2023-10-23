@@ -1,5 +1,5 @@
 CREATE TABLE "mails" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "from" varchar NOT NULL,
   "to" varchar[] NOT NULL,
   "cc" varchar[],
@@ -13,18 +13,22 @@ CREATE TABLE "mails" (
 );
 
 CREATE TABLE "accounts" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "permission_level" int NOT NULL DEFAULT 0,
   "passwordhash" varchar NOT NULL,
+  "email" varchar UNIQUE NOT NULL,
+  "secret_key" varchar,
+  "email_verified" boolean DEFAULT false,
+  "email_verified_time" timestamptz
+);
+
+CREATE TABLE "account_info" (
+  "account_id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
   "birthday" timestamptz NOT NULL,
   "privacy_accepted" boolean DEFAULT false,
   "privacy_accepted_date" timestamptz,
-  "email" varchar UNIQUE NOT NULL,
-  "secret_key" varchar,
-  "email_verified" boolean DEFAULT false,
-  "email_verified_time" timestamptz,
   "phone" varchar,
   "city" varchar NOT NULL,
   "zip" varchar NOT NULL,
@@ -48,7 +52,7 @@ CREATE TABLE "sessions" (
 );
 
 CREATE TABLE "persons" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "account_id" bigint NOT NULL,
   "firstname" varchar NOT NULL,
   "lastname" varchar NOT NULL,
@@ -64,7 +68,7 @@ CREATE TABLE "persons" (
 );
 
 CREATE TABLE "documents" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "person_id" bigint,
   "name" varchar NOT NULL,
   "type" varchar NOT NULL,
@@ -81,7 +85,7 @@ CREATE TABLE "documents" (
 );
 
 CREATE TABLE "payments" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "account_id" bigint NOT NULL,
   "payment_category" varchar NOT NULL,
   "bankname" varchar,
@@ -98,7 +102,7 @@ CREATE TABLE "payments" (
 );
 
 CREATE TABLE "providers" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "name" varchar NOT NULL,
   "description" text NOT NULL,
   "category" varchar NOT NULL,
@@ -110,7 +114,7 @@ CREATE TABLE "providers" (
 );
 
 CREATE TABLE "returns" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "person_id" bigint NOT NULL,
   "provider_id" bigint NOT NULL,
   "name" varchar NOT NULL,
@@ -125,7 +129,7 @@ CREATE TABLE "returns" (
 );
 
 CREATE TABLE "returnsLog" (
-  "id" bigserial UNIQUE PRIMARY KEY NOT NULL,
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
   "return_id" bigint NOT NULL,
   "mail_id" bigint NOT NULL,
   "status" varchar NOT NULL DEFAULT 'created',
@@ -134,6 +138,9 @@ CREATE TABLE "returnsLog" (
   "changer" varchar NOT NULL,
   "changed" timestamptz NOT NULL DEFAULT (now())
 );
+
+
+ALTER TABLE "account_info" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
 ALTER TABLE "sessions" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
