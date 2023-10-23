@@ -4,31 +4,29 @@ package pb;
 
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-import "account.proto";
-
 option go_package = "github.com/itsscb/df/pb";
 
-message GetAccountRequest {
+message VerifyEmailRequest {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
         json_schema: {
-          title: "GetAccount";
-          description: "Get AccountInfo by account_id";
+          title: "VerifyEmail";
           required: [
-            "id"
+            "account_id",
+            "secret_key"
             ];
         };
-        example: "{\"id\": \"1\" }";
+        example: "{\"id\": \"1\", \"secret_key\": \"thisisasecretkey\" }";
     };
-    uint64 id = 1;
+    uint64 account_id = 1;
+    string secret_key = 2;
 }
 
-message GetAccountResponse {
+message VerifyEmailResponse {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
         json_schema: {
-          title: "GetAccount Response";
-          description: "Returns the AccountInfo";
+          title: "VerifyEmail Response";
         };
     };
-    Account account = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    bool verified = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       }];
 }

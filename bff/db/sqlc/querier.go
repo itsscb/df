@@ -15,6 +15,7 @@ type Querier interface {
 	BlockSession(ctx context.Context, id uuid.UUID) error
 	CloneProviders(ctx context.Context, arg CloneProvidersParams) error
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
+	CreateAccountInfo(ctx context.Context, arg CreateAccountInfoParams) (AccountInfo, error)
 	CreateDocument(ctx context.Context, arg CreateDocumentParams) (Document, error)
 	CreateDocumentMail(ctx context.Context, arg CreateDocumentMailParams) (Document, error)
 	CreateDocumentUpload(ctx context.Context, arg CreateDocumentUploadParams) (Document, error)
@@ -26,6 +27,7 @@ type Querier interface {
 	CreateReturnsLog(ctx context.Context, arg CreateReturnsLogParams) (ReturnsLog, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	DeleteAccount(ctx context.Context, id uint64) error
+	DeleteAccountInfo(ctx context.Context, accountID uint64) error
 	DeleteDocument(ctx context.Context, id uint64) error
 	DeleteDocumentsByPersonID(ctx context.Context, personID sql.NullInt64) error
 	// -- name: UpdateMail :one
@@ -51,7 +53,7 @@ type Querier interface {
 	DeleteReturnsLogsByPersonID(ctx context.Context, personID uint64) error
 	GetAccount(ctx context.Context, id uint64) (Account, error)
 	GetAccountByEmail(ctx context.Context, email string) (Account, error)
-	GetAccountForUpdate(ctx context.Context, id uint64) (Account, error)
+	GetAccountInfo(ctx context.Context, accountID uint64) (AccountInfo, error)
 	GetDocument(ctx context.Context, id uint64) (Document, error)
 	GetDocumentByHash(ctx context.Context, arg GetDocumentByHashParams) ([]uint64, error)
 	GetDocumentByIDWithAccountID(ctx context.Context, arg GetDocumentByIDWithAccountIDParams) (Document, error)
@@ -66,6 +68,7 @@ type Querier interface {
 	GetReturnsLog(ctx context.Context, id uint64) (ReturnsLog, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	InvalidateDocument(ctx context.Context, arg InvalidateDocumentParams) (Document, error)
+	ListAccountInfo(ctx context.Context, arg ListAccountInfoParams) ([]AccountInfo, error)
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
 	ListDocuments(ctx context.Context, arg ListDocumentsParams) ([]Document, error)
 	ListMails(ctx context.Context, arg ListMailsParams) ([]Mail, error)
@@ -77,7 +80,8 @@ type Querier interface {
 	ListReturnsLogsByPersonID(ctx context.Context, personID uint64) ([]ReturnsLog, error)
 	ListSessions(ctx context.Context, accountID uint64) ([]Session, error)
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
-	UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPrivacyParams) (Account, error)
+	UpdateAccountInfo(ctx context.Context, arg UpdateAccountInfoParams) (AccountInfo, error)
+	UpdateAccountPrivacy(ctx context.Context, arg UpdateAccountPrivacyParams) (AccountInfo, error)
 	UpdateDocument(ctx context.Context, arg UpdateDocumentParams) (Document, error)
 	UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (Payment, error)
 	UpdatePerson(ctx context.Context, arg UpdatePersonParams) (Person, error)
@@ -85,6 +89,7 @@ type Querier interface {
 	UpdateReturn(ctx context.Context, arg UpdateReturnParams) (Return, error)
 	UpdateReturnsLog(ctx context.Context, arg UpdateReturnsLogParams) (ReturnsLog, error)
 	ValidateDocument(ctx context.Context, arg ValidateDocumentParams) (Document, error)
+	VerifyAccountEmail(ctx context.Context, arg VerifyAccountEmailParams) error
 }
 
 var _ Querier = (*Queries)(nil)

@@ -16,9 +16,9 @@ type UpdateAccountPrivacyTxResult struct {
 	Account Account `json:"account"`
 }
 
-func (store *SQLStore) UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAccountPrivacyTxParams) (Account, error) {
+func (store *SQLStore) UpdateAccountPrivacyTx(ctx context.Context, arg UpdateAccountPrivacyTxParams) (AccountInfo, error) {
 	var date sql.NullTime
-	var account Account
+	var account AccountInfo
 
 	if *arg.PrivacyAccepted {
 		date = sql.NullTime{

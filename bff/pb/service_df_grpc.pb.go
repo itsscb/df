@@ -27,6 +27,10 @@ const (
 	Df_ListAccounts_FullMethodName         = "/pb.df/ListAccounts"
 	Df_CreateAccount_FullMethodName        = "/pb.df/CreateAccount"
 	Df_UpdateAccount_FullMethodName        = "/pb.df/UpdateAccount"
+	Df_GetAccountInfo_FullMethodName       = "/pb.df/GetAccountInfo"
+	Df_ListAccountInfo_FullMethodName      = "/pb.df/ListAccountInfo"
+	Df_CreateAccountInfo_FullMethodName    = "/pb.df/CreateAccountInfo"
+	Df_UpdateAccountInfo_FullMethodName    = "/pb.df/UpdateAccountInfo"
 	Df_UpdateAccountPrivacy_FullMethodName = "/pb.df/UpdateAccountPrivacy"
 	Df_CreatePerson_FullMethodName         = "/pb.df/CreatePerson"
 	Df_UpdatePerson_FullMethodName         = "/pb.df/UpdatePerson"
@@ -41,6 +45,7 @@ const (
 	Df_ListReturnsLog_FullMethodName       = "/pb.df/ListReturnsLog"
 	Df_UploadDocument_FullMethodName       = "/pb.df/UploadDocument"
 	Df_DeleteDocument_FullMethodName       = "/pb.df/DeleteDocument"
+	Df_VerifyEmail_FullMethodName          = "/pb.df/VerifyEmail"
 )
 
 // DfClient is the client API for Df service.
@@ -55,6 +60,10 @@ type DfClient interface {
 	ListAccounts(ctx context.Context, in *ListAccountsRequest, opts ...grpc.CallOption) (*ListAccountsResponse, error)
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error)
+	GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, opts ...grpc.CallOption) (*GetAccountInfoResponse, error)
+	ListAccountInfo(ctx context.Context, in *ListAccountInfoRequest, opts ...grpc.CallOption) (*ListAccountInfoResponse, error)
+	CreateAccountInfo(ctx context.Context, in *CreateAccountInfoRequest, opts ...grpc.CallOption) (*CreateAccountInfoResponse, error)
+	UpdateAccountInfo(ctx context.Context, in *UpdateAccountInfoRequest, opts ...grpc.CallOption) (*UpdateAccountInfoResponse, error)
 	UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error)
 	CreatePerson(ctx context.Context, in *CreatePersonRequest, opts ...grpc.CallOption) (*CreatePersonResponse, error)
 	UpdatePerson(ctx context.Context, in *UpdatePersonRequest, opts ...grpc.CallOption) (*UpdatePersonResponse, error)
@@ -69,6 +78,7 @@ type DfClient interface {
 	ListReturnsLog(ctx context.Context, in *ListReturnsLogRequest, opts ...grpc.CallOption) (*ListReturnsLogResponse, error)
 	UploadDocument(ctx context.Context, in *UploadDocumentRequest, opts ...grpc.CallOption) (*UploadDocumentResponse, error)
 	DeleteDocument(ctx context.Context, in *DeleteDocumentRequest, opts ...grpc.CallOption) (*DeleteDocumentResponse, error)
+	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 }
 
 type dfClient struct {
@@ -145,6 +155,42 @@ func (c *dfClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, 
 func (c *dfClient) UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error) {
 	out := new(UpdateAccountResponse)
 	err := c.cc.Invoke(ctx, Df_UpdateAccount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, opts ...grpc.CallOption) (*GetAccountInfoResponse, error) {
+	out := new(GetAccountInfoResponse)
+	err := c.cc.Invoke(ctx, Df_GetAccountInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) ListAccountInfo(ctx context.Context, in *ListAccountInfoRequest, opts ...grpc.CallOption) (*ListAccountInfoResponse, error) {
+	out := new(ListAccountInfoResponse)
+	err := c.cc.Invoke(ctx, Df_ListAccountInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) CreateAccountInfo(ctx context.Context, in *CreateAccountInfoRequest, opts ...grpc.CallOption) (*CreateAccountInfoResponse, error) {
+	out := new(CreateAccountInfoResponse)
+	err := c.cc.Invoke(ctx, Df_CreateAccountInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) UpdateAccountInfo(ctx context.Context, in *UpdateAccountInfoRequest, opts ...grpc.CallOption) (*UpdateAccountInfoResponse, error) {
+	out := new(UpdateAccountInfoResponse)
+	err := c.cc.Invoke(ctx, Df_UpdateAccountInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -277,6 +323,15 @@ func (c *dfClient) DeleteDocument(ctx context.Context, in *DeleteDocumentRequest
 	return out, nil
 }
 
+func (c *dfClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error) {
+	out := new(VerifyEmailResponse)
+	err := c.cc.Invoke(ctx, Df_VerifyEmail_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DfServer is the server API for Df service.
 // All implementations must embed UnimplementedDfServer
 // for forward compatibility
@@ -289,6 +344,10 @@ type DfServer interface {
 	ListAccounts(context.Context, *ListAccountsRequest) (*ListAccountsResponse, error)
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error)
+	GetAccountInfo(context.Context, *GetAccountInfoRequest) (*GetAccountInfoResponse, error)
+	ListAccountInfo(context.Context, *ListAccountInfoRequest) (*ListAccountInfoResponse, error)
+	CreateAccountInfo(context.Context, *CreateAccountInfoRequest) (*CreateAccountInfoResponse, error)
+	UpdateAccountInfo(context.Context, *UpdateAccountInfoRequest) (*UpdateAccountInfoResponse, error)
 	UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error)
 	CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error)
 	UpdatePerson(context.Context, *UpdatePersonRequest) (*UpdatePersonResponse, error)
@@ -303,6 +362,7 @@ type DfServer interface {
 	ListReturnsLog(context.Context, *ListReturnsLogRequest) (*ListReturnsLogResponse, error)
 	UploadDocument(context.Context, *UploadDocumentRequest) (*UploadDocumentResponse, error)
 	DeleteDocument(context.Context, *DeleteDocumentRequest) (*DeleteDocumentResponse, error)
+	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	mustEmbedUnimplementedDfServer()
 }
 
@@ -333,6 +393,18 @@ func (UnimplementedDfServer) CreateAccount(context.Context, *CreateAccountReques
 }
 func (UnimplementedDfServer) UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccount not implemented")
+}
+func (UnimplementedDfServer) GetAccountInfo(context.Context, *GetAccountInfoRequest) (*GetAccountInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccountInfo not implemented")
+}
+func (UnimplementedDfServer) ListAccountInfo(context.Context, *ListAccountInfoRequest) (*ListAccountInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAccountInfo not implemented")
+}
+func (UnimplementedDfServer) CreateAccountInfo(context.Context, *CreateAccountInfoRequest) (*CreateAccountInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccountInfo not implemented")
+}
+func (UnimplementedDfServer) UpdateAccountInfo(context.Context, *UpdateAccountInfoRequest) (*UpdateAccountInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccountInfo not implemented")
 }
 func (UnimplementedDfServer) UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccountPrivacy not implemented")
@@ -375,6 +447,9 @@ func (UnimplementedDfServer) UploadDocument(context.Context, *UploadDocumentRequ
 }
 func (UnimplementedDfServer) DeleteDocument(context.Context, *DeleteDocumentRequest) (*DeleteDocumentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDocument not implemented")
+}
+func (UnimplementedDfServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
 }
 func (UnimplementedDfServer) mustEmbedUnimplementedDfServer() {}
 
@@ -529,6 +604,78 @@ func _Df_UpdateAccount_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DfServer).UpdateAccount(ctx, req.(*UpdateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_GetAccountInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccountInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).GetAccountInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_GetAccountInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).GetAccountInfo(ctx, req.(*GetAccountInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_ListAccountInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAccountInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).ListAccountInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_ListAccountInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).ListAccountInfo(ctx, req.(*ListAccountInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_CreateAccountInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccountInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).CreateAccountInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_CreateAccountInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).CreateAccountInfo(ctx, req.(*CreateAccountInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_UpdateAccountInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAccountInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).UpdateAccountInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_UpdateAccountInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).UpdateAccountInfo(ctx, req.(*UpdateAccountInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -785,6 +932,24 @@ func _Df_DeleteDocument_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_VerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).VerifyEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_VerifyEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).VerifyEmail(ctx, req.(*VerifyEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Df_ServiceDesc is the grpc.ServiceDesc for Df service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -823,6 +988,22 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAccount",
 			Handler:    _Df_UpdateAccount_Handler,
+		},
+		{
+			MethodName: "GetAccountInfo",
+			Handler:    _Df_GetAccountInfo_Handler,
+		},
+		{
+			MethodName: "ListAccountInfo",
+			Handler:    _Df_ListAccountInfo_Handler,
+		},
+		{
+			MethodName: "CreateAccountInfo",
+			Handler:    _Df_CreateAccountInfo_Handler,
+		},
+		{
+			MethodName: "UpdateAccountInfo",
+			Handler:    _Df_UpdateAccountInfo_Handler,
 		},
 		{
 			MethodName: "UpdateAccountPrivacy",
@@ -879,6 +1060,10 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteDocument",
 			Handler:    _Df_DeleteDocument_Handler,
+		},
+		{
+			MethodName: "VerifyEmail",
+			Handler:    _Df_VerifyEmail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
