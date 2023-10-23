@@ -96,6 +96,12 @@ proto:
 	./proto/*.proto
 	cd ..
 
+proto_app:
+	cd frontend/app && \
+	rm -f lib/pb/*.dart && \
+	protoc -I=../../bff/proto --dart_out=lib/pb ../../bff/proto/*.proto
+	cd ../..
+
 evans:
 	evans --host localhost --port 9090 --package pb -r repl
 
