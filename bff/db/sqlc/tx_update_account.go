@@ -3,40 +3,40 @@ package db
 import (
 	"context"
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
-type UpdateAccountInfoTxParams struct {
-	AccountID uint64         `json:"account_id"`
-	Changer   string         `json:"changer"`
-	Firstname sql.NullString `json:"firstname"`
-	Lastname  sql.NullString `json:"lastname"`
-	Birthday  sql.NullTime   `json:"birthday"`
-	Phone     sql.NullString `json:"phone"`
-	City      sql.NullString `json:"city"`
-	Zip       sql.NullString `json:"zip"`
-	Street    sql.NullString `json:"street"`
-	Country   sql.NullString `json:"country"`
+type UpdateAccountTxParams struct {
+	UpdateAccountParams
+	AfterUpdate func(Account) error
 }
 
-type UpdateAccountInfoTxResult struct {
-	AccountInfo AccountInfo `json:"account_info"`
+type UpdateAccountTxResult struct {
+	Account Account `json:"account"`
 }
 
-func (store *SQLStore) UpdateAccountInfoTx(ctx context.Context, arg UpdateAccountInfoTxParams) (AccountInfo, error) {
-	var result UpdateAccountInfoTxResult
+func (store *SQLStore) UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error) {
+	var result UpdateAccountTxResult
+	var err error
 
-	// if arg.Passwordhash.Valid {
-	// 	arg.Passwordhash.String, err = util.HashPassword(arg.Passwordhash.String)
-	// 	if err != nil {
-	// 		return Account{}, nil
-	// 	}
-	// }
+	uid, _ := uuid.NewUUID()
 
-	err := store.execTx(ctx, func(q *Queries) error {
+	arg.SecretKey = sql.NullString{
+		Valid:  uid.String() != "",
+		String: uid.String(),
+	}
+
+	err = store.execTx(ctx, func(q *Queries) error {
 		var err error
-		result.AccountInfo, err = q.UpdateAccountInfo(ctx, UpdateAccountInfoParams(arg))
-		return err
+
+		result.Account, err = q.UpdateAccount(ctx, arg.UpdateAccountParams)
+		if err != nil {
+			return err
+		}
+
+		return arg.AfterUpdate(result.Account)
 	})
 
-	return result.AccountInfo, err
+	return result.Account, err
 }

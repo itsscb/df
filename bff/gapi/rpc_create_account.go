@@ -36,6 +36,13 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 		},
 	}
 
+	if server.config.Environment == "development" {
+		arg.AfterCreate = func(a db.Account) error {
+			slog.Info("create_account (verify_account)", slog.String("secret_key", a.SecretKey.String))
+			return nil
+		}
+	}
+
 	account, err := server.store.CreateAccountTx(ctx, arg)
 	if err != nil {
 		slog.Error("create_account (db)", slog.String("invoked_by", req.GetEmail()), slog.String("error", err.Error()))
