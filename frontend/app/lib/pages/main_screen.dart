@@ -1,16 +1,21 @@
 import 'package:app/gapi/client.dart';
-import 'package:app/pb/rpc_create_account.pb.dart';
+import 'package:app/pages/login_screen.dart';
 import 'package:flutter/material.dart';
+
+Map<String, Widget> screens = {
+  // 'main': MainScreen(),
+  'login': LoginScreen(),
+};
 
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
 
   Client client = Client();
 
-  void test() {
-    client.stub.createAccount(
-      CreateAccountRequest(email: "dev@itsscb.de", password: "secret-key123"),
-    );
+  String currentScreen = 'login';
+
+  setPage(String screen) {
+    currentScreen = screen;
   }
 
   @override
@@ -53,16 +58,8 @@ class MainScreen extends StatelessWidget {
             // ),
           ],
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TextButton(
-                onPressed: () {
-                  test();
-                },
-                child: const Text('Button'))
-          ],
+        body: Center(
+          child: screens[currentScreen],
         ),
       ),
     );
