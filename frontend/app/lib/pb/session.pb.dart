@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $0;
+import 'google/protobuf/timestamp.pb.dart' as $27;
 
 class Session extends $pb.GeneratedMessage {
   factory Session({
@@ -23,9 +23,9 @@ class Session extends $pb.GeneratedMessage {
     $core.String? userAgent,
     $core.String? clientIp,
     $core.bool? isBlocked,
-    $0.Timestamp? expiresAt,
+    $27.Timestamp? expiresAt,
     $core.String? refreshToken,
-    $0.Timestamp? createdAt,
+    $27.Timestamp? createdAt,
   }) {
     final $result = create();
     if (id != null) {
@@ -64,9 +64,9 @@ class Session extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'userAgent')
     ..aOS(4, _omitFieldNames ? '' : 'clientIp')
     ..aOB(5, _omitFieldNames ? '' : 'isBlocked')
-    ..aOM<$0.Timestamp>(6, _omitFieldNames ? '' : 'expiresAt', subBuilder: $0.Timestamp.create)
+    ..aOM<$27.Timestamp>(6, _omitFieldNames ? '' : 'expiresAt', subBuilder: $27.Timestamp.create)
     ..aOS(7, _omitFieldNames ? '' : 'refreshToken')
-    ..aOM<$0.Timestamp>(8, _omitFieldNames ? '' : 'createdAt', subBuilder: $0.Timestamp.create)
+    ..aOM<$27.Timestamp>(8, _omitFieldNames ? '' : 'createdAt', subBuilder: $27.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -137,15 +137,15 @@ class Session extends $pb.GeneratedMessage {
   void clearIsBlocked() => clearField(5);
 
   @$pb.TagNumber(6)
-  $0.Timestamp get expiresAt => $_getN(5);
+  $27.Timestamp get expiresAt => $_getN(5);
   @$pb.TagNumber(6)
-  set expiresAt($0.Timestamp v) { setField(6, v); }
+  set expiresAt($27.Timestamp v) { setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasExpiresAt() => $_has(5);
   @$pb.TagNumber(6)
   void clearExpiresAt() => clearField(6);
   @$pb.TagNumber(6)
-  $0.Timestamp ensureExpiresAt() => $_ensure(5);
+  $27.Timestamp ensureExpiresAt() => $_ensure(5);
 
   @$pb.TagNumber(7)
   $core.String get refreshToken => $_getSZ(6);
@@ -157,15 +157,15 @@ class Session extends $pb.GeneratedMessage {
   void clearRefreshToken() => clearField(7);
 
   @$pb.TagNumber(8)
-  $0.Timestamp get createdAt => $_getN(7);
+  $27.Timestamp get createdAt => $_getN(7);
   @$pb.TagNumber(8)
-  set createdAt($0.Timestamp v) { setField(8, v); }
+  set createdAt($27.Timestamp v) { setField(8, v); }
   @$pb.TagNumber(8)
   $core.bool hasCreatedAt() => $_has(7);
   @$pb.TagNumber(8)
   void clearCreatedAt() => clearField(8);
   @$pb.TagNumber(8)
-  $0.Timestamp ensureCreatedAt() => $_ensure(7);
+  $27.Timestamp ensureCreatedAt() => $_ensure(7);
 }
 
 

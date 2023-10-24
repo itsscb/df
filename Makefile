@@ -99,7 +99,7 @@ proto:
 proto_app:
 	cd frontend/app && \
 	rm -f lib/pb/*.dart && \
-	protoc -I=../../bff/proto --dart_out=lib/pb ../../bff/proto/*.proto
+	protoc --dart_out=grpc:lib/pb -I=../../bff/proto/ ../../bff/proto/*.proto && \
 	cd ../..
 
 evans:

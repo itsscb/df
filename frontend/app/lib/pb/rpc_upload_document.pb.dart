@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'document.pb.dart' as $7;
+import 'document.pb.dart' as $34;
 
 class UploadDocumentRequest extends $pb.GeneratedMessage {
   factory UploadDocumentRequest({
@@ -96,7 +96,7 @@ class UploadDocumentRequest extends $pb.GeneratedMessage {
 
 class UploadDocumentResponse extends $pb.GeneratedMessage {
   factory UploadDocumentResponse({
-    $7.Document? document,
+    $34.Document? document,
   }) {
     final $result = create();
     if (document != null) {
@@ -109,7 +109,7 @@ class UploadDocumentResponse extends $pb.GeneratedMessage {
   factory UploadDocumentResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'UploadDocumentResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..aOM<$7.Document>(1, _omitFieldNames ? '' : 'document', subBuilder: $7.Document.create)
+    ..aOM<$34.Document>(1, _omitFieldNames ? '' : 'document', subBuilder: $34.Document.create)
     ..hasRequiredFields = false
   ;
 
@@ -135,15 +135,15 @@ class UploadDocumentResponse extends $pb.GeneratedMessage {
   static UploadDocumentResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $7.Document get document => $_getN(0);
+  $34.Document get document => $_getN(0);
   @$pb.TagNumber(1)
-  set document($7.Document v) { setField(1, v); }
+  set document($34.Document v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasDocument() => $_has(0);
   @$pb.TagNumber(1)
   void clearDocument() => clearField(1);
   @$pb.TagNumber(1)
-  $7.Document ensureDocument() => $_ensure(0);
+  $34.Document ensureDocument() => $_ensure(0);
 }
 
 

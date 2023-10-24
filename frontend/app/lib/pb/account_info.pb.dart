@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $0;
+import 'google/protobuf/timestamp.pb.dart' as $27;
 
 class AccountInfo extends $pb.GeneratedMessage {
   factory AccountInfo({
@@ -25,15 +25,15 @@ class AccountInfo extends $pb.GeneratedMessage {
     $core.String? city,
     $core.String? zip,
     $core.String? country,
-    $0.Timestamp? birthday,
+    $27.Timestamp? birthday,
     $core.String? phone,
     $core.bool? privacyAccepted,
-    $0.Timestamp? privacyAcceptedDate,
+    $27.Timestamp? privacyAcceptedDate,
     $core.int? permissionLevel,
     $core.String? creator,
-    $0.Timestamp? created,
+    $27.Timestamp? created,
     $core.String? changer,
-    $0.Timestamp? changed,
+    $27.Timestamp? changed,
   }) {
     final $result = create();
     if (accountId != null) {
@@ -98,15 +98,15 @@ class AccountInfo extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'city')
     ..aOS(7, _omitFieldNames ? '' : 'zip')
     ..aOS(8, _omitFieldNames ? '' : 'country')
-    ..aOM<$0.Timestamp>(9, _omitFieldNames ? '' : 'birthday', subBuilder: $0.Timestamp.create)
+    ..aOM<$27.Timestamp>(9, _omitFieldNames ? '' : 'birthday', subBuilder: $27.Timestamp.create)
     ..aOS(10, _omitFieldNames ? '' : 'phone')
     ..aOB(11, _omitFieldNames ? '' : 'privacyAccepted')
-    ..aOM<$0.Timestamp>(12, _omitFieldNames ? '' : 'privacyAcceptedDate', subBuilder: $0.Timestamp.create)
+    ..aOM<$27.Timestamp>(12, _omitFieldNames ? '' : 'privacyAcceptedDate', subBuilder: $27.Timestamp.create)
     ..a<$core.int>(13, _omitFieldNames ? '' : 'permissionLevel', $pb.PbFieldType.O3)
     ..aOS(14, _omitFieldNames ? '' : 'creator')
-    ..aOM<$0.Timestamp>(15, _omitFieldNames ? '' : 'created', subBuilder: $0.Timestamp.create)
+    ..aOM<$27.Timestamp>(15, _omitFieldNames ? '' : 'created', subBuilder: $27.Timestamp.create)
     ..aOS(16, _omitFieldNames ? '' : 'changer')
-    ..aOM<$0.Timestamp>(17, _omitFieldNames ? '' : 'changed', subBuilder: $0.Timestamp.create)
+    ..aOM<$27.Timestamp>(17, _omitFieldNames ? '' : 'changed', subBuilder: $27.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -195,15 +195,15 @@ class AccountInfo extends $pb.GeneratedMessage {
   void clearCountry() => clearField(8);
 
   @$pb.TagNumber(9)
-  $0.Timestamp get birthday => $_getN(7);
+  $27.Timestamp get birthday => $_getN(7);
   @$pb.TagNumber(9)
-  set birthday($0.Timestamp v) { setField(9, v); }
+  set birthday($27.Timestamp v) { setField(9, v); }
   @$pb.TagNumber(9)
   $core.bool hasBirthday() => $_has(7);
   @$pb.TagNumber(9)
   void clearBirthday() => clearField(9);
   @$pb.TagNumber(9)
-  $0.Timestamp ensureBirthday() => $_ensure(7);
+  $27.Timestamp ensureBirthday() => $_ensure(7);
 
   @$pb.TagNumber(10)
   $core.String get phone => $_getSZ(8);
@@ -224,15 +224,15 @@ class AccountInfo extends $pb.GeneratedMessage {
   void clearPrivacyAccepted() => clearField(11);
 
   @$pb.TagNumber(12)
-  $0.Timestamp get privacyAcceptedDate => $_getN(10);
+  $27.Timestamp get privacyAcceptedDate => $_getN(10);
   @$pb.TagNumber(12)
-  set privacyAcceptedDate($0.Timestamp v) { setField(12, v); }
+  set privacyAcceptedDate($27.Timestamp v) { setField(12, v); }
   @$pb.TagNumber(12)
   $core.bool hasPrivacyAcceptedDate() => $_has(10);
   @$pb.TagNumber(12)
   void clearPrivacyAcceptedDate() => clearField(12);
   @$pb.TagNumber(12)
-  $0.Timestamp ensurePrivacyAcceptedDate() => $_ensure(10);
+  $27.Timestamp ensurePrivacyAcceptedDate() => $_ensure(10);
 
   @$pb.TagNumber(13)
   $core.int get permissionLevel => $_getIZ(11);
@@ -253,15 +253,15 @@ class AccountInfo extends $pb.GeneratedMessage {
   void clearCreator() => clearField(14);
 
   @$pb.TagNumber(15)
-  $0.Timestamp get created => $_getN(13);
+  $27.Timestamp get created => $_getN(13);
   @$pb.TagNumber(15)
-  set created($0.Timestamp v) { setField(15, v); }
+  set created($27.Timestamp v) { setField(15, v); }
   @$pb.TagNumber(15)
   $core.bool hasCreated() => $_has(13);
   @$pb.TagNumber(15)
   void clearCreated() => clearField(15);
   @$pb.TagNumber(15)
-  $0.Timestamp ensureCreated() => $_ensure(13);
+  $27.Timestamp ensureCreated() => $_ensure(13);
 
   @$pb.TagNumber(16)
   $core.String get changer => $_getSZ(14);
@@ -273,15 +273,15 @@ class AccountInfo extends $pb.GeneratedMessage {
   void clearChanger() => clearField(16);
 
   @$pb.TagNumber(17)
-  $0.Timestamp get changed => $_getN(15);
+  $27.Timestamp get changed => $_getN(15);
   @$pb.TagNumber(17)
-  set changed($0.Timestamp v) { setField(17, v); }
+  set changed($27.Timestamp v) { setField(17, v); }
   @$pb.TagNumber(17)
   $core.bool hasChanged() => $_has(15);
   @$pb.TagNumber(17)
   void clearChanged() => clearField(17);
   @$pb.TagNumber(17)
-  $0.Timestamp ensureChanged() => $_ensure(15);
+  $27.Timestamp ensureChanged() => $_ensure(15);
 }
 
 

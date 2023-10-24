@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $0;
+import 'google/protobuf/timestamp.pb.dart' as $27;
 
 class ReturnsLog extends $pb.GeneratedMessage {
   factory ReturnsLog({
@@ -23,9 +23,9 @@ class ReturnsLog extends $pb.GeneratedMessage {
     $fixnum.Int64? mailId,
     $core.String? status,
     $core.String? creator,
-    $0.Timestamp? created,
+    $27.Timestamp? created,
     $core.String? changer,
-    $0.Timestamp? changed,
+    $27.Timestamp? changed,
   }) {
     final $result = create();
     if (id != null) {
@@ -64,9 +64,9 @@ class ReturnsLog extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(3, _omitFieldNames ? '' : 'mailId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(4, _omitFieldNames ? '' : 'status')
     ..aOS(5, _omitFieldNames ? '' : 'creator')
-    ..aOM<$0.Timestamp>(6, _omitFieldNames ? '' : 'created', subBuilder: $0.Timestamp.create)
+    ..aOM<$27.Timestamp>(6, _omitFieldNames ? '' : 'created', subBuilder: $27.Timestamp.create)
     ..aOS(7, _omitFieldNames ? '' : 'changer')
-    ..aOM<$0.Timestamp>(8, _omitFieldNames ? '' : 'changed', subBuilder: $0.Timestamp.create)
+    ..aOM<$27.Timestamp>(8, _omitFieldNames ? '' : 'changed', subBuilder: $27.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -137,15 +137,15 @@ class ReturnsLog extends $pb.GeneratedMessage {
   void clearCreator() => clearField(5);
 
   @$pb.TagNumber(6)
-  $0.Timestamp get created => $_getN(5);
+  $27.Timestamp get created => $_getN(5);
   @$pb.TagNumber(6)
-  set created($0.Timestamp v) { setField(6, v); }
+  set created($27.Timestamp v) { setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasCreated() => $_has(5);
   @$pb.TagNumber(6)
   void clearCreated() => clearField(6);
   @$pb.TagNumber(6)
-  $0.Timestamp ensureCreated() => $_ensure(5);
+  $27.Timestamp ensureCreated() => $_ensure(5);
 
   @$pb.TagNumber(7)
   $core.String get changer => $_getSZ(6);
@@ -157,15 +157,15 @@ class ReturnsLog extends $pb.GeneratedMessage {
   void clearChanger() => clearField(7);
 
   @$pb.TagNumber(8)
-  $0.Timestamp get changed => $_getN(7);
+  $27.Timestamp get changed => $_getN(7);
   @$pb.TagNumber(8)
-  set changed($0.Timestamp v) { setField(8, v); }
+  set changed($27.Timestamp v) { setField(8, v); }
   @$pb.TagNumber(8)
   $core.bool hasChanged() => $_has(7);
   @$pb.TagNumber(8)
   void clearChanged() => clearField(8);
   @$pb.TagNumber(8)
-  $0.Timestamp ensureChanged() => $_ensure(7);
+  $27.Timestamp ensureChanged() => $_ensure(7);
 }
 
 
