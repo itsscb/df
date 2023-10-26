@@ -1,17 +1,35 @@
+import 'package:app/pages/login_page.dart';
+import 'package:app/widgets/background.dart';
 import 'package:flutter/material.dart';
-
-import 'package:app/pages/main_screen.dart';
-
-class GlobalVariable {
-  /// This global key is used in material app for navigation through firebase notifications.
-  static final GlobalKey<NavigatorState> navigatorState =
-      GlobalKey<NavigatorState>();
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-    navigatorKey: GlobalVariable.navigatorState,
-    home: MainScreen(),
-  ));
+
+  runApp(
+    MaterialApp(
+      theme: ThemeData().copyWith(
+          textTheme: const TextTheme().copyWith(
+            titleLarge: const TextStyle(
+              color: Colors.white,
+            ),
+            titleMedium: const TextStyle(
+              color: Colors.white,
+            ),
+            titleSmall: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          inputDecorationTheme: const InputDecorationTheme(
+            labelStyle: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          scaffoldBackgroundColor: Colors.transparent,
+          appBarTheme: const AppBarTheme().copyWith(
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+          )),
+      home: Background(child: LoginPage()),
+    ),
+  );
 }

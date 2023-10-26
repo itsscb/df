@@ -1,15 +1,15 @@
-import 'package:app/main.dart';
 import 'package:app/pb/rpc_create_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/pb/rpc_login.pb.dart';
 import 'package:app/pb/service_df.pbgrpc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
 
 class Client {
   String baseUrl = 'localhost';
   int port = 9090;
+
+  Map<String, dynamic> metadata = {'Authorization': ''};
+  String accessToken = '';
 
   dfClient stub = dfClient(
     ClientChannel('10.0.2.2',
@@ -35,44 +35,51 @@ class Client {
     return CreateAccountResponse();
   }
 
-  // LoginResponse Login(BuildContext context, LoginRequest request ){
-  //   try {
-  //     final response = stub.login(request);
-  //     return response;
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //                   content: Text('Login fehlgeschlagen: $e'),
-  //                 ));
-  //   }
-  //   return LoginResponse();
-
-  // }
-
-  Future<LoginResponse> login(LoginRequest request, {Function? onError}) async {
+  Future<LoginResponse> login(
+      {required String email,
+      required String password,
+      required Function onError,
+      required Function onSuccess}) async {
+    LoginResponse response = LoginResponse();
     try {
-      final response = await stub.login(request);
-      return response;
+      response = await stub.login(LoginRequest(
+        email: email,
+        password: password,
+      ));
+      accessToken = response.accessToken;
+      metadata['Authorization'] = 'Bearer ${response.accessToken}';
+      print('auth: ${metadata['Authorization']}');
+      onSuccess();
+      // return response;
     } on GrpcError catch (e) {
       print('caught error: ${e.message}');
-      onError!();
+      metadata['Authorization'] = '';
+      onError();
     } catch (e) {
-      print('caught error: $e');
-      onError!();
+      print('caught error: ${e}');
+      metadata['Authorization'] = '';
+      onError();
     }
-    return LoginResponse();
+    return response;
   }
 
   Future<GetAccountInfoResponse> getAccountInfo(GetAccountInfoRequest request,
-      {Function? onError}) async {
+      {required String token, required Function onError}) async {
     try {
-      final response = await stub.getAccountInfo(request);
+      Map<String, String> metadata = {'Authorization': 'Bearer $token'};
+      final response = await stub.getAccountInfo(
+        request,
+        options: CallOptions(
+          metadata: metadata,
+        ),
+      );
       return response;
     } on GrpcError catch (e) {
       print('caught error: ${e.message}');
-      onError!();
+      onError();
     } catch (e) {
       print('caught error: $e');
-      onError!();
+      onError();
     }
     return GetAccountInfoResponse();
   }
