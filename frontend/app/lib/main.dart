@@ -29,7 +29,7 @@ void main() async {
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
           )),
-      home: Background(child: LoginPage()),
+      home: const Background(child: LoginPage()),
     ),
   );
 }

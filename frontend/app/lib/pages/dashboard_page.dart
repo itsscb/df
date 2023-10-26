@@ -1,4 +1,5 @@
 import 'package:app/gapi/client.dart';
+import 'package:app/widgets/background.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -33,7 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black,
         flexibleSpace: Image.asset(
           'lib/assets/logo_300x200.png',
           height: 80,
@@ -51,10 +52,16 @@ class _DashboardPageState extends State<DashboardPage> {
         // ),
         // ],
       ),
-      body: Text(
-        widget.client.accessToken,
-        style: const TextStyle(
-          color: Colors.white,
+      body: Background(
+        child: Column(
+          children: [
+            Text(
+              widget.client.accessToken,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
     );

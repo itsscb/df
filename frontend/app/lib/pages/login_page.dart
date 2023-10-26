@@ -52,7 +52,6 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.black,
         flexibleSpace: Image.asset(
           'lib/assets/logo_300x200.png',
           height: 80,
