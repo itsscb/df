@@ -1,3 +1,4 @@
+import 'package:fixnum/fixnum.dart';
 import 'package:app/pb/rpc_create_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/pb/rpc_login.pb.dart';
@@ -8,8 +9,9 @@ class Client {
   String baseUrl = 'localhost';
   int port = 9090;
 
-  Map<String, dynamic> metadata = {'Authorization': ''};
+  Map<String, String> metadata = {'Authorization': ''};
   String accessToken = '';
+  Int64 accountId = Int64();
 
   dfClient stub = dfClient(
     ClientChannel('10.0.2.2',
@@ -25,7 +27,6 @@ class Client {
 
   Future<CreateAccountResponse> createAccount(
       CreateAccountRequest request) async {
-    // CreateAccountResponse response;
     try {
       final response = stub.createAccount(request);
       return response;
@@ -47,6 +48,7 @@ class Client {
         password: password,
       ));
       accessToken = response.accessToken;
+      accountId = response.accountId;
       metadata['Authorization'] = 'Bearer ${response.accessToken}';
       print('auth: ${metadata['Authorization']}');
       onSuccess();
@@ -64,9 +66,9 @@ class Client {
   }
 
   Future<GetAccountInfoResponse> getAccountInfo(GetAccountInfoRequest request,
-      {required String token, required Function onError}) async {
+      {required Function onError}) async {
     try {
-      Map<String, String> metadata = {'Authorization': 'Bearer $token'};
+      // Map<String, String> metadata = {'Authorization': 'Bearer $token'};
       final response = await stub.getAccountInfo(
         request,
         options: CallOptions(

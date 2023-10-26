@@ -8,6 +8,19 @@ void main() async {
   runApp(
     MaterialApp(
       theme: ThemeData().copyWith(
+          colorScheme: const ColorScheme(
+            brightness: Brightness.dark,
+            primary: Colors.white,
+            onPrimary: Colors.black,
+            secondary: Colors.black,
+            onSecondary: Colors.white,
+            error: Color.fromARGB(170, 255, 0, 0),
+            onError: Color.fromARGB(170, 255, 0, 0),
+            background: Colors.transparent,
+            onBackground: Colors.white,
+            surface: Colors.black,
+            onSurface: Colors.white,
+          ),
           textTheme: const TextTheme().copyWith(
             titleLarge: const TextStyle(
               color: Colors.white,
@@ -21,7 +34,7 @@ void main() async {
           ),
           inputDecorationTheme: const InputDecorationTheme(
             labelStyle: TextStyle(
-              color: Colors.white,
+              color: Colors.grey,
             ),
           ),
           scaffoldBackgroundColor: Colors.transparent,

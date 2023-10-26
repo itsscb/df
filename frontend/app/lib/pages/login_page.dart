@@ -1,6 +1,6 @@
 import 'package:app/gapi/client.dart';
 import 'package:app/pages/dashboard_page.dart';
-import 'package:app/pb/rpc_login.pb.dart';
+import 'package:app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,28 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
-  // Future<String> _login(
-  //     {required BuildContext context,
-  //     required String email,
-  //     required String password,
-  //     required Function onSuccess,
-  //     required Function onError}) async {
-  //   LoginResponse r = await client.login(
-  //     LoginRequest(
-  //       email: email,
-  //       password: password,
-  //     ),
-  //     onError: onError,
-  //     onSuccess: onSuccess,
-  //   );
-  //   return r.accessToken;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,18 +34,27 @@ class _LoginPageState extends State<LoginPage> {
           'lib/assets/logo_300x200.png',
           height: 80,
         ),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {},
-        //     icon: const Icon(Icons.menu),
-        //     tooltip: 'Menu',
-        //   ),
-        // IconButton(
-        //   onPressed: () {},
-        //   icon: const Icon(Icons.login_sharp),
-        //   tooltip: 'Login',
-        // ),
-        // ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            label: 'Zurueck',
+            backgroundColor: Colors.white,
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Colors.white,
+            label: 'AccountInf',
+            icon: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+          ),
+        ],
+        backgroundColor: Colors.transparent,
       ),
       body: !_loading
           ? Form(
@@ -77,9 +64,9 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   TextFormField(
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                    // style: TextStyle(
+                    //   color: Theme.of(context).colorScheme.primary,
+                    // ),
                     controller: mailController,
                     decoration: const InputDecoration(
                       fillColor: Color.fromARGB(30, 255, 255, 255),
@@ -164,15 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'lib/assets/logo_300x200.png',
-                  height: 300,
-                ),
-              ],
-            ),
+          : const LoadingWidget(),
     );
   }
 }
