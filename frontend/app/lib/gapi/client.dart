@@ -5,7 +5,7 @@ import 'package:app/pb/rpc_login.pb.dart';
 import 'package:app/pb/service_df.pbgrpc.dart';
 import 'package:grpc/grpc.dart';
 
-class Client {
+class GClient {
   String baseUrl = 'localhost';
   int port = 9090;
 
@@ -39,7 +39,7 @@ class Client {
   Future<LoginResponse> login(
       {required String email,
       required String password,
-      required Function onError,
+      required Function({GrpcError? error}) onError,
       required Function onSuccess}) async {
     LoginResponse response = LoginResponse();
     try {
@@ -56,9 +56,9 @@ class Client {
     } on GrpcError catch (e) {
       print('caught error: ${e.message}');
       metadata['Authorization'] = '';
-      onError();
+      onError(error: e);
     } catch (e) {
-      print('caught error: ${e}');
+      print('caught error: $e');
       metadata['Authorization'] = '';
       onError();
     }

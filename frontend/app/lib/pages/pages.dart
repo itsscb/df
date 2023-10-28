@@ -1,1 +1,1 @@
-enum Pages { start, login, about, persons }
+enum Pages { start, login, about, persons, dashboard }

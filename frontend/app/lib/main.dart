@@ -1,5 +1,5 @@
 import 'package:app/pages/home_page.dart';
-import 'package:app/pages/login_page.dart';
+import 'package:app/pages/start_page.dart';
 import 'package:app/widgets/background.dart';
 import 'package:flutter/material.dart';
 
@@ -43,8 +43,8 @@ void main() async {
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
           )),
-      home: const Background(
-        child: HomePage(),
+      home: Background(
+        child: StartPage(),
       ),
     ),
   );

@@ -94,9 +94,13 @@ class _HomePageState extends State<HomePage> {
   Widget _selectPage(Pages page) {
     switch (page) {
       case Pages.login:
-        return const LoginPage();
+        return LoginPage(
+            // onChangePage: changePage,
+            );
       default:
-        return StartPage(onChangePage: changePage);
+        return StartPage(
+            // onChangePage: changePage,
+            );
     }
   }
 
@@ -120,12 +124,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final Client client = Client();
+  final GClient client = GClient();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _selectedPage == 'start'
+      appBar: _selectedPage == Pages.start
           ? AppBar(
               automaticallyImplyLeading: false,
             )
@@ -138,7 +142,7 @@ class _HomePageState extends State<HomePage> {
             ),
       bottomNavigationBar: BottomNavigationBar(
         items: bottomBarButtons[_selectedPage]!.toList(),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
       ),
       body: Container(
         padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),

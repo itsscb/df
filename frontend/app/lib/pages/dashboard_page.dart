@@ -5,10 +5,31 @@ import 'package:app/widgets/background.dart';
 import 'package:app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
+GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
+
+List<BottomNavigationBarItem> bottomBarButtons = const [
+  BottomNavigationBarItem(
+    label: 'Zurueck',
+    backgroundColor: Colors.white,
+    icon: Icon(
+      Icons.arrow_back,
+      color: Colors.white,
+    ),
+  ),
+  BottomNavigationBarItem(
+    backgroundColor: Colors.white,
+    label: 'AccountInf',
+    icon: Icon(
+      Icons.person,
+      color: Colors.white,
+    ),
+  ),
+];
+
 class DashboardPage extends StatefulWidget {
   DashboardPage({super.key, required this.client});
 
-  final Client client;
+  final GClient client;
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -50,83 +71,40 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.client.accessToken);
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            label: '',
-            backgroundColor: Colors.white,
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
+    return Background(
+      child: Scaffold(
+        key: scaffolKey,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Image.asset(
+            'lib/assets/logo_300x200.png',
+            height: 80,
           ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.white,
-            label: '',
-            icon: Icon(
-              Icons.person,
-              color: Colors.white,
-            ),
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.white,
-            label: '',
-            icon: Icon(
-              Icons.group,
-              color: Colors.white,
-            ),
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.white,
-            label: '',
-            icon: Icon(
-              Icons.file_copy,
-              color: Colors.white,
-            ),
-          ),
-        ],
-        backgroundColor: Colors.transparent,
-      ),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Image.asset(
-          'lib/assets/logo_300x200.png',
-          height: 80,
         ),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {},
-        //     icon: const Icon(Icons.menu),
-        //     tooltip: 'Menu',
-        //   ),
-        // IconButton(
-        //   onPressed: () {},
-        //   icon: const Icon(Icons.login_sharp),
-        //   tooltip: 'Login',
-        // ),
-        // ],
-      ),
-      body: !_loading
-          ? Background(
-              child: Center(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 48,
-                    ),
-                    Text(
-                      'Willkommen ${accountInfo.firstname} ${accountInfo.lastname}!',
-                      style: const TextStyle(
-                        fontSize: 24,
+        bottomNavigationBar: BottomNavigationBar(
+          items: bottomBarButtons,
+          backgroundColor: Colors.black,
+        ),
+        body: !_loading
+            ? Background(
+                child: Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 48,
                       ),
-                    ),
-                  ],
+                      Text(
+                        'Willkommen ${accountInfo.firstname} ${accountInfo.lastname}!',
+                        style: const TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          : const LoadingWidget(),
+              )
+            : const LoadingWidget(),
+      ),
     );
   }
 }
