@@ -1,3 +1,4 @@
+import 'package:app/data/database.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:app/pb/rpc_create_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
@@ -6,12 +7,28 @@ import 'package:app/pb/service_df.pbgrpc.dart';
 import 'package:grpc/grpc.dart';
 
 class GClient {
+  GClient() {
+    // session = Session.newSession();
+    _init();
+  }
+
   String baseUrl = 'localhost';
   int port = 9090;
 
   Map<String, String> metadata = {'Authorization': ''};
-  String accessToken = '';
-  Int64 accountId = Int64();
+  // String accessToken = '';
+  // Int64 accountId = Int64();
+
+  late Session session;
+
+  static Future<GClient> get client async {
+    Session s = await Session.newSession;
+    GClient c = GClient();
+    c.session = s;
+    final sessions = await c.session.getSessions();
+    c.session = sessions[0];
+    return c;
+  }
 
   dfClient stub = dfClient(
     ClientChannel('10.0.2.2',
@@ -24,6 +41,19 @@ class GClient {
     ),
   );
   Future<void> main(List<String> args) async {}
+
+  void _init() async {
+    // print('CLIENT: INITIALIZING CLIENT - start');
+
+    session = await Session.newSession;
+    // print('CLIENT: getting sessions from database');
+
+    final sessions = await session.getSessions();
+    print('CLIENT: got sessions from database: ${sessions.toString()}');
+    session = sessions[0];
+    // print('CLIENT: INITIALIZING CLIENT - end');
+    print(session.toString());
+  }
 
   Future<CreateAccountResponse> createAccount(
       CreateAccountRequest request) async {
@@ -47,8 +77,19 @@ class GClient {
         email: email,
         password: password,
       ));
-      accessToken = response.accessToken;
-      accountId = response.accountId;
+      print(response);
+      session.accessToken = response.accessToken;
+      session.accountId = response.accountId;
+      session.sessionId = response.sessionId;
+      session.refreshToken = response.refreshToken;
+      session.accessTokenExpiresAt = response.accessTokenExpiresAt;
+      session.refreshTokenExpiresAt = response.refreshTokenExpiresAt;
+      print('GOT: ${session.toString()}');
+      try {
+        session.insertSession(session);
+      } catch (err) {
+        print('ERROR WRITING DB: $err');
+      }
       metadata['Authorization'] = 'Bearer ${response.accessToken}';
       print('auth: ${metadata['Authorization']}');
       onSuccess();

@@ -1,4 +1,3 @@
-import 'package:app/pages/home_page.dart';
 import 'package:app/pages/start_page.dart';
 import 'package:app/widgets/background.dart';
 import 'package:flutter/material.dart';

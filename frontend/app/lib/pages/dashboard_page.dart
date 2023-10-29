@@ -5,29 +5,8 @@ import 'package:app/widgets/background.dart';
 import 'package:app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
-GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
-
-List<BottomNavigationBarItem> bottomBarButtons = const [
-  BottomNavigationBarItem(
-    label: 'Zurueck',
-    backgroundColor: Colors.white,
-    icon: Icon(
-      Icons.arrow_back,
-      color: Colors.white,
-    ),
-  ),
-  BottomNavigationBarItem(
-    backgroundColor: Colors.white,
-    label: 'AccountInf',
-    icon: Icon(
-      Icons.person,
-      color: Colors.white,
-    ),
-  ),
-];
-
 class DashboardPage extends StatefulWidget {
-  DashboardPage({super.key, required this.client});
+  const DashboardPage({super.key, required this.client});
 
   final GClient client;
 
@@ -48,15 +27,15 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.client.accessToken == '') {
-      Navigator.of(context).pop();
-      return;
-    }
+    // if (widget.client.session.accessToken == '') {
+    //   Navigator.of(context).pop();
+    //   return;
+    // }
 
     _setLoading(true);
     widget.client.getAccountInfo(
       GetAccountInfoRequest(
-        accountId: widget.client.accountId,
+        accountId: widget.client.session?.accountId,
       ),
       onError: () {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -73,7 +52,6 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Background(
       child: Scaffold(
-        key: scaffolKey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Image.asset(
@@ -81,10 +59,7 @@ class _DashboardPageState extends State<DashboardPage> {
             height: 80,
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: bottomBarButtons,
-          backgroundColor: Colors.black,
-        ),
+        bottomNavigationBar: BottomBar(),
         body: !_loading
             ? Background(
                 child: Center(
@@ -105,6 +80,43 @@ class _DashboardPageState extends State<DashboardPage> {
               )
             : const LoadingWidget(),
       ),
+    );
+  }
+}
+
+class BottomBar extends StatelessWidget {
+  const BottomBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: [
+        BottomNavigationBarItem(
+          label: 'back',
+          backgroundColor: Colors.white,
+          icon: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          label: 'Menu',
+          icon: IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: const Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+      backgroundColor: Colors.black,
     );
   }
 }

@@ -5,29 +5,7 @@ import 'package:app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
 
-GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-List<BottomNavigationBarItem> bottomBarButtons = [
-  const BottomNavigationBarItem(
-    label: 'back',
-    backgroundColor: Colors.white,
-    icon: Icon(
-      Icons.arrow_back,
-      color: Colors.white,
-    ),
-  ),
-  BottomNavigationBarItem(
-    backgroundColor: Colors.white,
-    label: 'Menu',
-    icon: IconButton(
-      onPressed: () => scaffoldKey.currentState!.openDrawer(),
-      icon: const Icon(
-        Icons.menu,
-        color: Colors.white,
-      ),
-    ),
-  ),
-];
+// GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 class LoginPage extends StatefulWidget {
   LoginPage({
@@ -43,14 +21,44 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
+  final List<BottomNavigationBarItem> bottombarButtons = [];
 
-  List<BottomNavigationBarItem> _selectedBottomBarButtons = bottomBarButtons;
+  // List<BottomNavigationBarItem> _selectedBottomBarButtons = bottomBarButtons;
+  @override
+  void initState() {
+    super.initState();
+    _addBottomBarButtons();
+  }
 
   void _bottomBarAction(int index) {
-    switch (_selectedBottomBarButtons[index].label?.toLowerCase()) {
+    switch (bottombarButtons[index].label?.toLowerCase()) {
       case 'back':
         Navigator.of(context).pop();
     }
+  }
+
+  void _addBottomBarButtons() {
+    bottombarButtons.addAll([
+      const BottomNavigationBarItem(
+        label: 'back',
+        backgroundColor: Colors.white,
+        icon: Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+        ),
+      ),
+      BottomNavigationBarItem(
+        backgroundColor: Colors.white,
+        label: 'Menu',
+        icon: IconButton(
+          onPressed: () => Scaffold.of(context).openDrawer(),
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    ]);
   }
 
   void _setLoading(bool loading) {
@@ -69,7 +77,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Background(
       child: Scaffold(
-        key: scaffoldKey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           // flexibleSpace: Image.asset(
@@ -77,81 +84,8 @@ class _LoginPageState extends State<LoginPage> {
           //   height: 80,
           // ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: bottomBarButtons,
-          backgroundColor: Colors.black,
-          fixedColor: Colors.black,
-          onTap: (value) => _bottomBarAction(value),
-        ),
-        drawer: Drawer(
-          backgroundColor: Colors.black,
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
-                    scaffoldKey.currentState!.closeDrawer();
-                  },
-                  child: const Row(
-                    children: [
-                      Text(
-                        'About',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.question_answer,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    scaffoldKey.currentState!.closeDrawer();
-                  },
-                  child: const Row(
-                    children: [
-                      Text(
-                        'Datenschutz',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.privacy_tip,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    scaffoldKey.currentState!.closeDrawer();
-                  },
-                  child: const Row(
-                    children: [
-                      Text(
-                        'Impressum',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.apartment,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 250,
-                )
-              ],
-            ),
-          ),
-        ),
+        bottomNavigationBar: const BottomBar(),
+        drawer: const SideDrawer(),
         body: !_loading
             ? Form(
                 key: _formKey,
@@ -227,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                             return null;
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         ElevatedButton(
@@ -319,6 +253,124 @@ class _LoginPageState extends State<LoginPage> {
               )
             : const LoadingWidget(),
       ),
+    );
+  }
+}
+
+class SideDrawer extends StatelessWidget {
+  const SideDrawer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                Scaffold.of(context).closeDrawer();
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    'About',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.question_answer,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Scaffold.of(context).closeDrawer();
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    'Datenschutz',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.privacy_tip,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Scaffold.of(context).closeDrawer();
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    'Impressum',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.apartment,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 250,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BottomBar extends StatelessWidget {
+  const BottomBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: [
+        BottomNavigationBarItem(
+          label: 'back',
+          backgroundColor: Colors.white,
+          icon: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          label: 'Menu',
+          icon: IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+      backgroundColor: Colors.black,
+      fixedColor: Colors.black,
+      // onTap: (value) => _bottomBarAction(value),
     );
   }
 }
