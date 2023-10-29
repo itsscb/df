@@ -91,6 +91,11 @@ class Session {
     print('INSERT RESULT: $result');
   }
 
+  Future<void> removeSession(String sessionId) async {
+    final db = _database;
+    await db.delete('sessions', where: 'sessionId = ?', whereArgs: [sessionId]);
+  }
+
   Future<List<Session>> getSessions() async {
     final db = await database;
 

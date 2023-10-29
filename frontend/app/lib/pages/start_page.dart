@@ -21,7 +21,10 @@ class _StartPageState extends State<StartPage> {
   final List<BottomNavigationBarItem> bottombarButtons = [];
 
   void _init() async {
-    widget.client ??= await GClient.client;
+    final c = await GClient.client;
+    setState(() {
+      widget.client = c;
+    });
   }
 
   @override
@@ -37,7 +40,14 @@ class _StartPageState extends State<StartPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
         ),
-        drawer: const SideDrawer(),
+        drawer: SideDrawer(
+          onLogout: () {
+            setState(() {
+              widget.client?.session
+                  .removeSession(widget.client!.session.sessionId!);
+            });
+          },
+        ),
         bottomNavigationBar: BottomBar(widget: widget),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -121,9 +131,12 @@ class _StartPageState extends State<StartPage> {
 }
 
 class SideDrawer extends StatelessWidget {
-  const SideDrawer({
+  SideDrawer({
     super.key,
+    required this.onLogout,
   });
+
+  Function() onLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +197,24 @@ class SideDrawer extends StatelessWidget {
                   Spacer(),
                   Icon(
                     Icons.apartment,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                onLogout();
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    'Log out',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.logout,
                     color: Colors.white,
                   ),
                 ],
