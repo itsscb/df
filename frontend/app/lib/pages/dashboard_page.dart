@@ -35,7 +35,7 @@ class _DashboardPageState extends State<DashboardPage> {
     _setLoading(true);
     widget.client.getAccountInfo(
       GetAccountInfoRequest(
-        accountId: widget.client.session?.accountId,
+        accountId: widget.client.session.accountId,
       ),
       onError: () {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

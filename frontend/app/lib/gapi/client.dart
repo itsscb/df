@@ -8,7 +8,6 @@ import 'package:grpc/grpc.dart';
 
 class GClient {
   GClient() {
-    // session = Session.newSession();
     _init();
   }
 
@@ -16,8 +15,6 @@ class GClient {
   int port = 9090;
 
   Map<String, String> metadata = {'Authorization': ''};
-  // String accessToken = '';
-  // Int64 accountId = Int64();
 
   late Session session;
 
@@ -43,16 +40,10 @@ class GClient {
   Future<void> main(List<String> args) async {}
 
   void _init() async {
-    // print('CLIENT: INITIALIZING CLIENT - start');
-
     session = await Session.newSession;
-    // print('CLIENT: getting sessions from database');
 
     final sessions = await session.getSessions();
-    print('CLIENT: got sessions from database: ${sessions.toString()}');
     session = sessions[0];
-    // print('CLIENT: INITIALIZING CLIENT - end');
-    print(session.toString());
   }
 
   Future<CreateAccountResponse> createAccount(
@@ -60,9 +51,7 @@ class GClient {
     try {
       final response = stub.createAccount(request);
       return response;
-    } catch (e) {
-      print('caught error: $e');
-    }
+    } catch (e) {}
     return CreateAccountResponse();
   }
 
@@ -77,23 +66,18 @@ class GClient {
         email: email,
         password: password,
       ));
-      print(response);
       session.accessToken = response.accessToken;
       session.accountId = response.accountId;
       session.sessionId = response.sessionId;
       session.refreshToken = response.refreshToken;
       session.accessTokenExpiresAt = response.accessTokenExpiresAt;
       session.refreshTokenExpiresAt = response.refreshTokenExpiresAt;
-      print('GOT: ${session.toString()}');
       try {
         session.insertSession(session);
-      } catch (err) {
-        print('ERROR WRITING DB: $err');
-      }
+      } catch (err) {}
       metadata['Authorization'] = 'Bearer ${response.accessToken}';
-      print('auth: ${metadata['Authorization']}');
       onSuccess();
-      // return response;
+      return response;
     } on GrpcError catch (e) {
       print('caught error: ${e.message}');
       metadata['Authorization'] = '';
@@ -109,7 +93,6 @@ class GClient {
   Future<GetAccountInfoResponse> getAccountInfo(GetAccountInfoRequest request,
       {required Function onError}) async {
     try {
-      // Map<String, String> metadata = {'Authorization': 'Bearer $token'};
       final response = await stub.getAccountInfo(
         request,
         options: CallOptions(

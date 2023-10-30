@@ -1,7 +1,9 @@
 import 'package:app/gapi/client.dart';
 import 'package:app/pages/start_page.dart';
 import 'package:app/widgets/background.dart';
+import 'package:app/widgets/bottom_bar.dart';
 import 'package:app/widgets/loading_widget.dart';
+import 'package:app/widgets/side_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
 
@@ -84,8 +86,92 @@ class _LoginPageState extends State<LoginPage> {
           //   height: 80,
           // ),
         ),
-        bottomNavigationBar: const BottomBar(),
-        drawer: const SideDrawer(),
+        bottomNavigationBar: BottomBar(
+          children: [
+            BottomNavigationBarItem(
+              label: 'back',
+              backgroundColor: Colors.white,
+              icon: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.white,
+              label: 'Menu',
+              icon: IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        drawer: SideDrawer(children: [
+          const Spacer(),
+          TextButton(
+            onPressed: () {
+              Scaffold.of(context).closeDrawer();
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'About',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.question_answer,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Scaffold.of(context).closeDrawer();
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'Datenschutz',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.privacy_tip,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Scaffold.of(context).closeDrawer();
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'Impressum',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.apartment,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 250,
+          )
+        ]),
         body: !_loading
             ? Form(
                 key: _formKey,
@@ -253,124 +339,6 @@ class _LoginPageState extends State<LoginPage> {
               )
             : const LoadingWidget(),
       ),
-    );
-  }
-}
-
-class SideDrawer extends StatelessWidget {
-  const SideDrawer({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: Colors.black,
-      child: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                Scaffold.of(context).closeDrawer();
-              },
-              child: const Row(
-                children: [
-                  Text(
-                    'About',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.question_answer,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Scaffold.of(context).closeDrawer();
-              },
-              child: const Row(
-                children: [
-                  Text(
-                    'Datenschutz',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.privacy_tip,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Scaffold.of(context).closeDrawer();
-              },
-              child: const Row(
-                children: [
-                  Text(
-                    'Impressum',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.apartment,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 250,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class BottomBar extends StatelessWidget {
-  const BottomBar({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: [
-        BottomNavigationBarItem(
-          label: 'back',
-          backgroundColor: Colors.white,
-          icon: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        BottomNavigationBarItem(
-          backgroundColor: Colors.white,
-          label: 'Menu',
-          icon: IconButton(
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ],
-      backgroundColor: Colors.black,
-      fixedColor: Colors.black,
-      // onTap: (value) => _bottomBarAction(value),
     );
   }
 }

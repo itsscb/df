@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:fixnum/fixnum.dart';
 
 import 'package:app/pb/google/protobuf/timestamp.pb.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -49,7 +48,7 @@ class Session {
   }
 
   Future<Database> _initDatabase() async {
-    print('DB: INITIALIZING - start');
+    // print('DB: INITIALIZING - start');
     _database = await openDatabase(
       join(await getDatabasesPath(), 'df_database.db'),
       onCreate: (db, version) {
@@ -59,7 +58,7 @@ class Session {
       },
       version: 1,
     );
-    print('DB: INITIALIZING - end');
+    // print('DB: INITIALIZING - end');
 
     return _database;
   }
@@ -81,19 +80,25 @@ class Session {
   }
 
   Future<void> insertSession(Session session) async {
-    print('INSERTING SESSION: ${session.sessionId}');
+    // print('INSERTING SESSION: ${session.sessionId}');
     final db = _database;
-    final result = await db.insert(
+    await db.insert(
       'sessions',
       session.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    print('INSERT RESULT: $result');
+    // print('INSERT RESULT: $result');
   }
 
   Future<void> removeSession(String sessionId) async {
     final db = _database;
     await db.delete('sessions', where: 'sessionId = ?', whereArgs: [sessionId]);
+    this.sessionId = null;
+    refreshToken = null;
+    accessTokenExpiresAt = null;
+    refreshTokenExpiresAt = null;
+    accountId = null;
+    accessToken = null;
   }
 
   Future<List<Session>> getSessions() async {
@@ -104,7 +109,7 @@ class Session {
     final List<Session> sessions = List.generate(
       maps.length,
       (i) {
-        print('GOT MAP: ${maps[i]}');
+        // print('GOT MAP: ${maps[i]}');
 
         return Session(
           sessionId: maps[i]['sessionId'] as String,

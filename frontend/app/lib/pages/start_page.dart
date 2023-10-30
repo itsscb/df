@@ -1,6 +1,8 @@
 import 'package:app/gapi/client.dart';
 import 'package:app/pages/login_page.dart';
 import 'package:app/widgets/background.dart';
+import 'package:app/widgets/bottom_bar.dart';
+import 'package:app/widgets/side_drawer.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -40,15 +42,194 @@ class _StartPageState extends State<StartPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
         ),
-        drawer: SideDrawer(
-          onLogout: () {
-            setState(() {
-              widget.client?.session
-                  .removeSession(widget.client!.session.sessionId!);
-            });
-          },
-        ),
-        bottomNavigationBar: BottomBar(widget: widget),
+        drawer: SideDrawer(children: [
+          const Spacer(),
+          TextButton(
+            onPressed: () {
+              Scaffold.of(context).closeDrawer();
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'About',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.question_answer,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Scaffold.of(context).closeDrawer();
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'Datenschutz',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.privacy_tip,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Scaffold.of(context).closeDrawer();
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'Impressum',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.apartment,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                widget.client?.session.accessToken = null;
+                widget.client?.session
+                    .removeSession(widget.client!.session.sessionId!);
+              });
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'Log out',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 250,
+          )
+        ]),
+        bottomNavigationBar: Builder(builder: (context) {
+          return BottomBar(
+            // onTap: (value) => _bottomBarAction(value),
+            children: widget.client?.session.accessToken != null
+                ? [
+                    BottomNavigationBarItem(
+                      backgroundColor: Colors.white,
+                      label: 'Personen',
+                      icon: Column(
+                        children: [
+                          IconButton(
+                            onPressed: () => Scaffold.of(context).openDrawer(),
+                            icon: const Icon(
+                              Icons.group,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Text(
+                            'Personen',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    BottomNavigationBarItem(
+                      backgroundColor: Colors.white,
+                      label: 'Menu',
+                      icon: IconButton(
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]
+                : [
+                    BottomNavigationBarItem(
+                      label: 'register',
+                      backgroundColor: Colors.white,
+                      icon: Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => LoginPage()));
+                            },
+                            icon: const Icon(
+                              Icons.login,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Text(
+                            'Registrieren',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    BottomNavigationBarItem(
+                      label: 'login',
+                      backgroundColor: Colors.white,
+                      icon: Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => LoginPage()));
+                            },
+                            icon: const Icon(
+                              Icons.login,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Text(
+                            'Login',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    BottomNavigationBarItem(
+                      backgroundColor: Colors.white,
+                      label: 'Menu',
+                      icon: IconButton(
+                        onPressed: () => Scaffold.of(context).openDrawer(),
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+          );
+        }),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -74,275 +255,18 @@ class _StartPageState extends State<StartPage> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  final s = widget.client?.session.getSessions();
-                  print(s);
-                  print(widget.client?.session.accessToken);
+                onPressed: () async {
+                  final s = await widget.client?.session.getSessions();
+                  print('SESSIONS: $s');
                 },
                 child: const Text(
                   "GET SESSIONS",
                 ),
               ),
-              // const Spacer(),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   children: widget.client?.accessToken == null
-              //       ? [
-              // ElevatedButton.icon(
-              //   label: const Text('Login'),
-              //   onPressed: () {
-              //     // onChangePage(Pages.login);
-              //     Navigator.of(context).push(
-              //       MaterialPageRoute(
-              //         builder: ((context) => LoginPage()),
-              //       ),
-              //     );
-              //   },
-              //   icon: const Icon(
-              //     Icons.login,
-              //     semanticLabel: 'Login',
-              //     size: 16,
-              //   ),
-              // ),
-              //   ElevatedButton.icon(
-              //     label: const Text('Registrieren'),
-              //     onPressed: () {},
-              //     icon: const Icon(
-              //       Icons.person_add,
-              //       semanticLabel: 'Register',
-              //       size: 16,
-              //     ),
-              //   ),
-              // ]
-              // : [],
-              // ),
-              // const SizedBox(
-              //   height: 38,
-              // ),
-
-              // const Text('data'),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class SideDrawer extends StatelessWidget {
-  SideDrawer({
-    super.key,
-    required this.onLogout,
-  });
-
-  Function() onLogout;
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: Colors.black,
-      child: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                Scaffold.of(context).closeDrawer();
-              },
-              child: const Row(
-                children: [
-                  Text(
-                    'About',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.question_answer,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Scaffold.of(context).closeDrawer();
-              },
-              child: const Row(
-                children: [
-                  Text(
-                    'Datenschutz',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.privacy_tip,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Scaffold.of(context).closeDrawer();
-              },
-              child: const Row(
-                children: [
-                  Text(
-                    'Impressum',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.apartment,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                onLogout();
-              },
-              child: const Row(
-                children: [
-                  Text(
-                    'Log out',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 250,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class BottomBar extends StatelessWidget {
-  const BottomBar({
-    super.key,
-    required this.widget,
-  });
-
-  final StartPage widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      // onTap: (value) => _bottomBarAction(value),
-      items: widget.client?.session.accessToken != null
-          ? [
-              BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                label: 'Personen',
-                icon: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () => Scaffold.of(context).openDrawer(),
-                      icon: const Icon(
-                        Icons.group,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Text(
-                      'Personen',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                label: 'Menu',
-                icon: IconButton(
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: const Icon(
-                    Icons.menu,
-                    color: Colors.white,
-                  ),
-                ),
-              )
-            ]
-          : [
-              BottomNavigationBarItem(
-                label: 'register',
-                backgroundColor: Colors.white,
-                icon: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => LoginPage()));
-                      },
-                      icon: const Icon(
-                        Icons.login,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Text(
-                      'Registrieren',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: 'login',
-                backgroundColor: Colors.white,
-                icon: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => LoginPage()));
-                      },
-                      icon: const Icon(
-                        Icons.login,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                label: 'Menu',
-                icon: IconButton(
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: const Icon(
-                    Icons.menu,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-      backgroundColor: Colors.black,
-      fixedColor: Colors.black,
     );
   }
 }
