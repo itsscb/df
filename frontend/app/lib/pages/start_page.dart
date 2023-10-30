@@ -1,4 +1,5 @@
 import 'package:app/gapi/client.dart';
+import 'package:app/pages/dashboard_page.dart';
 import 'package:app/pages/login_page.dart';
 import 'package:app/widgets/background.dart';
 import 'package:app/widgets/bottom_bar.dart';
@@ -9,10 +10,10 @@ import 'dart:core';
 class StartPage extends StatefulWidget {
   StartPage({
     super.key,
-    this.client,
+    required this.client,
   });
 
-  GClient? client;
+  GClient client;
 
   @override
   State<StartPage> createState() => _StartPageState();
@@ -42,88 +43,90 @@ class _StartPageState extends State<StartPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
         ),
-        drawer: SideDrawer(children: [
-          const Spacer(),
-          TextButton(
-            onPressed: () {
-              Scaffold.of(context).closeDrawer();
-            },
-            child: const Row(
-              children: [
-                Text(
-                  'About',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.question_answer,
-                  color: Colors.white,
-                ),
-              ],
+        drawer: Builder(builder: (context) {
+          return SideDrawer(children: [
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                Scaffold.of(context).closeDrawer();
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    'About',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.question_answer,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              Scaffold.of(context).closeDrawer();
-            },
-            child: const Row(
-              children: [
-                Text(
-                  'Datenschutz',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.privacy_tip,
-                  color: Colors.white,
-                ),
-              ],
+            TextButton(
+              onPressed: () {
+                Scaffold.of(context).closeDrawer();
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    'Datenschutz',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.privacy_tip,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              Scaffold.of(context).closeDrawer();
-            },
-            child: const Row(
-              children: [
-                Text(
-                  'Impressum',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.apartment,
-                  color: Colors.white,
-                ),
-              ],
+            TextButton(
+              onPressed: () {
+                Scaffold.of(context).closeDrawer();
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    'Impressum',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.apartment,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                widget.client?.session.accessToken = null;
-                widget.client?.session
-                    .removeSession(widget.client!.session.sessionId!);
-              });
-            },
-            child: const Row(
-              children: [
-                Text(
-                  'Log out',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ),
-              ],
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  widget.client?.session.accessToken = null;
+                  widget.client?.session
+                      .removeSession(widget.client!.session.sessionId!);
+                });
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    'Log out',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 250,
-          )
-        ]),
+            const SizedBox(
+              height: 250,
+            )
+          ]);
+        }),
         bottomNavigationBar: Builder(builder: (context) {
           return BottomBar(
             // onTap: (value) => _bottomBarAction(value),
@@ -153,6 +156,44 @@ class _StartPageState extends State<StartPage> {
                     ),
                     BottomNavigationBarItem(
                       backgroundColor: Colors.white,
+                      label: 'Dashboard',
+                      icon: Column(
+                        children: [
+                          IconButton(
+                            onPressed: () async {
+                              // setState(() {
+
+                              GClient c = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DashboardPage(
+                                    client: widget.client!,
+                                  ),
+                                ),
+                              );
+                              print('Got Client back: $c');
+                              // });
+                              setState(() {
+                                widget.client = c;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.dashboard,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Text(
+                            'Dashboard',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    BottomNavigationBarItem(
+                      backgroundColor: Colors.white,
                       label: 'Menu',
                       icon: IconButton(
                         onPressed: () {
@@ -172,9 +213,11 @@ class _StartPageState extends State<StartPage> {
                       icon: Column(
                         children: [
                           IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
+                            onPressed: () async {
+                              widget.client = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
                             },
                             icon: const Icon(
                               Icons.login,
@@ -197,9 +240,11 @@ class _StartPageState extends State<StartPage> {
                       icon: Column(
                         children: [
                           IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
+                            onPressed: () async {
+                              widget.client = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
                             },
                             icon: const Icon(
                               Icons.login,

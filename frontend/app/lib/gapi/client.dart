@@ -23,7 +23,9 @@ class GClient {
     GClient c = GClient();
     c.session = s;
     final sessions = await c.session.getSessions();
-    c.session = sessions[0];
+    if (sessions.isNotEmpty) {
+      c.session = sessions[0];
+    }
     return c;
   }
 
@@ -43,7 +45,9 @@ class GClient {
     session = await Session.newSession;
 
     final sessions = await session.getSessions();
-    session = sessions[0];
+    if (sessions.isNotEmpty) {
+      session = sessions[0];
+    }
   }
 
   Future<CreateAccountResponse> createAccount(

@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   void _bottomBarAction(int index) {
     switch (bottombarButtons[index].label?.toLowerCase()) {
       case 'back':
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(client);
     }
   }
 
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
               label: 'back',
               backgroundColor: Colors.white,
               icon: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(client),
                 icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
