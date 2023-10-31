@@ -28,7 +28,7 @@ class Session {
 
   Future<Database> get database async => _database;
 
-  static Future<Session> get newSession async {
+  static Future<Session> get session async {
     final Database db = await openDatabase(
       join(await getDatabasesPath(), 'df_database.db'),
       onCreate: (db, version) {
@@ -45,6 +45,17 @@ class Session {
 
   void _init() {
     _initDatabase();
+  }
+
+  void reset() {
+    if (sessionId != null) {
+      removeSession(sessionId!);
+    }
+    sessionId = null;
+    accessToken = null;
+    refreshToken = null;
+    accessTokenExpiresAt = null;
+    refreshTokenExpiresAt = null;
   }
 
   Future<Database> _initDatabase() async {

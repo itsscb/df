@@ -1,4 +1,5 @@
 import 'package:app/data/database.dart';
+import 'package:app/pb/account.pb.dart';
 import 'package:app/pb/rpc_create_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/pb/rpc_login.pb.dart';
@@ -17,9 +18,10 @@ class GClient {
   Map<String, String> metadata = {'Authorization': ''};
 
   late Session session;
+  late Account account;
 
   static Future<GClient> get client async {
-    Session s = await Session.newSession;
+    Session s = await Session.session;
     GClient c = GClient();
     c.session = s;
     final sessions = await c.session.getSessions();
@@ -43,7 +45,7 @@ class GClient {
   Future<void> main(List<String> args) async {}
 
   void _init() async {
-    session = await Session.newSession;
+    session = await Session.session;
 
     final sessions = await session.getSessions();
     if (sessions.isNotEmpty) {
@@ -60,6 +62,7 @@ class GClient {
         email: email,
         password: password,
       ));
+      account = response.account;
       return response;
     } on GrpcError catch (e) {
       onError(error: e);
@@ -110,10 +113,9 @@ class GClient {
       session.accessTokenExpiresAt!.toDateTime().isAfter(DateTime.now());
 
   Future<void> resetSession() async {
-    if (session.sessionId != null) {
-      session.removeSession(session.sessionId!);
-    }
-    session = await Session.newSession;
+    session.reset();
+    account = Account();
+    session = await Session.session;
   }
 
   Future<bool> refreshToken() async {
