@@ -39,10 +39,35 @@ class _DashboardPageState extends State<DashboardPage> {
       GetAccountInfoRequest(
         accountId: widget.client.session.accountId,
       ),
-      onError: () {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('AccountInfo konnte nicht geladen werden'),
-        ));
+      onError: ({String? msg}) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('AccountInfo konnte nicht geladen werden'),
+            action: msg != null
+                ? SnackBarAction(
+                    label: 'Details',
+                    textColor: Colors.grey,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text(
+                              msg,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Colors.black),
+                            ),
+                            icon: const Icon(
+                              Icons.warning,
+                              color: Colors.red,
+                            ),
+                          );
+                        },
+                      );
+                    })
+                : null,
+          ),
+        );
       },
     ).then((value) {
       accountInfo = value.accountInfo;
@@ -126,7 +151,12 @@ class _DashboardPageState extends State<DashboardPage> {
                     widget.client.session
                         .removeSession(widget.client.session.sessionId!);
 
-                    Navigator.of(context).pop(widget.client);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              StartPage(client: widget.client),
+                        ),
+                        (route) => false);
                   },
                   child: const Row(
                     children: [
@@ -225,8 +255,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         label: 'back',
                         backgroundColor: Colors.white,
                         icon: IconButton(
-                          onPressed: () =>
-                              Navigator.of(context).pop(widget.client),
+                          onPressed: () {},
                           icon: const Icon(
                             Icons.arrow_back,
                             color: Colors.white,

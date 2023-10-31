@@ -10,11 +10,13 @@ import 'package:grpc/grpc.dart';
 // GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 class LoginPage extends StatefulWidget {
-  LoginPage({
+  const LoginPage({
     super.key,
+    required this.client,
     // required this.onChangePage,
   });
 
+  final GClient client;
   // void Function(Pages page) onChangePage;
 
   @override
@@ -30,13 +32,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _addBottomBarButtons();
-  }
-
-  void _bottomBarAction(int index) {
-    switch (bottombarButtons[index].label?.toLowerCase()) {
-      case 'back':
-        Navigator.of(context).pop(client);
-    }
   }
 
   void _addBottomBarButtons() {
@@ -69,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  final GClient client = GClient();
+  // final GClient client = GClient();
 
   final _formKey = GlobalKey<FormState>();
   final mailController = TextEditingController();
@@ -92,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
               label: 'back',
               backgroundColor: Colors.white,
               icon: IconButton(
-                onPressed: () => Navigator.of(context).pop(client),
+                onPressed: () => Navigator.of(context).pop(widget.client),
                 icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
@@ -255,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                               if (_formKey.currentState!.validate()) {
                                 // final navigator = Navigator.of(context);
                                 _setLoading(true);
-                                client
+                                widget.client
                                     .login(
                                   email: mailController.text,
                                   password: passwordController.text,
@@ -317,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (ctx) => StartPage(
-                                            client: client,
+                                            client: widget.client,
                                           ),
                                         ),
                                         (ctx) => false,

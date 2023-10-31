@@ -1,12 +1,14 @@
 import 'package:app/gapi/client.dart';
 import 'package:app/pages/dashboard_page.dart';
 import 'package:app/pages/login_page.dart';
+import 'package:app/pages/register_page.dart';
 import 'package:app/widgets/background.dart';
 import 'package:app/widgets/bottom_bar.dart';
 import 'package:app/widgets/side_drawer.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
+// ignore: must_be_immutable
 class StartPage extends StatefulWidget {
   StartPage({
     super.key,
@@ -23,16 +25,23 @@ class _StartPageState extends State<StartPage> {
   // List<BottomNavigationBarItem> _selectedBottomBarButtons = bottomBarButtons;
   final List<BottomNavigationBarItem> bottombarButtons = [];
 
-  void _init() async {
-    final c = await GClient.client;
+  // void _init() async {
+  //   final c = await GClient.client;
+  //   setState(() {
+  //     widget.client = c;
+  //   });
+  // }
+
+  void _updateClient(GClient c) {
     setState(() {
+      print('GOT CLIENT: $c');
       widget.client = c;
     });
   }
 
   @override
   void initState() {
-    _init();
+    // _init();
     super.initState();
   }
 
@@ -103,9 +112,9 @@ class _StartPageState extends State<StartPage> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  widget.client?.session.accessToken = null;
-                  widget.client?.session
-                      .removeSession(widget.client!.session.sessionId!);
+                  widget.client.session.accessToken = null;
+                  widget.client.session
+                      .removeSession(widget.client.session.sessionId!);
                 });
               },
               child: const Row(
@@ -130,7 +139,7 @@ class _StartPageState extends State<StartPage> {
         bottomNavigationBar: Builder(builder: (context) {
           return BottomBar(
             // onTap: (value) => _bottomBarAction(value),
-            children: widget.client?.session.accessToken != null
+            children: widget.client.session.accessToken != null
                 ? [
                     BottomNavigationBarItem(
                       backgroundColor: Colors.white,
@@ -161,21 +170,29 @@ class _StartPageState extends State<StartPage> {
                         children: [
                           IconButton(
                             onPressed: () async {
-                              // setState(() {
-
-                              GClient c = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DashboardPage(
-                                    client: widget.client!,
+                              if (!widget.client.isLoggedIn) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Sitzung ist abgelaufen.'),
                                   ),
-                                ),
-                              );
-                              print('Got Client back: $c');
-                              // });
-                              setState(() {
-                                widget.client = c;
-                              });
+                                );
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginPage(client: widget.client)),
+                                    (route) => false);
+                              } else {
+                                GClient c = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DashboardPage(
+                                      client: widget.client,
+                                    ),
+                                  ),
+                                );
+                                _updateClient(c);
+                              }
                             },
                             icon: const Icon(
                               Icons.dashboard,
@@ -217,7 +234,9 @@ class _StartPageState extends State<StartPage> {
                               widget.client = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginPage()));
+                                      builder: (context) => RegisterPage(
+                                            client: widget.client,
+                                          )));
                             },
                             icon: const Icon(
                               Icons.login,
@@ -241,10 +260,14 @@ class _StartPageState extends State<StartPage> {
                         children: [
                           IconButton(
                             onPressed: () async {
-                              widget.client = await Navigator.push(
+                              final c = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginPage()));
+                                    builder: (context) => LoginPage(
+                                      client: widget.client,
+                                    ),
+                                  ));
+                              _updateClient(c);
                             },
                             icon: const Icon(
                               Icons.login,
@@ -297,15 +320,6 @@ class _StartPageState extends State<StartPage> {
                   height: 1.6,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 6,
-                ),
-              ),
-              TextButton(
-                onPressed: () async {
-                  final s = await widget.client?.session.getSessions();
-                  print('SESSIONS: $s');
-                },
-                child: const Text(
-                  "GET SESSIONS",
                 ),
               ),
             ],

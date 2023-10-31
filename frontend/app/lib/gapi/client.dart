@@ -1,8 +1,8 @@
 import 'package:app/data/database.dart';
-import 'package:fixnum/fixnum.dart';
 import 'package:app/pb/rpc_create_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/pb/rpc_login.pb.dart';
+import 'package:app/pb/rpc_refresh_token.pb.dart';
 import 'package:app/pb/service_df.pbgrpc.dart';
 import 'package:grpc/grpc.dart';
 
@@ -26,6 +26,7 @@ class GClient {
     if (sessions.isNotEmpty) {
       c.session = sessions[0];
     }
+    print('ACCESS_TOKEN: ${c.session.accessToken}');
     return c;
   }
 
@@ -51,11 +52,21 @@ class GClient {
   }
 
   Future<CreateAccountResponse> createAccount(
-      CreateAccountRequest request) async {
+      {required String email,
+      required String password,
+      required Function({GrpcError? error}) onError}) async {
     try {
-      final response = stub.createAccount(request);
+      final response = await stub.createAccount(CreateAccountRequest(
+        email: email,
+        password: password,
+      ));
       return response;
-    } catch (e) {}
+    } on GrpcError catch (e) {
+      onError(error: e);
+      print('GRPC ERROR: ${e.message}');
+    } catch (e) {
+      print('ERROR: $e');
+    }
     return CreateAccountResponse();
   }
 
@@ -94,23 +105,56 @@ class GClient {
     return response;
   }
 
-  Future<GetAccountInfoResponse> getAccountInfo(GetAccountInfoRequest request,
-      {required Function onError}) async {
+  bool get isLoggedIn =>
+      session.accessTokenExpiresAt != null &&
+      session.accessTokenExpiresAt!.toDateTime().isAfter(DateTime.now());
+
+  Future<void> resetSession() async {
+    if (session.sessionId != null) {
+      session.removeSession(session.sessionId!);
+    }
+    session = await Session.newSession;
+  }
+
+  Future<bool> refreshToken() async {
     try {
-      final response = await stub.getAccountInfo(
+      final response = await stub.refreshToken(
+        RefreshTokenRequest(
+          refreshToken: session.refreshToken,
+        ),
+      );
+      session.accessToken = response.accessToken;
+      session.insertSession(session);
+      return true;
+    } on GrpcError catch (e) {
+      print('caught grpc error: $e');
+    }
+    return false;
+  }
+
+  Future<GetAccountInfoResponse> getAccountInfo(GetAccountInfoRequest request,
+      {required Function({String msg}) onError}) async {
+    GetAccountInfoResponse response = GetAccountInfoResponse();
+    try {
+      print('SENDING REQ: $request WITH $metadata');
+      response = await stub.getAccountInfo(
         request,
         options: CallOptions(
-          metadata: metadata,
+          metadata: {'Authorization': 'Bearer ${session.accessToken}'},
         ),
       );
       return response;
     } on GrpcError catch (e) {
-      print('caught error: ${e.message}');
-      onError();
+      print('caught grpc error: ${e.message} [${e.code}]');
+      if (e.code == 16) {
+        onError(msg: 'Sitzung ist abgelaufen.\nBitte loggen Sie sich neu ein.');
+      } else {
+        onError(msg: e.message != null ? e.message! : 'Interner Fehler');
+      }
     } catch (e) {
       print('caught error: $e');
       onError();
     }
-    return GetAccountInfoResponse();
+    return response;
   }
 }
