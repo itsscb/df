@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:app/data/database.dart';
 import 'package:app/pb/account.pb.dart';
 import 'package:app/pb/rpc_create_account.pb.dart';
+import 'package:app/pb/rpc_get_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/pb/rpc_login.pb.dart';
 import 'package:app/pb/rpc_refresh_token.pb.dart';
 import 'package:app/pb/service_df.pbgrpc.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:grpc/grpc.dart';
 
 class GClient {
@@ -18,7 +22,7 @@ class GClient {
   Map<String, String> metadata = {'Authorization': ''};
 
   late Session session;
-  late Account account;
+  Account? account;
 
   static Future<GClient> get client async {
     Session s = await Session.session;
@@ -64,11 +68,11 @@ class GClient {
       ));
       account = response.account;
       return response;
-    } on GrpcError catch (e) {
-      onError(error: e);
-      print('GRPC ERROR: ${e.message}');
-    } catch (e) {
-      print('ERROR: $e');
+    } on GrpcError catch (err) {
+      onError(error: err);
+      print('GRPC ERROR: ${err.message}');
+    } catch (err) {
+      print('ERROR: $err');
     }
     return CreateAccountResponse();
   }
@@ -96,12 +100,12 @@ class GClient {
       metadata['Authorization'] = 'Bearer ${response.accessToken}';
       onSuccess();
       return response;
-    } on GrpcError catch (e) {
-      print('caught error: ${e.message}');
+    } on GrpcError catch (err) {
+      print('caught error: ${err.message}');
       metadata['Authorization'] = '';
-      onError(error: e);
-    } catch (e) {
-      print('caught error: $e');
+      onError(error: err);
+    } catch (err) {
+      print('caught error: $err');
       metadata['Authorization'] = '';
       onError();
     }
@@ -128,10 +132,34 @@ class GClient {
       session.accessToken = response.accessToken;
       session.insertSession(session);
       return true;
-    } on GrpcError catch (e) {
-      print('caught grpc error: $e');
+    } on GrpcError catch (err) {
+      print('caught grpc error: $err');
     }
     return false;
+  }
+
+  Future<GetAccountResponse> getAccount(
+      {required Int64 accountId,
+      required Function({GrpcError? err}) onError}) async {
+    GetAccountResponse response = GetAccountResponse();
+    try {
+      response = await stub.getAccount(GetAccountRequest(
+        id: accountId,
+      ));
+      account = response.account;
+    } on GrpcError catch (err) {
+      if (err.code == 16) {
+        log(err.toString());
+        onError(err: err);
+      } else {
+        log(err.toString());
+        onError();
+      }
+    } catch (err) {
+      log(err.toString());
+      onError();
+    }
+    return response;
   }
 
   Future<GetAccountInfoResponse> getAccountInfo(GetAccountInfoRequest request,
@@ -146,16 +174,16 @@ class GClient {
         ),
       );
       return response;
-    } on GrpcError catch (e) {
-      print('caught grpc error: ${e.message} [${e.code}]');
-      if (e.code == 16) {
+    } on GrpcError catch (err) {
+      print('caught grpc error: ${err.message} [${err.code}]');
+      if (err.code == 16) {
         onError(msg: 'Sitzung ist abgelaufen.\nBitte loggen Sie sich neu ein.');
       } else {
-        onError(msg: e.message != null ? e.message! : 'Interner Fehler');
+        onError(msg: err.message != null ? err.message! : 'Interner Fehler');
       }
-    } catch (e) {
-      print('caught error: $e');
-      onError();
+    } catch (err) {
+      print('caught error: $err');
+      onError(msg: err.toString());
     }
     return response;
   }

@@ -261,6 +261,65 @@ class _RegisterPageState extends State<RegisterPage> {
                                       .then(
                                     (r) {
                                       if (r.account.secretKey != '') {
+                                        widget.client
+                                            .login(
+                                                email: mailController.text,
+                                                password:
+                                                    passwordController.text,
+                                                onError: (
+                                                    {GrpcError? error}) {},
+                                                onSuccess: () {})
+                                            .then((resp) {
+                                          widget.client.getAccount(
+                                              accountId: r.account.id,
+                                              onError: ({GrpcError? err}) {
+                                                _setLoading(false);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: const Text(
+                                                      'Login fehlgeschlagen',
+                                                    ),
+                                                    action: SnackBarAction(
+                                                        textColor: Colors.grey,
+                                                        label: 'Details',
+                                                        onPressed: () {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return AlertDialog(
+                                                                content: err !=
+                                                                        null
+                                                                    ? Text(
+                                                                        'Hoppla! Da ist etwas schief gelaufen..\n\n${err.message}',
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style: const TextStyle(
+                                                                            color:
+                                                                                Colors.black),
+                                                                      )
+                                                                    : const Text(
+                                                                        'Interner Fehler',
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black),
+                                                                      ),
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        }),
+                                                  ),
+                                                );
+                                              });
+                                        });
                                         Navigator.pushAndRemoveUntil(
                                             context,
                                             MaterialPageRoute(

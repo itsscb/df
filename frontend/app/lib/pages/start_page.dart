@@ -308,6 +308,19 @@ class _StartPageState extends State<StartPage> {
                   'lib/assets/logo_300x200.png',
                 ),
               ),
+              if (widget.client.account != null &&
+                  !widget.client.account!.emailVerified)
+                Container(
+                  height: 120,
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  child: Card(
+                    color: Colors.brown.shade300,
+                    child: const Text(
+                        'Deine E-Mail Adresse ist noch nicht validiert.'),
+                  ),
+                ),
               const SizedBox(
                 height: 40,
               ),
