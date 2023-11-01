@@ -22,26 +22,16 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  // List<BottomNavigationBarItem> _selectedBottomBarButtons = bottomBarButtons;
   final List<BottomNavigationBarItem> bottombarButtons = [];
-
-  // void _init() async {
-  //   final c = await GClient.client;
-  //   setState(() {
-  //     widget.client = c;
-  //   });
-  // }
 
   void _updateClient(GClient c) {
     setState(() {
-      print('GOT CLIENT: $c');
       widget.client = c;
     });
   }
 
   @override
   void initState() {
-    // _init();
     super.initState();
   }
 
@@ -170,21 +160,31 @@ class _StartPageState extends State<StartPage> {
                         children: [
                           IconButton(
                             onPressed: () async {
-                              if (!widget.client.isLoggedIn) {
+                              if (widget.client.session.accessTokenExpiresAt!
+                                  .toDateTime()
+                                  .isBefore(DateTime.now())) {
+                                await widget.client.refreshToken();
+                              }
+                              if (!widget.client.isLoggedIn &&
+                                  context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('Sitzung ist abgelaufen.'),
                                   ),
                                 );
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            LoginPage(client: widget.client)),
-                                    (route) => false);
+                                if (context.mounted) {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LoginPage(client: widget.client)),
+                                      (route) => false);
+                                }
                               } else {
+                                final ctx = context;
+                                // ignore: use_build_context_synchronously
                                 GClient c = await Navigator.push(
-                                  context,
+                                  ctx,
                                   MaterialPageRoute(
                                     builder: (context) => DashboardPage(
                                       client: widget.client,
