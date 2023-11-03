@@ -11,10 +11,10 @@ import 'package:flutter/material.dart';
 class DashboardPage extends StatefulWidget {
   const DashboardPage({
     super.key,
-    required this.client,
+    // required this.client,
   });
 
-  final GClient client;
+  // final GClient client;
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -35,44 +35,44 @@ class _DashboardPageState extends State<DashboardPage> {
     super.initState();
 
     _setLoading(true);
-    widget.client.getAccountInfo(
-      GetAccountInfoRequest(
-        accountId: widget.client.session.accountId,
-      ),
-      onError: ({String? msg}) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('AccountInfo konnte nicht geladen werden'),
-            action: msg != null
-                ? SnackBarAction(
-                    label: 'Details',
-                    textColor: Colors.grey,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text(
-                              msg,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                            icon: const Icon(
-                              Icons.warning,
-                              color: Colors.red,
-                            ),
-                          );
-                        },
-                      );
-                    })
-                : null,
-          ),
-        );
-      },
-    ).then((value) {
-      accountInfo = value.accountInfo;
-      _setLoading(false);
-    });
+    // widget.client.getAccountInfo(
+    //   GetAccountInfoRequest(
+    //     accountId: widget.client.session.accountId,
+    //   ),
+    //   onError: ({String? msg}) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: const Text('AccountInfo konnte nicht geladen werden'),
+    //         action: msg != null
+    //             ? SnackBarAction(
+    //                 label: 'Details',
+    //                 textColor: Colors.grey,
+    //                 onPressed: () {
+    //                   showDialog(
+    //                     context: context,
+    //                     builder: (context) {
+    //                       return AlertDialog(
+    //                         content: Text(
+    //                           msg,
+    //                           textAlign: TextAlign.center,
+    //                           style: const TextStyle(color: Colors.black),
+    //                         ),
+    //                         icon: const Icon(
+    //                           Icons.warning,
+    //                           color: Colors.red,
+    //                         ),
+    //                       );
+    //                     },
+    //                   );
+    //                 })
+    //             : null,
+    //       ),
+    //     );
+    //   },
+    // ).then((value) {
+    //   accountInfo = value.accountInfo;
+    //   _setLoading(false);
+    // });
   }
 
   @override
@@ -144,139 +144,139 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              if (widget.client.session.accessToken != null)
-                TextButton(
-                  onPressed: () {
-                    widget.client.session.accessToken = null;
-                    widget.client.session
-                        .removeSession(widget.client.session.sessionId!);
+              // if (widget.client.session.accessToken != null)
+              //   TextButton(
+              //     onPressed: () {
+              //       widget.client.session.accessToken = null;
+              //       widget.client.session
+              //           .removeSession(widget.client.session.sessionId!);
 
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              StartPage(client: widget.client),
-                        ),
-                        (route) => false);
-                  },
-                  child: const Row(
-                    children: [
-                      Text(
-                        'Log out',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.logout,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
+              //       Navigator.of(context).pushAndRemoveUntil(
+              //           MaterialPageRoute(
+              //             builder: (context) =>
+              //                 StartPage(client: widget.client),
+              //           ),
+              //           (route) => false);
+              //     },
+              //     child: const Row(
+              //       children: [
+              //         Text(
+              //           'Log out',
+              //           style: TextStyle(fontSize: 20),
+              //         ),
+              //         Spacer(),
+              //         Icon(
+              //           Icons.logout,
+              //           color: Colors.white,
+              //         ),
+              //       ],
+              //     ),
+              //   ),
               const SizedBox(
                 height: 250,
               )
             ],
           );
         }),
-        bottomNavigationBar: Builder(
-          builder: (context) {
-            return BottomBar(
-              children: widget.client.session.accessToken != null
-                  ? [
-                      BottomNavigationBarItem(
-                        backgroundColor: Colors.white,
-                        label: 'Personen',
-                        icon: Column(
-                          children: [
-                            IconButton(
-                              onPressed: () =>
-                                  Scaffold.of(context).openDrawer(),
-                              icon: const Icon(
-                                Icons.group,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const Text(
-                              'Personen',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      BottomNavigationBarItem(
-                        backgroundColor: Colors.white,
-                        label: 'Home',
-                        icon: Column(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => StartPage(
-                                      client: widget.client,
-                                    ),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.home,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const Text(
-                              'Home',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      BottomNavigationBarItem(
-                        backgroundColor: Colors.white,
-                        label: 'Menu',
-                        icon: IconButton(
-                          onPressed: () {
-                            Scaffold.of(context).openDrawer();
-                          },
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    ]
-                  : [
-                      BottomNavigationBarItem(
-                        label: 'back',
-                        backgroundColor: Colors.white,
-                        icon: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      BottomNavigationBarItem(
-                        backgroundColor: Colors.white,
-                        label: 'Menu',
-                        icon: IconButton(
-                          onPressed: () => Scaffold.of(context).openDrawer(),
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-            );
-          },
-        ),
+        // bottomNavigationBar: Builder(
+        //   builder: (context) {
+        //     return BottomBar(
+        //       children: widget.client.session.accessToken != null
+        //           ? [
+        //               BottomNavigationBarItem(
+        //                 backgroundColor: Colors.white,
+        //                 label: 'Personen',
+        //                 icon: Column(
+        //                   children: [
+        //                     IconButton(
+        //                       onPressed: () =>
+        //                           Scaffold.of(context).openDrawer(),
+        //                       icon: const Icon(
+        //                         Icons.group,
+        //                         color: Colors.white,
+        //                       ),
+        //                     ),
+        //                     const Text(
+        //                       'Personen',
+        //                       style: TextStyle(
+        //                         color: Colors.white,
+        //                         fontSize: 16,
+        //                       ),
+        //                     )
+        //                   ],
+        //                 ),
+        //               ),
+        //               BottomNavigationBarItem(
+        //                 backgroundColor: Colors.white,
+        //                 label: 'Home',
+        //                 icon: Column(
+        //                   children: [
+        //                     IconButton(
+        //                       onPressed: () {
+        //                         Navigator.of(context).push(
+        //                           MaterialPageRoute(
+        //                             builder: (context) => StartPage(
+        //                               client: widget.client,
+        //                             ),
+        //                           ),
+        //                         );
+        //                       },
+        //                       icon: const Icon(
+        //                         Icons.home,
+        //                         color: Colors.white,
+        //                       ),
+        //                     ),
+        //                     const Text(
+        //                       'Home',
+        //                       style: TextStyle(
+        //                         color: Colors.white,
+        //                         fontSize: 16,
+        //                       ),
+        //                     )
+        //                   ],
+        //                 ),
+        //               ),
+        //               BottomNavigationBarItem(
+        //                 backgroundColor: Colors.white,
+        //                 label: 'Menu',
+        //                 icon: IconButton(
+        //                   onPressed: () {
+        //                     Scaffold.of(context).openDrawer();
+        //                   },
+        //                   icon: const Icon(
+        //                     Icons.menu,
+        //                     color: Colors.white,
+        //                   ),
+        //                 ),
+        //               )
+        //             ]
+        //           : [
+        //               BottomNavigationBarItem(
+        //                 label: 'back',
+        //                 backgroundColor: Colors.white,
+        //                 icon: IconButton(
+        //                   onPressed: () {},
+        //                   icon: const Icon(
+        //                     Icons.arrow_back,
+        //                     color: Colors.white,
+        //                   ),
+        //                 ),
+        //               ),
+        //               BottomNavigationBarItem(
+        //                 backgroundColor: Colors.white,
+        //                 label: 'Menu',
+        //                 icon: IconButton(
+        //                   onPressed: () => Scaffold.of(context).openDrawer(),
+        //                   icon: const Icon(
+        //                     Icons.menu,
+        //                     color: Colors.white,
+        //                   ),
+        //                 ),
+        //               ),
+        //             ],
+        //     );
+        //   },
+        // ),
         body: !_loading
             ? Background(
                 child: Center(

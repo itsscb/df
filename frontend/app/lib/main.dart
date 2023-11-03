@@ -45,8 +45,8 @@ void main() async {
           )),
       home: Background(
         child: StartPage(
-          client: await GClient.client,
-        ),
+            // client: await GClient.client,
+            ),
       ),
     ),
   );

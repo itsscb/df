@@ -10,10 +10,10 @@ import 'package:grpc/grpc.dart';
 class RegisterPage extends StatefulWidget {
   const RegisterPage({
     super.key,
-    required this.client,
+    // required this.client,
   });
 
-  final GClient client;
+  // final GClient client;
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -112,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 label: 'back',
                 backgroundColor: Colors.white,
                 icon: IconButton(
-                  onPressed: () => Navigator.of(context).pop(widget.client),
+                  onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(
                     Icons.arrow_back,
                     color: Colors.white,
@@ -209,143 +209,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  _setLoading(true);
-                                  widget.client
-                                      .createAccount(
-                                          email: mailController.text,
-                                          password: passwordController.text,
-                                          onError: ({GrpcError? error}) {
-                                            _setLoading(false);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                              content: const Text(
-                                                'Login fehlgeschlagen',
-                                              ),
-                                              action: SnackBarAction(
-                                                  textColor: Colors.grey,
-                                                  label: 'Details',
-                                                  onPressed: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return AlertDialog(
-                                                          content: error != null
-                                                              ? Text(
-                                                                  'Fehler: ${error.message}',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: const TextStyle(
-                                                                      color: Colors
-                                                                          .black),
-                                                                )
-                                                              : const Text(
-                                                                  'Interner Fehler',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black),
-                                                                ),
-                                                          icon: const Icon(
-                                                            Icons.error,
-                                                            color: Colors.black,
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  }),
-                                            ));
-                                          })
-                                      .then(
-                                    (r) {
-                                      if (r.account.secretKey != '') {
-                                        widget.client
-                                            .login(
-                                                email: mailController.text,
-                                                password:
-                                                    passwordController.text,
-                                                onError: (
-                                                    {GrpcError? error}) {},
-                                                onSuccess: () {})
-                                            .then((resp) {
-                                          widget.client.getAccount(
-                                              accountId: r.account.id,
-                                              onError: ({GrpcError? err}) {
-                                                _setLoading(false);
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: const Text(
-                                                      'Login fehlgeschlagen',
-                                                    ),
-                                                    action: SnackBarAction(
-                                                        textColor: Colors.grey,
-                                                        label: 'Details',
-                                                        onPressed: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return AlertDialog(
-                                                                content: err !=
-                                                                        null
-                                                                    ? Text(
-                                                                        'Hoppla! Da ist etwas schief gelaufen..\n\n${err.message}',
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style: const TextStyle(
-                                                                            color:
-                                                                                Colors.black),
-                                                                      )
-                                                                    : const Text(
-                                                                        'Interner Fehler',
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.black),
-                                                                      ),
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
-                                                              );
-                                                            },
-                                                          );
-                                                        }),
-                                                  ),
-                                                );
-                                              });
-                                        });
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (builder) => StartPage(
-                                                    client: widget.client)),
-                                            (route) => false);
-                                        showDialog(
-                                            context: context,
-                                            builder: (builder) {
-                                              return const AlertDialog(
-                                                content: Text(
-                                                  'Account wurde angelegt',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                                icon: Icon(
-                                                  Icons.done,
-                                                  size: 50,
-                                                ),
-                                                iconColor: Colors.green,
-                                              );
-                                            });
-                                      }
-                                    },
-                                  );
+                                  // _setLoading(true);
                                 }
                               },
                               child: const Icon(Icons.login))

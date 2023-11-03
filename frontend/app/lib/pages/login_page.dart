@@ -1,4 +1,5 @@
 import 'package:app/gapi/client.dart';
+import 'package:app/model/services/backend_service.dart';
 import 'package:app/pages/start_page.dart';
 import 'package:app/widgets/background.dart';
 import 'package:app/widgets/bottom_bar.dart';
@@ -12,11 +13,11 @@ import 'package:grpc/grpc.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({
     super.key,
-    required this.client,
+    // required this.client,
     // required this.onChangePage,
   });
 
-  final GClient client;
+  // final GClient client;
   // void Function(Pages page) onChangePage;
 
   @override
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
               label: 'back',
               backgroundColor: Colors.white,
               icon: IconButton(
-                onPressed: () => Navigator.of(context).pop(widget.client),
+                onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
@@ -250,73 +251,23 @@ class _LoginPageState extends State<LoginPage> {
                               if (_formKey.currentState!.validate()) {
                                 // final navigator = Navigator.of(context);
                                 _setLoading(true);
-                                widget.client
-                                    .login(
+                                BackendService.login(
                                   email: mailController.text,
                                   password: passwordController.text,
-                                  onError: ({GrpcError? error}) {
-                                    _setLoading(false);
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: const Text(
-                                        'Login fehlgeschlagen',
-                                      ),
-                                      action: SnackBarAction(
-                                          textColor: Colors.grey,
-                                          label: 'Details',
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: error != null
-                                                      ? Text(
-                                                          'Fehler: ${error.message}',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black),
-                                                        )
-                                                      : const Text(
-                                                          'Interner Fehler',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                  icon: const Icon(
-                                                    Icons.error,
-                                                    color: Colors.black,
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          }),
-                                    ));
-                                  },
-                                  onSuccess: () {
-                                    // _setLoading(false);
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text('Login erfolgreich'),
-                                    ));
-                                  },
-                                )
-                                    .then(
+                                ).then(
                                   (r) {
-                                    if (r.accessToken != '') {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (ctx) => StartPage(
-                                            client: widget.client,
-                                          ),
-                                        ),
-                                        (ctx) => false,
-                                      );
+                                    if (r) {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      // Navigator.pushAndRemoveUntil(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (ctx) => const StartPage(
+                                      //         // client: widget.client,
+                                      //         ),
+                                      //   ),
+                                      //   (ctx) => false,
+                                      // );
                                       // widget.onChangePage(
                                       //   Pages.dashboard,
                                       // );

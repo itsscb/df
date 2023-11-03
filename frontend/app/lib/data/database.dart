@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app/pb/session.pbjson.dart';
 import 'package:fixnum/fixnum.dart';
 
 import 'package:app/pb/google/protobuf/timestamp.pb.dart';
@@ -40,6 +41,12 @@ class Session {
     );
     Session s = Session();
     s._database = db;
+    final sessions = await s.getSessions();
+    if (sessions.isNotEmpty) {
+      final session = sessions[0];
+      session._database = db;
+      return session;
+    }
     return s;
   }
 
@@ -90,6 +97,41 @@ class Session {
     return 'Session{accountId: $accountId, sessionId: $sessionId, accessToken: $accessToken, accessTokenExpiresAt: ${accessTokenExpiresAt.toString()}, refreshToken: $refreshToken, refreshTokenExpiresAt: ${refreshTokenExpiresAt.toString()}}';
   }
 
+  static newSession(Session session) async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'df_database.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE sessions(accountId INTEGER PRIMARY KEY, sessionId TEXT, accessToken TEXT, accessTokenExpiresAt TEXT, refreshToken TEXT, refreshTokenExpiresAt TEXT)',
+        );
+      },
+      version: 1,
+    );
+
+    await db.insert(
+      'sessions',
+      session.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<Session> updateToken(Session s) async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'df_database.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE sessions(accountId INTEGER PRIMARY KEY, sessionId TEXT, accessToken TEXT, accessTokenExpiresAt TEXT, refreshToken TEXT, refreshTokenExpiresAt TEXT)',
+        );
+      },
+      version: 1,
+    );
+    await db.update(
+      'sessions',
+      s.toMap(),
+    );
+    return s; //await getSession(s.accountId!);
+  }
+
   Future<void> insertSession(Session session) async {
     // print('INSERTING SESSION: ${session.sessionId}');
     final db = _database;
@@ -99,6 +141,17 @@ class Session {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     // print('INSERT RESULT: $result');
+  }
+
+  Future<Session> updateSession(Session session) async {
+    sessionId = session.sessionId;
+    accessToken = session.accessToken;
+    accessTokenExpiresAt = session.accessTokenExpiresAt;
+    refreshToken = session.refreshToken;
+    refreshTokenExpiresAt = session.refreshTokenExpiresAt;
+    final db = _database;
+    await db.update('sessions', session.toMap());
+    return session;
   }
 
   Future<void> removeSession(String sessionId) async {
