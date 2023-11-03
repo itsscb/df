@@ -54,14 +54,9 @@ func (server *Server) RefreshToken(ctx context.Context, req *pb.RefreshTokenRequ
 		return nil, status.Error(codes.PermissionDenied, "session expired")
 	}
 
-	id, err := server.tokenMaker.NewTokenID()
-	if err != nil {
-		slog.Error("refresh_token (token_id)", slog.Int64("invoked_by", int64(refreshPayload.AccountID)), slog.String("error", err.Error()))
-		return nil, status.Error(codes.Internal, "failed to create session token")
-	}
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
 		refreshPayload.AccountID,
-		id,
+		session.ID,
 		server.config.AccessTokenDuration,
 	)
 	if err != nil {
