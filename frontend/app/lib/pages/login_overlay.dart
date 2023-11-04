@@ -3,11 +3,28 @@ import 'package:app/widgets/background.dart';
 import 'package:flutter/material.dart';
 
 Future<bool> showLogin(BuildContext context) async {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  bool _loggedin = false;
+  bool submitted = false;
+  bool loggedin = false;
+  void login() {
+    if (formKey.currentState!.validate()) {
+      submitted = true;
+      BackendService.login(
+        email: mailController.text,
+        password: passwordController.text,
+      ).then(
+        (r) {
+          if (r) {
+            loggedin = r;
+            Navigator.pop(context, true);
+          }
+        },
+      );
+    }
+  }
 
   await showModalBottomSheet(
       useSafeArea: true,
@@ -42,7 +59,7 @@ Future<bool> showLogin(BuildContext context) async {
                 ),
               ),
               Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,27 +114,15 @@ Future<bool> showLogin(BuildContext context) async {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: !submitted
+                              ? () {
+                                  Navigator.pop(context);
+                                }
+                              : null,
                           child: const Icon(Icons.arrow_back),
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              BackendService.login(
-                                email: mailController.text,
-                                password: passwordController.text,
-                              ).then(
-                                (r) {
-                                  if (r) {
-                                    _loggedin = r;
-                                    Navigator.pop(context, true);
-                                  }
-                                },
-                              );
-                            }
-                          },
+                          onPressed: !submitted ? login : null,
                           child: const Icon(Icons.login),
                         ),
                       ],
@@ -130,5 +135,5 @@ Future<bool> showLogin(BuildContext context) async {
           ),
         );
       });
-  return _loggedin;
+  return loggedin;
 }
