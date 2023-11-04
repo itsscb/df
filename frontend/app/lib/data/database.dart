@@ -14,9 +14,7 @@ class Session {
     this.refreshToken,
     this.refreshTokenExpiresAt,
     this.accountId,
-  }) {
-    _init();
-  }
+  });
 
   String? sessionId;
   String? accessToken;
@@ -169,12 +167,14 @@ class Session {
     final db = await database;
 
     final List<Map<String, Object?>> maps = await db.query('sessions');
-
+    print(maps);
     final List<Session> sessions = List.generate(
       maps.length,
       (i) {
         // print('GOT MAP: ${maps[i]}');
-
+        if (maps[i]['sessionId'] == null) {
+          return Session();
+        }
         return Session(
           sessionId: maps[i]['sessionId'] as String,
           accessToken: maps[i]['accessToken'] as String,

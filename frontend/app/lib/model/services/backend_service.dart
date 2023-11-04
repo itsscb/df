@@ -202,7 +202,15 @@ class BackendService {
           password: password,
         ),
       );
-      await Session.newSession(response as Session);
+      Session s = Session(
+        accessToken: response.accessToken,
+        sessionId: response.sessionId,
+        accessTokenExpiresAt: response.accessTokenExpiresAt,
+        refreshToken: response.refreshToken,
+        refreshTokenExpiresAt: response.refreshTokenExpiresAt,
+        accountId: response.accountId,
+      );
+      await Session.newSession(s);
       return response.accessToken != '';
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');

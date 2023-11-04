@@ -1,5 +1,5 @@
 import 'package:app/gapi/client.dart';
-import 'package:app/pages/start_page.dart';
+import 'package:app/pages_old/start_page.dart';
 import 'package:app/pb/account_info.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/widgets/background.dart';

@@ -1,6 +1,4 @@
-import 'package:app/gapi/client.dart';
-import 'package:app/pages/start_page.dart';
-import 'package:app/widgets/background.dart';
+import 'package:app/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -43,11 +41,7 @@ void main() async {
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
           )),
-      home: Background(
-        child: StartPage(
-            // client: await GClient.client,
-            ),
-      ),
+      home: const HomePage(),
     ),
   );
 }
