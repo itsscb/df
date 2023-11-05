@@ -5,9 +5,11 @@ import 'package:app/pb/account.pb.dart';
 import 'package:app/pb/account_info.pb.dart';
 import 'package:app/pb/person.pb.dart';
 import 'package:app/data/database.dart';
+import 'package:app/pb/rpc_create_account.pb.dart';
 import 'package:app/pb/rpc_get_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/pb/rpc_get_person.pb.dart';
+import 'package:app/pb/rpc_list_persons.pb.dart';
 import 'package:app/pb/rpc_login.pb.dart';
 import 'package:app/pb/rpc_refresh_token.pb.dart';
 import 'package:app/pb/service_df.pbgrpc.dart';
@@ -87,18 +89,46 @@ class BackendService {
     }
 
     if (session.accessTokenExpiresAt == null) {
+      await logout();
       return false;
     }
 
     if (session.refreshTokenExpiresAt == null) {
+      await logout();
       return false;
     }
 
     if (session.refreshTokenExpiresAt!.toDateTime().isBefore(DateTime.now())) {
+      await logout();
       return false;
     }
 
+    if (session.accessTokenExpiresAt!.toDateTime().isBefore(DateTime.now())) {
+      Session s = await BackendService.refreshToken(session);
+      if (s == session) {
+        return false;
+      }
+    }
+
     return true;
+  }
+
+  static Future<bool> createAccount(
+      {required String email, required String password}) async {
+    try {
+      await BackendService.client.createAccount(CreateAccountRequest(
+        email: email,
+        password: password,
+      ));
+
+      return await login(email: email, password: password);
+    } on SocketException {
+      throw FetchDataException('Keine Internet Verbindung');
+    } on GrpcError catch (err) {
+      throw FetchDataException(err.message);
+    } catch (err) {
+      throw InternalException(err.toString());
+    }
   }
 
   Future<Account> getAccount() async {
@@ -177,6 +207,34 @@ class BackendService {
     }
   }
 
+  Future<List<Person>> listPersons() async {
+    Session session = await Session.session;
+    if (session.accessTokenExpiresAt == null) {
+      throw UnauthorizedException('Keine Siztung gefunden');
+    }
+    if (session.accessTokenExpiresAt!.toDateTime().isBefore(DateTime.now())) {
+      session = await refreshToken(session);
+      if (session.accessTokenExpiresAt == null) {
+        throw UnauthorizedException('Sitzung ist abgelaufen');
+      }
+    }
+    try {
+      final ListPersonsResponse response = await _client.listPersons(
+          ListPersonsRequest(
+            accountId: session.accountId,
+          ),
+          options: CallOptions(
+              metadata: {'Authorization': 'Bearer ${session.accessToken}'}));
+      return response.persons;
+    } on SocketException {
+      throw FetchDataException('Keine Internet Verbindung');
+    } on GrpcError catch (err) {
+      throw FetchDataException(err.message);
+    } catch (err) {
+      throw InternalException(err.toString());
+    }
+  }
+
   // Future<List<Person>> listPersons() async {
   //   if (_session.accessToken == null) {
   //     refreshToken();
@@ -221,10 +279,11 @@ class BackendService {
     }
   }
 
-  Future<Session> refreshToken(Session session) async {
+  static Future<Session> refreshToken(Session session) async {
     try {
-      final RefreshTokenResponse response = await _client.refreshToken(
-          RefreshTokenRequest(refreshToken: session.refreshToken));
+      final RefreshTokenResponse response = await BackendService.client
+          .refreshToken(
+              RefreshTokenRequest(refreshToken: session.refreshToken));
       session.accessToken = response.accessToken;
       session.accessTokenExpiresAt = response.accessTokenExpiresAt;
       session = await Session.updateToken(session);

@@ -1,8 +1,10 @@
 import 'package:app/model/services/backend_service.dart';
 import 'package:app/widgets/background.dart';
 import 'package:flutter/material.dart';
+import 'package:app/util/validation.dart';
 
-Future<bool> showLogin(BuildContext context) async {
+Future<bool> showLogin(BuildContext context,
+    {bool registration = false}) async {
   final formKey = GlobalKey<FormState>();
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -13,6 +15,23 @@ Future<bool> showLogin(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       submitted = true;
       BackendService.login(
+        email: mailController.text,
+        password: passwordController.text,
+      ).then(
+        (r) {
+          if (r) {
+            loggedin = r;
+            Navigator.pop(context, true);
+          }
+        },
+      );
+    }
+  }
+
+  void register() {
+    if (formKey.currentState!.validate()) {
+      submitted = true;
+      BackendService.createAccount(
         email: mailController.text,
         password: passwordController.text,
       ).then(
@@ -48,9 +67,9 @@ Future<bool> showLogin(BuildContext context) async {
               const SizedBox(
                 height: 30,
               ),
-              const Text(
-                'Login',
-                style: TextStyle(
+              Text(
+                registration ? 'Registrieren' : 'Login',
+                style: const TextStyle(
                   fontFamily: 'sans-serif',
                   fontSize: 24,
                   height: 1.6,
@@ -68,6 +87,12 @@ Future<bool> showLogin(BuildContext context) async {
                       height: 40,
                     ),
                     TextFormField(
+                      autofocus: true,
+                      // inputFormatters: [
+                      //   FilteringTextInputFormatter.allow(
+                      //     emailRegExp,
+                      //   ),
+                      // ],
                       controller: mailController,
                       decoration: const InputDecoration(
                         fillColor: Color.fromARGB(30, 255, 255, 255),
@@ -79,7 +104,7 @@ Future<bool> showLogin(BuildContext context) async {
                       ),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || !value.isValidEmail) {
                           return 'Bitte eine gültige E-Mail Adresse eingeben';
                         }
                         return null;
@@ -89,6 +114,11 @@ Future<bool> showLogin(BuildContext context) async {
                       style: const TextStyle(
                         color: Colors.white,
                       ),
+                      // inputFormatters: [
+                      //   FilteringTextInputFormatter.allow(
+                      //     passwordRegExp,
+                      //   ),
+                      // ],
                       controller: passwordController,
                       decoration: const InputDecoration(
                         fillColor: Color.fromARGB(30, 255, 255, 255),
@@ -101,7 +131,7 @@ Future<bool> showLogin(BuildContext context) async {
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || !value.isValidPassword) {
                           return 'Bitte geben Sie Ihr Passwort ein';
                         }
                         return null;
@@ -122,7 +152,11 @@ Future<bool> showLogin(BuildContext context) async {
                           child: const Icon(Icons.arrow_back),
                         ),
                         ElevatedButton(
-                          onPressed: !submitted ? login : null,
+                          onPressed: !submitted
+                              ? !registration
+                                  ? login
+                                  : register
+                              : null,
                           child: const Icon(Icons.login),
                         ),
                       ],
