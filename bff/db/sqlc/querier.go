@@ -61,6 +61,7 @@ type Querier interface {
 	GetPayment(ctx context.Context, id uint64) (Payment, error)
 	GetPerson(ctx context.Context, id uint64) (Person, error)
 	GetProvider(ctx context.Context, id uint64) (Provider, error)
+	GetQueryByName(ctx context.Context, name string) (Query, error)
 	GetReturn(ctx context.Context, id uint64) (Return, error)
 	GetReturnIDsByPersonID(ctx context.Context, personID uint64) ([]uint64, error)
 	GetReturns(ctx context.Context, id uint64) ([]Return, error)
