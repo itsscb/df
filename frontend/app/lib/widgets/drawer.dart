@@ -1,13 +1,12 @@
-import 'package:app/pages/home_page.dart';
-import 'package:app/widgets/side_drawer_item.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class SideDrawer extends StatelessWidget {
   SideDrawer({super.key, required this.children, this.backgroundColor}) {
     backgroundColor ??= Colors.black;
   }
 
-  List<Widget> children;
+  final List<Widget> children;
   Color? backgroundColor;
 
   @override

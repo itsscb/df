@@ -41,7 +41,9 @@ void main() async {
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
           )),
-      home: const HomePage(),
+      home: HomePage(
+        loggedOut: false,
+      ),
     ),
   );
 }

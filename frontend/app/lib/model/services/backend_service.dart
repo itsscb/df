@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:app/model/apis/app_exception.dart';
 import 'package:app/pb/account.pb.dart';
 import 'package:app/pb/account_info.pb.dart';
+import 'package:app/pb/google/protobuf/timestamp.pb.dart';
 import 'package:app/pb/person.pb.dart';
 import 'package:app/data/database.dart';
 import 'package:app/pb/rpc_create_account.pb.dart';
+import 'package:app/pb/rpc_create_person.pb.dart';
 import 'package:app/pb/rpc_get_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/pb/rpc_get_person.pb.dart';
@@ -15,7 +17,6 @@ import 'package:app/pb/rpc_refresh_token.pb.dart';
 import 'package:app/pb/service_df.pbgrpc.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:grpc/grpc.dart';
-import 'package:sqflite/sqflite.dart';
 
 class BackendService {
   BackendService() {
@@ -138,17 +139,16 @@ class BackendService {
     }
     try {
       final GetAccountResponse response = await _client.getAccount(
-          GetAccountRequest(id: session!.accountId),
+          GetAccountRequest(id: session.accountId),
           options: CallOptions(
               metadata: {'Authorization': 'Bearer ${session.accessToken}'}));
       return response.account;
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
     } on GrpcError catch (err) {
-      // if (err.code == 16) {
-      //   await refreshToken(session);
-      //   return getAccount();
-      // }
+      if (err.code == 16) {
+        throw UnauthorizedException(err.message);
+      }
       throw FetchDataException(err.message);
     } catch (err) {
       throw InternalException(err.toString());
@@ -197,6 +197,47 @@ class BackendService {
     try {
       final GetPersonResponse response =
           await _client.getPerson(GetPersonRequest(id: personId));
+      return response.person;
+    } on SocketException {
+      throw FetchDataException('Keine Internet Verbindung');
+    } on GrpcError catch (err) {
+      throw FetchDataException(err.message);
+    } catch (err) {
+      throw InternalException(err.toString());
+    }
+  }
+
+  Future<Person> createPerson(
+      {required String firstname,
+      required String lastname,
+      required String street,
+      required String zip,
+      required String city,
+      required String country,
+      required DateTime birthday}) async {
+    Session session = await Session.session;
+    if (session.accessTokenExpiresAt == null) {
+      throw UnauthorizedException('Keine Siztung gefunden');
+    }
+    if (session.accessTokenExpiresAt!.toDateTime().isBefore(DateTime.now())) {
+      session = await refreshToken(session);
+      if (session.accessTokenExpiresAt == null) {
+        throw UnauthorizedException('Sitzung ist abgelaufen');
+      }
+    }
+    try {
+      final CreatePersonResponse response = await _client.createPerson(
+          CreatePersonRequest(
+            accountId: session.accountId,
+            lastname: lastname,
+            firstname: firstname,
+            street: street,
+            zip: zip,
+            country: country,
+            birthday: Timestamp.fromDateTime(birthday),
+          ),
+          options: CallOptions(
+              metadata: {'Authorization': 'Bearer ${session.accessToken}'}));
       return response.person;
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');

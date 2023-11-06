@@ -5,7 +5,7 @@ class ApiResponse<T> {
 
   ApiResponse.initial(this.message) : status = Status.INITIAL;
   ApiResponse.loading(this.message) : status = Status.LOADING;
-  ApiResponse.completed(this.data, this.message) : status = Status.COMPLETED;
+  ApiResponse.completed(this.data) : status = Status.COMPLETED;
   ApiResponse.error(this.message) : status = Status.ERROR;
 
   @override

@@ -1,6 +1,6 @@
-import 'package:app/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class SideDrawerItem extends StatelessWidget {
   SideDrawerItem({
     super.key,

@@ -42,13 +42,23 @@ class _PersonsPageState extends State<PersonsPage> {
         response.message!.contains('unauthenticated')) {
       BackendService.logout();
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (builder) => const HomePage()),
+          MaterialPageRoute(
+              builder: (builder) => HomePage(
+                    loggedOut: true,
+                  )),
           (route) => false);
     }
   }
 
   bool _loading = true;
   bool _loggedin = false;
+  List<Person> persons = [];
+
+  PersonsViewModel vm = PersonsViewModel();
+
+  void listPersons(BuildContext context) async {
+    persons = await vm.listPersons();
+  }
 
   List<Widget> _personsList(List<Person> persons) {
     final List<Widget> list = [];
@@ -67,106 +77,106 @@ class _PersonsPageState extends State<PersonsPage> {
   @override
   Widget build(BuildContext context) {
     return Background(
-      child: ChangeNotifierProvider<PersonsViewModel>(
-        create: (context) => PersonsViewModel(),
-        child: Consumer<PersonsViewModel>(
-          builder: (context, value, child) {
-            _checkResponse(value.response);
-            return Scaffold(
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {},
-                child: const Icon(Icons.add),
+      child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+        ),
+        drawer: SideDrawer(
+          children: [
+            const Spacer(
+              flex: 3,
+            ),
+            SideDrawerItem(
+              onPressed: () {},
+              icon: Icons.question_answer,
+              color: Colors.white,
+              label: 'About',
+            ),
+            SideDrawerItem(
+              onPressed: () {},
+              icon: Icons.privacy_tip,
+              color: Colors.white,
+              label: 'Datenschutz',
+            ),
+            SideDrawerItem(
+              onPressed: () {},
+              icon: Icons.apartment,
+              color: Colors.white,
+              label: 'Impressum',
+            ),
+            const Spacer(
+              flex: 1,
+            ),
+            if (_loggedin)
+              SideDrawerItem(
+                onPressed: () async {
+                  setState(() {
+                    _loading = true;
+                  });
+                  await BackendService.logout();
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (builder) => HomePage(
+                                loggedOut: true,
+                              )),
+                      (route) => false);
+                  setState(() {
+                    _loggedin = false;
+                    _loading = false;
+                  });
+                },
+                icon: Icons.logout,
+                color: Colors.white,
+                label: 'Logout',
               ),
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-              ),
-              drawer: SideDrawer(
-                children: [
-                  const Spacer(
-                    flex: 3,
-                  ),
-                  SideDrawerItem(
-                    onPressed: () {},
-                    icon: Icons.question_answer,
-                    color: Colors.white,
-                    label: 'About',
-                  ),
-                  SideDrawerItem(
-                    onPressed: () {},
-                    icon: Icons.privacy_tip,
-                    color: Colors.white,
-                    label: 'Datenschutz',
-                  ),
-                  SideDrawerItem(
-                    onPressed: () {},
-                    icon: Icons.apartment,
-                    color: Colors.white,
-                    label: 'Impressum',
-                  ),
-                  const Spacer(
-                    flex: 1,
-                  ),
-                  if (_loggedin || value.response.data != null)
-                    SideDrawerItem(
-                      onPressed: () async {
-                        setState(() {
-                          _loading = true;
-                        });
-                        await BackendService.logout();
-                        // ignore: use_build_context_synchronously
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (builder) => const HomePage()),
-                            (route) => false);
-                        setState(() {
-                          _loggedin = false;
-                          _loading = false;
-                        });
-                      },
-                      icon: Icons.logout,
-                      color: Colors.white,
-                      label: 'Logout',
-                    ),
-                ],
-              ),
-              bottomNavigationBar: BottomNavigation(
-                children: [
-                  BottomNavigationItem(
-                    onPressed: () {},
-                    icon: Icons.dashboard,
-                    color: Colors.white,
-                    label: 'Dashboard',
-                  ),
-                  BottomNavigationItem(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icons.home,
-                    color: Colors.white,
-                    label: 'Home',
-                  ),
-                ],
-              ),
-              body: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Center(
-                  child: _loading
+          ],
+        ),
+        bottomNavigationBar: BottomNavigation(
+          children: [
+            BottomNavigationItem(
+              onPressed: () {},
+              icon: Icons.dashboard,
+              color: Colors.white,
+              label: 'Dashboard',
+            ),
+            BottomNavigationItem(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icons.home,
+              color: Colors.white,
+              label: 'Home',
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: ChangeNotifierProvider<PersonsViewModel>(
+              create: (context) => PersonsViewModel(),
+              child: Consumer<PersonsViewModel>(
+                builder: (context, value, child) {
+                  _checkResponse(value.response);
+                  listPersons(context);
+                  return _loading
                       ? const CircularProgressIndicator(
                           color: Colors.grey,
                         )
                       : value.response.status == Status.COMPLETED
                           ? value.response.data.length > 0
-                              ? ListView(
-                                  children: _personsList(
-                                      (value.response.data as List<Person>)))
+                              ? ListView(children: _personsList(persons))
                               : const Text('Noch keine Personen angelegt')
-                          : const Text('Lade Daten...'),
-                ),
+                          : const Text('Lade Daten...');
+                },
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );

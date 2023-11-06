@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:app/pb/session.pbjson.dart';
 import 'package:fixnum/fixnum.dart';
 
 import 'package:app/pb/google/protobuf/timestamp.pb.dart';
@@ -167,7 +166,7 @@ class Session {
     final db = await database;
 
     final List<Map<String, Object?>> maps = await db.query('sessions');
-    print(maps);
+    // print(maps);
     final List<Session> sessions = List.generate(
       maps.length,
       (i) {
