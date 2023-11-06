@@ -48,7 +48,9 @@ class _HomePageState extends State<HomePage> {
 
   _isLoggedIn(BuildContext context) async {
     bool logged = await vm.isLoggedIn(context);
-    _loggedin = logged;
+    setState(() {
+      _loggedin = logged;
+    });
   }
 
   void _setLoading(bool loading) {
@@ -137,9 +139,10 @@ class _HomePageState extends State<HomePage> {
             ),
             BottomNavigationItem(
               onPressed: () async {
-                await showLogin(context);
+                bool res = await showLogin(context);
                 setState(() {
-                  vm.isLoggedIn(context);
+                  _loggedin = res;
+                  // vm.isLoggedIn(context);
                 });
               },
               icon: Icons.login,
