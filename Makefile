@@ -96,10 +96,16 @@ proto:
 	./proto/*.proto
 	cd ..
 
+proto_app:
+	cd frontend/app && \
+	rm -f lib/pb/*.dart && \
+	protoc --dart_out=grpc:lib/pb -I=../../bff/proto/ ../../bff/proto/*.proto && \
+	cd ../..
+
 evans:
 	evans --host localhost --port 9090 --package pb -r repl
 
 count_lines:
-	cloc --exclude-dir=.history,.git .
+	cloc --exclude-dir=.history,.git,.idea,.dart_tool,build,ios,android,linux,macos,web,windows .
 
 .PHONY: reset_docker backend_build rebuild backend backend dev network postgres migratenew migrateup migratedown createdb dropdb sqlc sqlcinit test coverage server mock proto evans count_lines
