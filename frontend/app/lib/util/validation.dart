@@ -24,4 +24,10 @@ extension valString on String {
   bool get isValidPhone {
     return phoneRegExp.hasMatch(this);
   }
+
+  String get titleCase {
+    return split(' ')
+        .map((str) => str[0].toUpperCase() + str.substring(1))
+        .join(' ');
+  }
 }

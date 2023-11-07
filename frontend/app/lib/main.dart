@@ -1,11 +1,15 @@
 import 'package:app/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'
+    show GlobalMaterialLocalizations;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
     MaterialApp(
+      localizationsDelegates: const [GlobalMaterialLocalizations.delegate],
+      supportedLocales: const [Locale('en'), Locale('de')],
       theme: ThemeData().copyWith(
           colorScheme: const ColorScheme(
             brightness: Brightness.dark,

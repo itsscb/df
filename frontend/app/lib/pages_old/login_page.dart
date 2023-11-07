@@ -1,12 +1,9 @@
-import 'package:app/gapi/client.dart';
 import 'package:app/model/services/backend_service.dart';
-import 'package:app/pages_old/start_page.dart';
 import 'package:app/widgets/background.dart';
 import 'package:app/widgets/bottom_bar.dart';
 import 'package:app/widgets/loading_widget.dart';
 import 'package:app/widgets/side_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:grpc/grpc.dart';
 
 // GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
