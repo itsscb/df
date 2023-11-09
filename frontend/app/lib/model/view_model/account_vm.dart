@@ -22,7 +22,7 @@ class AccountViewModel extends BaseViewModel {
   }
 
   void _init() async {
-    super.init();
+    // super.init();
     // try {
     //   _apiResponse = ApiResponse.completed(await _service.getAccount());
     // } catch (e) {

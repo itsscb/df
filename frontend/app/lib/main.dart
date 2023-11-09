@@ -1,4 +1,5 @@
-import 'package:app/pages/home_page.dart';
+import 'package:app/pages/start_page.dart';
+import 'package:app/pages_draft/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'
     show GlobalMaterialLocalizations;
@@ -11,6 +12,7 @@ void main() async {
       localizationsDelegates: const [GlobalMaterialLocalizations.delegate],
       supportedLocales: const [Locale('en'), Locale('de')],
       theme: ThemeData().copyWith(
+          canvasColor: Colors.black,
           colorScheme: const ColorScheme(
             brightness: Brightness.dark,
             primary: Colors.white,
@@ -45,9 +47,7 @@ void main() async {
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
           )),
-      home: HomePage(
-        loggedOut: false,
-      ),
+      home: StartPage(),
     ),
   );
 }
