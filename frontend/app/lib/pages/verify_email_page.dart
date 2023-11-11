@@ -1,21 +1,8 @@
-import 'package:app/model/services/storage_service.dart';
-import 'package:app/pages/registration_page.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
 
-class NotificationsPage extends StatelessWidget {
-  NotificationsPage({super.key});
-
-  final StorageService _storageService = StorageService();
-
-  void _setNotificationSetting(bool enabled) {
-    _storageService.addAccountLevel();
-    _storageService.setNotificationSetting(enabled).then(
-          (x) => _storageService.notificationSetting.then(
-            (value) => print('notifications: $value'),
-          ),
-        );
-  }
+class VerifyEmailPage extends StatelessWidget {
+  VerifyEmailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +21,8 @@ class NotificationsPage extends StatelessWidget {
               const SizedBox(
                 height: 80,
               ),
-              Image.asset('assets/chat_bubbles.png'),
-              const SizedBox(
-                height: 60,
-              ),
               const Text(
-                'Erhalte Mitteilungen',
+                'Verifizieren',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'sans-serif',
@@ -49,21 +32,23 @@ class NotificationsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 50,
               ),
               const Text(
-                'Du erhältst z. B. eine Mitteilung sobald wir eine Digitale Spur gefunden haben.',
+                'Wir haben dir eine E-Mail geschickt.',
                 textAlign: TextAlign.center,
+                // textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 20,
               ),
               const Text(
-                'Du kannst die Mitteilungen jederzeit wieder deaktivieren.',
+                'Bitte verifiziere deine E-Mail Adresse, dann geht es weiter.',
                 textAlign: TextAlign.center,
+                // textAlign: TextAlign.center,
               ),
-              const Spacer(
-                flex: 2,
+              const SizedBox(
+                height: 80,
               ),
               Hero(
                 tag: 'flow-button',
@@ -71,23 +56,15 @@ class NotificationsPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: CustomColors.primary,
                   ),
-                  onPressed: () {
-                    _setNotificationSetting(true);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (builder) => const RegistrationPage(),
-                        // builder: (builder) => SecurityPage(),
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                   child: const SizedBox(
-                    height: 60,
+                    height: 50,
+                    width: 100,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Mitteilungen erhalten',
+                          'Weiter',
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -98,19 +75,31 @@ class NotificationsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 60,
+              ),
+              const Text(
+                'Noch keine E-Mail erhalten?',
+                // textAlign: TextAlign.center,
+              ),
+              const Text(
+                'Schon im Spam-Ordner nachgeschaut?',
+                // textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 20,
               ),
               TextButton(
-                onPressed: () {
-                  _setNotificationSetting(false);
-                },
+                onPressed: () {},
                 child: Text(
-                  'Später',
-                  style: TextStyle(color: CustomColors.primary),
+                  'Erneut senden',
+                  // textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: CustomColors.primary,
+                  ),
                 ),
               ),
               const Spacer(
-                flex: 1,
+                flex: 2,
               ),
             ],
           ),

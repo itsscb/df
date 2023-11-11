@@ -131,7 +131,7 @@ class BackendService {
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
     } on GrpcError catch (err) {
-      throw FetchDataException(err.message);
+      throw FetchDataException('${err.message}');
     } catch (err) {
       throw InternalException(err.toString());
     }
