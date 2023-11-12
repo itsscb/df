@@ -6,7 +6,7 @@ class CustomColors {
   }
 
   static Color get success {
-    return const Color.fromARGB(200, 55, 125, 55);
+    return const Color.fromARGB(255, 51, 217, 178);
   }
 
   static Color get primary {

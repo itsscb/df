@@ -57,9 +57,9 @@ class StorageService {
 
   Future<int> get accountLevel async {
     int? level;
-    final l = await readData('account_level');
-    if (l != null) {
-      level = int.tryParse(l);
+    final lev = await readData('account_level');
+    if (lev != null) {
+      level = int.tryParse(lev);
     }
     return level ?? 0;
   }
