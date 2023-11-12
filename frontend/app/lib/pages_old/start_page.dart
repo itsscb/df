@@ -1,9 +1,6 @@
-import 'package:app/gapi/client.dart';
 import 'package:app/model/apis/api_response.dart';
 import 'package:app/model/view_model/account_vm.dart';
-import 'package:app/pages_old/dashboard_page.dart';
 import 'package:app/pages_old/login_page.dart';
-import 'package:app/pages_old/register_page.dart';
 import 'package:app/pb/account.pb.dart';
 import 'package:app/widgets/background.dart';
 import 'package:app/widgets/bottom_bar.dart';

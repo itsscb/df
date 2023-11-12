@@ -7,11 +7,12 @@ class AccountViewModel extends BaseViewModel {
   AccountViewModel() {
     _init();
   }
-  ApiResponse _apiResponse = ApiResponse.initial('Keine Daten');
+  final ApiResponse _apiResponse = ApiResponse.initial('Keine Daten');
 
   final BackendService _service = BackendService();
   Account? _account;
 
+  @override
   ApiResponse get response {
     return _apiResponse;
   }
@@ -21,7 +22,7 @@ class AccountViewModel extends BaseViewModel {
   }
 
   void _init() async {
-    super.init();
+    // super.init();
     // try {
     //   _apiResponse = ApiResponse.completed(await _service.getAccount());
     // } catch (e) {

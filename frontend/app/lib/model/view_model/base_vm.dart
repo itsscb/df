@@ -1,12 +1,12 @@
 import 'package:app/model/apis/api_response.dart';
 import 'package:app/model/services/backend_service.dart';
-import 'package:app/pages/home_page.dart';
+import 'package:app/pages_draft/home_page.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
 
 class BaseViewModel with ChangeNotifier {
   BaseViewModel() {
-    init();
+    // init();
   }
   ApiResponse _apiResponse = ApiResponse.initial('Keine Daten');
 
@@ -16,16 +16,16 @@ class BaseViewModel with ChangeNotifier {
     return _apiResponse;
   }
 
-  void init() async {
-    // if (await BackendService.isLoggedIn) {
-    try {
-      _apiResponse = ApiResponse.completed(await _service.getAccount());
-    } catch (e) {
-      _apiResponse = ApiResponse.error(e.toString());
-    }
-    notifyListeners();
-    // }
-  }
+  // void init() async {
+  //   // if (await BackendService.isLoggedIn) {
+  //   try {
+  //     _apiResponse = ApiResponse.completed(await _service.getAccount());
+  //   } catch (e) {
+  //     _apiResponse = ApiResponse.error(e.toString());
+  //   }
+  //   notifyListeners();
+  //   // }
+  // }
 
   Future<bool> isLoggedIn(BuildContext context) async {
     final messenger = ScaffoldMessenger.of(context);

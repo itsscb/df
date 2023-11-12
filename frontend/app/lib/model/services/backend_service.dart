@@ -14,6 +14,7 @@ import 'package:app/pb/rpc_get_person.pb.dart';
 import 'package:app/pb/rpc_list_persons.pb.dart';
 import 'package:app/pb/rpc_login.pb.dart';
 import 'package:app/pb/rpc_refresh_token.pb.dart';
+import 'package:app/pb/rpc_update_person.pb.dart';
 import 'package:app/pb/service_df.pbgrpc.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:grpc/grpc.dart';
@@ -114,6 +115,10 @@ class BackendService {
     return true;
   }
 
+  static Future<Int64?> get accountId async {
+    return (await Session.session).accountId;
+  }
+
   static Future<bool> createAccount(
       {required String email, required String password}) async {
     try {
@@ -126,7 +131,7 @@ class BackendService {
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
     } on GrpcError catch (err) {
-      throw FetchDataException(err.message);
+      throw FetchDataException('${err.message}');
     } catch (err) {
       throw InternalException(err.toString());
     }
@@ -207,14 +212,15 @@ class BackendService {
     }
   }
 
-  Future<Person> createPerson(
-      {required String firstname,
-      required String lastname,
-      required String street,
-      required String zip,
-      required String city,
-      required String country,
-      required DateTime birthday}) async {
+  Future<Person> updatePerson(
+      {required Int64 id,
+      String? firstname,
+      String? lastname,
+      String? street,
+      String? zip,
+      String? city,
+      String? country,
+      Timestamp? birthday}) async {
     Session session = await Session.session;
     if (session.accessTokenExpiresAt == null) {
       throw UnauthorizedException('Keine Siztung gefunden');
@@ -226,16 +232,74 @@ class BackendService {
       }
     }
     try {
-      final CreatePersonResponse response = await _client.createPerson(
-          CreatePersonRequest(
-            accountId: session.accountId,
-            lastname: lastname,
-            firstname: firstname,
-            street: street,
-            zip: zip,
-            country: country,
-            birthday: Timestamp.fromDateTime(birthday),
-          ),
+      final UpdatePersonRequest req = UpdatePersonRequest(
+        id: id,
+      );
+
+      if (lastname != null) {
+        req.lastname = lastname;
+      }
+      if (firstname != null) {
+        req.firstname = firstname;
+      }
+      if (street != null) {
+        req.street = street;
+      }
+      if (city != null) {
+        req.city = city;
+      }
+      if (zip != null) {
+        req.zip = zip;
+      }
+      if (country != null) {
+        req.country = country;
+      }
+      if (birthday != null) {
+        req.birthday = birthday;
+      }
+      final UpdatePersonResponse response = await _client.updatePerson(req,
+          options: CallOptions(
+              metadata: {'Authorization': 'Bearer ${session.accessToken}'}));
+      return response.person;
+    } on SocketException {
+      throw FetchDataException('Keine Internet Verbindung');
+    } on GrpcError catch (err) {
+      throw FetchDataException(err.message);
+    } catch (err) {
+      throw InternalException(err.toString());
+    }
+  }
+
+  Future<Person> createPerson(
+      {required String firstname,
+      required String lastname,
+      required String street,
+      required String zip,
+      required String city,
+      required String country,
+      required Timestamp birthday}) async {
+    Session session = await Session.session;
+    if (session.accessTokenExpiresAt == null) {
+      throw UnauthorizedException('Keine Siztung gefunden');
+    }
+    if (session.accessTokenExpiresAt!.toDateTime().isBefore(DateTime.now())) {
+      session = await refreshToken(session);
+      if (session.accessTokenExpiresAt == null) {
+        throw UnauthorizedException('Sitzung ist abgelaufen');
+      }
+    }
+    try {
+      final CreatePersonRequest req = CreatePersonRequest(
+        accountId: session.accountId,
+        lastname: lastname,
+        firstname: firstname,
+        street: street,
+        city: city,
+        zip: zip,
+        country: country,
+        birthday: birthday,
+      );
+      final CreatePersonResponse response = await _client.createPerson(req,
           options: CallOptions(
               metadata: {'Authorization': 'Bearer ${session.accessToken}'}));
       return response.person;

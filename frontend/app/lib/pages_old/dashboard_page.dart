@@ -1,9 +1,5 @@
-import 'package:app/gapi/client.dart';
-import 'package:app/pages_old/start_page.dart';
 import 'package:app/pb/account_info.pb.dart';
-import 'package:app/pb/rpc_get_account_info.pb.dart';
 import 'package:app/widgets/background.dart';
-import 'package:app/widgets/bottom_bar.dart';
 import 'package:app/widgets/loading_widget.dart';
 import 'package:app/widgets/side_drawer.dart';
 import 'package:flutter/material.dart';

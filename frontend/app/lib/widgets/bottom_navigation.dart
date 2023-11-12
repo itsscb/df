@@ -7,10 +7,13 @@ class BottomNavigation extends StatelessWidget {
     required this.children,
     this.backgroundColor,
     this.iconColor,
+    this.hideMenu,
   }) {
+    hideMenu ??= false;
     backgroundColor ??= Colors.black;
   }
 
+  bool? hideMenu;
   List<Widget> children;
   Color? backgroundColor;
   Color? iconColor;
@@ -32,14 +35,18 @@ class BottomNavigation extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ...children,
-              Builder(builder: (context) {
-                return IconButton(
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                    icon: const Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    ));
-              }),
+              if (!hideMenu!)
+                Builder(
+                  builder: (context) {
+                    return IconButton(
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                )
             ],
           ),
         ),
