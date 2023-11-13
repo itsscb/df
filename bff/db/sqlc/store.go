@@ -18,6 +18,7 @@ type Store interface {
 	CreateDocumentTx(ctx context.Context, arg CreateDocumentTxParams) (doc Document, code int, err error)
 	DeleteDocumentTx(ctx context.Context, id uint64) (code codes.Code, err error)
 	UpdateAccountTx(ctx context.Context, arg UpdateAccountTxParams) (Account, error)
+	ResendVerificationTx(ctx context.Context, arg ResendVerificationTxParams) (Account, error)
 }
 
 // Store provides all functions to execute db queries and transactions

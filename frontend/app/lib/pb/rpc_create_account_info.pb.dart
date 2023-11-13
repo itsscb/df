@@ -14,8 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'account_info.pb.dart' as $28;
-import 'google/protobuf/timestamp.pb.dart' as $27;
+import 'account_info.pb.dart' as $29;
+import 'google/protobuf/timestamp.pb.dart' as $28;
 
 class CreateAccountInfoRequest extends $pb.GeneratedMessage {
   factory CreateAccountInfoRequest({
@@ -27,7 +27,7 @@ class CreateAccountInfoRequest extends $pb.GeneratedMessage {
     $core.String? zip,
     $core.String? country,
     $core.String? phone,
-    $27.Timestamp? birthday,
+    $28.Timestamp? birthday,
     $core.bool? privacyAccepted,
   }) {
     final $result = create();
@@ -76,7 +76,7 @@ class CreateAccountInfoRequest extends $pb.GeneratedMessage {
     ..aOS(7, _omitFieldNames ? '' : 'zip')
     ..aOS(8, _omitFieldNames ? '' : 'country')
     ..aOS(9, _omitFieldNames ? '' : 'phone')
-    ..aOM<$27.Timestamp>(10, _omitFieldNames ? '' : 'birthday', subBuilder: $27.Timestamp.create)
+    ..aOM<$28.Timestamp>(10, _omitFieldNames ? '' : 'birthday', subBuilder: $28.Timestamp.create)
     ..aOB(11, _omitFieldNames ? '' : 'privacyAccepted')
     ..hasRequiredFields = false
   ;
@@ -175,15 +175,15 @@ class CreateAccountInfoRequest extends $pb.GeneratedMessage {
   void clearPhone() => clearField(9);
 
   @$pb.TagNumber(10)
-  $27.Timestamp get birthday => $_getN(8);
+  $28.Timestamp get birthday => $_getN(8);
   @$pb.TagNumber(10)
-  set birthday($27.Timestamp v) { setField(10, v); }
+  set birthday($28.Timestamp v) { setField(10, v); }
   @$pb.TagNumber(10)
   $core.bool hasBirthday() => $_has(8);
   @$pb.TagNumber(10)
   void clearBirthday() => clearField(10);
   @$pb.TagNumber(10)
-  $27.Timestamp ensureBirthday() => $_ensure(8);
+  $28.Timestamp ensureBirthday() => $_ensure(8);
 
   @$pb.TagNumber(11)
   $core.bool get privacyAccepted => $_getBF(9);
@@ -197,7 +197,7 @@ class CreateAccountInfoRequest extends $pb.GeneratedMessage {
 
 class CreateAccountInfoResponse extends $pb.GeneratedMessage {
   factory CreateAccountInfoResponse({
-    $28.AccountInfo? accountInfo,
+    $29.AccountInfo? accountInfo,
   }) {
     final $result = create();
     if (accountInfo != null) {
@@ -210,7 +210,7 @@ class CreateAccountInfoResponse extends $pb.GeneratedMessage {
   factory CreateAccountInfoResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CreateAccountInfoResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..aOM<$28.AccountInfo>(1, _omitFieldNames ? '' : 'accountInfo', subBuilder: $28.AccountInfo.create)
+    ..aOM<$29.AccountInfo>(1, _omitFieldNames ? '' : 'accountInfo', subBuilder: $29.AccountInfo.create)
     ..hasRequiredFields = false
   ;
 
@@ -236,15 +236,15 @@ class CreateAccountInfoResponse extends $pb.GeneratedMessage {
   static CreateAccountInfoResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $28.AccountInfo get accountInfo => $_getN(0);
+  $29.AccountInfo get accountInfo => $_getN(0);
   @$pb.TagNumber(1)
-  set accountInfo($28.AccountInfo v) { setField(1, v); }
+  set accountInfo($29.AccountInfo v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasAccountInfo() => $_has(0);
   @$pb.TagNumber(1)
   void clearAccountInfo() => clearField(1);
   @$pb.TagNumber(1)
-  $28.AccountInfo ensureAccountInfo() => $_ensure(0);
+  $29.AccountInfo ensureAccountInfo() => $_ensure(0);
 }
 
 

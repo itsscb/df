@@ -14,16 +14,16 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $27;
+import 'google/protobuf/timestamp.pb.dart' as $28;
 
 class Account extends $pb.GeneratedMessage {
   factory Account({
     $fixnum.Int64? id,
     $core.String? email,
     $core.String? secretKey,
-    $27.Timestamp? emailVerifiedTime,
+    $28.Timestamp? emailVerifiedTime,
     $core.bool? emailVerified,
-    $27.Timestamp? privacyAcceptedDate,
+    $28.Timestamp? privacyAcceptedDate,
     $core.int? permissionLevel,
   }) {
     final $result = create();
@@ -58,9 +58,9 @@ class Account extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(1, _omitFieldNames ? '' : 'id', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(2, _omitFieldNames ? '' : 'email')
     ..aOS(3, _omitFieldNames ? '' : 'secretKey')
-    ..aOM<$27.Timestamp>(9, _omitFieldNames ? '' : 'emailVerifiedTime', subBuilder: $27.Timestamp.create)
+    ..aOM<$28.Timestamp>(9, _omitFieldNames ? '' : 'emailVerifiedTime', subBuilder: $28.Timestamp.create)
     ..aOB(10, _omitFieldNames ? '' : 'emailVerified')
-    ..aOM<$27.Timestamp>(12, _omitFieldNames ? '' : 'privacyAcceptedDate', subBuilder: $27.Timestamp.create)
+    ..aOM<$28.Timestamp>(12, _omitFieldNames ? '' : 'privacyAcceptedDate', subBuilder: $28.Timestamp.create)
     ..a<$core.int>(13, _omitFieldNames ? '' : 'permissionLevel', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
@@ -114,15 +114,15 @@ class Account extends $pb.GeneratedMessage {
   void clearSecretKey() => clearField(3);
 
   @$pb.TagNumber(9)
-  $27.Timestamp get emailVerifiedTime => $_getN(3);
+  $28.Timestamp get emailVerifiedTime => $_getN(3);
   @$pb.TagNumber(9)
-  set emailVerifiedTime($27.Timestamp v) { setField(9, v); }
+  set emailVerifiedTime($28.Timestamp v) { setField(9, v); }
   @$pb.TagNumber(9)
   $core.bool hasEmailVerifiedTime() => $_has(3);
   @$pb.TagNumber(9)
   void clearEmailVerifiedTime() => clearField(9);
   @$pb.TagNumber(9)
-  $27.Timestamp ensureEmailVerifiedTime() => $_ensure(3);
+  $28.Timestamp ensureEmailVerifiedTime() => $_ensure(3);
 
   @$pb.TagNumber(10)
   $core.bool get emailVerified => $_getBF(4);
@@ -134,15 +134,15 @@ class Account extends $pb.GeneratedMessage {
   void clearEmailVerified() => clearField(10);
 
   @$pb.TagNumber(12)
-  $27.Timestamp get privacyAcceptedDate => $_getN(5);
+  $28.Timestamp get privacyAcceptedDate => $_getN(5);
   @$pb.TagNumber(12)
-  set privacyAcceptedDate($27.Timestamp v) { setField(12, v); }
+  set privacyAcceptedDate($28.Timestamp v) { setField(12, v); }
   @$pb.TagNumber(12)
   $core.bool hasPrivacyAcceptedDate() => $_has(5);
   @$pb.TagNumber(12)
   void clearPrivacyAcceptedDate() => clearField(12);
   @$pb.TagNumber(12)
-  $27.Timestamp ensurePrivacyAcceptedDate() => $_ensure(5);
+  $28.Timestamp ensurePrivacyAcceptedDate() => $_ensure(5);
 
   @$pb.TagNumber(13)
   $core.int get permissionLevel => $_getIZ(6);

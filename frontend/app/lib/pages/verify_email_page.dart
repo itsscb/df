@@ -1,4 +1,5 @@
 import 'package:app/model/services/storage_service.dart';
+import 'package:app/model/view_model/base_vm.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,7 @@ class VerifyEmailPage extends StatefulWidget {
 
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
   final StorageService _storageService = StorageService();
+  final BaseViewModel _vm = BaseViewModel();
   bool _loading = true;
 
   @override
@@ -135,7 +137,9 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                       height: 20,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await _vm.resendVerification(context);
+                      },
                       child: Text(
                         'Erneut senden',
                         // textAlign: TextAlign.center,

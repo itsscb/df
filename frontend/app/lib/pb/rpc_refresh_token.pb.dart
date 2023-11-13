@@ -13,7 +13,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $27;
+import 'google/protobuf/timestamp.pb.dart' as $28;
 
 class RefreshTokenRequest extends $pb.GeneratedMessage {
   factory RefreshTokenRequest({
@@ -68,7 +68,7 @@ class RefreshTokenRequest extends $pb.GeneratedMessage {
 class RefreshTokenResponse extends $pb.GeneratedMessage {
   factory RefreshTokenResponse({
     $core.String? accessToken,
-    $27.Timestamp? accessTokenExpiresAt,
+    $28.Timestamp? accessTokenExpiresAt,
   }) {
     final $result = create();
     if (accessToken != null) {
@@ -85,7 +85,7 @@ class RefreshTokenResponse extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RefreshTokenResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'accessToken')
-    ..aOM<$27.Timestamp>(2, _omitFieldNames ? '' : 'accessTokenExpiresAt', subBuilder: $27.Timestamp.create)
+    ..aOM<$28.Timestamp>(2, _omitFieldNames ? '' : 'accessTokenExpiresAt', subBuilder: $28.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -120,15 +120,15 @@ class RefreshTokenResponse extends $pb.GeneratedMessage {
   void clearAccessToken() => clearField(1);
 
   @$pb.TagNumber(2)
-  $27.Timestamp get accessTokenExpiresAt => $_getN(1);
+  $28.Timestamp get accessTokenExpiresAt => $_getN(1);
   @$pb.TagNumber(2)
-  set accessTokenExpiresAt($27.Timestamp v) { setField(2, v); }
+  set accessTokenExpiresAt($28.Timestamp v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasAccessTokenExpiresAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearAccessTokenExpiresAt() => clearField(2);
   @$pb.TagNumber(2)
-  $27.Timestamp ensureAccessTokenExpiresAt() => $_ensure(1);
+  $28.Timestamp ensureAccessTokenExpiresAt() => $_ensure(1);
 }
 
 

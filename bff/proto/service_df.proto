@@ -39,6 +39,7 @@ import "rpc_upload_document.proto";
 import "rpc_delete_document.proto";
 
 import "rpc_verify_email.proto";
+import "rpc_resend_verification.proto";
 
 option go_package = "github.com/itsscb/df/pb";
 
@@ -422,6 +423,20 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             summary: "Delete Document by ID"
+            security: {
+              security_requirement: {
+                key: "BearerAuth";
+                value: {}
+              }
+            }
+        };
+    };
+    rpc ResendVerification (ResendVerificationRequest) returns (ResendVerificationResponse) {
+        option (google.api.http) = {
+            get: "/v1/verify_email/{account_id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Resend Verification Email"
             security: {
               security_requirement: {
                 key: "BearerAuth";

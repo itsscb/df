@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app/model/apis/app_exception.dart';
+import 'package:app/model/services/storage_service.dart';
 import 'package:app/pb/account.pb.dart';
 import 'package:app/pb/account_info.pb.dart';
 import 'package:app/pb/google/protobuf/timestamp.pb.dart';
@@ -14,6 +15,7 @@ import 'package:app/pb/rpc_get_person.pb.dart';
 import 'package:app/pb/rpc_list_persons.pb.dart';
 import 'package:app/pb/rpc_login.pb.dart';
 import 'package:app/pb/rpc_refresh_token.pb.dart';
+import 'package:app/pb/rpc_resend_verification.pb.dart';
 import 'package:app/pb/rpc_update_person.pb.dart';
 import 'package:app/pb/service_df.pbgrpc.dart';
 import 'package:fixnum/fixnum.dart';
@@ -25,6 +27,8 @@ class BackendService {
   }
   final String baseUrl = '10.0.0.2';
   final String port = '9090';
+
+  final StorageService _storageService = StorageService();
 
   late Session _session;
 
@@ -119,15 +123,36 @@ class BackendService {
     return (await Session.session).accountId;
   }
 
-  static Future<bool> createAccount(
+  Future<bool> createAccount(
       {required String email, required String password}) async {
     try {
-      await BackendService.client.createAccount(CreateAccountRequest(
+      final resp =
+          await BackendService.client.createAccount(CreateAccountRequest(
         email: email,
         password: password,
       ));
-
+      print(resp);
+      await _storageService.setAccountId(resp.account.id);
       return await login(email: email, password: password);
+    } on SocketException {
+      throw FetchDataException('Keine Internet Verbindung');
+    } on GrpcError catch (err) {
+      throw FetchDataException('${err.message}');
+    } catch (err) {
+      throw InternalException(err.toString());
+    }
+  }
+
+  Future<bool> resendVerification({required Int64 accountId}) async {
+    try {
+      final resp = await BackendService.client.resendVerification(
+          ResendVerificationRequest(
+            accountId: accountId,
+          ),
+          options: CallOptions(metadata: {
+            'Authorization': 'Bearer ${await _storageService.accessToken}'
+          }));
+      return resp.account.id == accountId;
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
     } on GrpcError catch (err) {
@@ -356,8 +381,7 @@ class BackendService {
   //     throw InternalException(err.toString());
   //   }
   // }
-  static Future<bool> login(
-      {required String email, required String password}) async {
+  Future<bool> login({required String email, required String password}) async {
     try {
       final LoginResponse response = await BackendService.client.login(
         LoginRequest(
@@ -365,15 +389,18 @@ class BackendService {
           password: password,
         ),
       );
-      Session s = Session(
-        accessToken: response.accessToken,
-        sessionId: response.sessionId,
-        accessTokenExpiresAt: response.accessTokenExpiresAt,
-        refreshToken: response.refreshToken,
-        refreshTokenExpiresAt: response.refreshTokenExpiresAt,
-        accountId: response.accountId,
-      );
-      await Session.newSession(s);
+      // Session s = Session(
+      //   accessToken: response.accessToken,
+      //   sessionId: response.sessionId,
+      //   accessTokenExpiresAt: response.accessTokenExpiresAt,
+      //   refreshToken: response.refreshToken,
+      //   refreshTokenExpiresAt: response.refreshTokenExpiresAt,
+      //   accountId: response.accountId,
+      // );
+
+      await _storageService.setAccessToken(response.accessToken);
+
+      // await Session.newSession(s);
       return response.accessToken != '';
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');

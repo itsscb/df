@@ -1,5 +1,6 @@
 import 'package:app/model/apis/api_response.dart';
 import 'package:app/model/services/backend_service.dart';
+import 'package:app/model/services/storage_service.dart';
 import 'package:app/pages_draft/home_page.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class BaseViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Keine Daten');
 
   final BackendService _service = BackendService();
+  final StorageService _storageService = StorageService();
 
   ApiResponse get response {
     return _apiResponse;
@@ -159,7 +161,7 @@ class BaseViewModel with ChangeNotifier {
     notifyListeners();
     final messenger = ScaffoldMessenger.of(context);
     try {
-      resp = await BackendService.login(email: email, password: password);
+      resp = await _service.login(email: email, password: password);
       _apiResponse = ApiResponse.completed(resp);
       messenger.showSnackBar(SnackBar(
         backgroundColor: CustomColors.success,
@@ -209,8 +211,7 @@ class BaseViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Logge ein');
     notifyListeners();
     try {
-      resp =
-          await BackendService.createAccount(email: email, password: password);
+      resp = await _service.createAccount(email: email, password: password);
       messenger.showSnackBar(SnackBar(
         backgroundColor: CustomColors.success,
         content: const Text(
@@ -224,6 +225,58 @@ class BaseViewModel with ChangeNotifier {
         backgroundColor: CustomColors.error,
         content: const Text(
           'Account anlegen fehlgeschlagen',
+          style: TextStyle(color: Colors.white),
+        ),
+        action: SnackBarAction(
+          label: 'Details',
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      backgroundColor: Colors.black,
+                      icon: Icon(
+                        Icons.error,
+                        color: CustomColors.error,
+                      ),
+                      content: Text(
+                        e.toString(),
+                        textAlign: TextAlign.center,
+                      ),
+                    ));
+          },
+        ),
+      ));
+      _apiResponse = ApiResponse.error(e.toString());
+    }
+    print(_apiResponse.message);
+    notifyListeners();
+    return resp;
+  }
+
+  Future<bool> resendVerification(
+    BuildContext context,
+  ) async {
+    bool resp = false;
+    final messenger = ScaffoldMessenger.of(context);
+
+    // _apiResponse = ApiResponse.loading('Logge ein');
+    notifyListeners();
+    try {
+      final accountId = await _storageService.accountId;
+      resp = await _service.resendVerification(accountId: accountId);
+      messenger.showSnackBar(SnackBar(
+        backgroundColor: CustomColors.success,
+        content: const Text(
+          'E-Mail gesendet',
+          style: TextStyle(color: Colors.white),
+        ),
+      ));
+      _apiResponse = ApiResponse.completed(resp);
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(
+        backgroundColor: CustomColors.error,
+        content: const Text(
+          'E-Mail wurde nicht gesendet',
           style: TextStyle(color: Colors.white),
         ),
         action: SnackBarAction(

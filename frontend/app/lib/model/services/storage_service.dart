@@ -1,3 +1,4 @@
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageItem {
@@ -62,6 +63,30 @@ class StorageService {
       level = int.tryParse(lev);
     }
     return level ?? 0;
+  }
+
+  Future<void> setAccessToken(String accessToken) async {
+    return await writeData(StorageItem('access_token', accessToken));
+  }
+
+  Future<String?> get accessToken async {
+    return await readData('access_token');
+  }
+
+  Future<void> setAccountId(Int64 accountId) async {
+    return await writeData(StorageItem('account_id', '$accountId'));
+  }
+
+  Future<Int64> get accountId async {
+    Int64? accountId;
+    final id = await readData('account_id');
+    if (id != null) {
+      final i = Int64.tryParseInt(id);
+      if (i != null) {
+        accountId = i;
+      }
+    }
+    return accountId ?? Int64(0);
   }
 
   Future<void> setAccountLevel(int level) async {
