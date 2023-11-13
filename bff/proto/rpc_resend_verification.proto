@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "account.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message ResendVerificationRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Resend Verification Email";
+          required: [
+            "account_id"
+            ];
+        };
+        example: "{\"account_id\": \"1\" }";
+    };
+    uint64 account_id = 1;
+}
+
+message ResendVerificationResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Resend Verification Email";
+        };
+    };
+    Account account = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

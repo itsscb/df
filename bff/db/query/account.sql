@@ -10,12 +10,14 @@ WHERE "email" = sqlc.arg(email);
 INSERT INTO accounts (
     "email",
     "passwordhash",
-    "secret_key"
+    "secret_key",
+    "verification_sent"
 )
 VALUES (    
     sqlc.arg(email),
     sqlc.arg(passwordhash),
-    sqlc.arg(secret_key)
+    sqlc.arg(secret_key),
+    now()
 )
 RETURNING *;
 
@@ -33,6 +35,14 @@ SELECT * FROM accounts
 ORDER BY "email"
 LIMIT $1
 OFFSET $2;
+
+-- name: ResendVerification :one
+UPDATE accounts
+SET
+    "secret_key" = sqlc.arg(secret_key),
+    "verification_sent" = now()
+WHERE "id" = sqlc.arg(id)
+RETURNING *;
 
 -- name: VerifyAccountEmail :exec
 UPDATE accounts

@@ -17,6 +17,7 @@ type Account struct {
 	Passwordhash      string         `json:"passwordhash"`
 	Email             string         `json:"email"`
 	SecretKey         sql.NullString `json:"secret_key"`
+	VerificationSent  sql.NullTime   `json:"verification_sent"`
 	EmailVerified     sql.NullBool   `json:"email_verified"`
 	EmailVerifiedTime sql.NullTime   `json:"email_verified_time"`
 }

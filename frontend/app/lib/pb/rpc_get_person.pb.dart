@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'person.pb.dart' as $31;
+import 'person.pb.dart' as $32;
 
 class GetPersonRequest extends $pb.GeneratedMessage {
   factory GetPersonRequest({
@@ -68,7 +68,7 @@ class GetPersonRequest extends $pb.GeneratedMessage {
 
 class GetPersonResponse extends $pb.GeneratedMessage {
   factory GetPersonResponse({
-    $31.Person? person,
+    $32.Person? person,
   }) {
     final $result = create();
     if (person != null) {
@@ -81,7 +81,7 @@ class GetPersonResponse extends $pb.GeneratedMessage {
   factory GetPersonResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GetPersonResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..aOM<$31.Person>(1, _omitFieldNames ? '' : 'person', subBuilder: $31.Person.create)
+    ..aOM<$32.Person>(1, _omitFieldNames ? '' : 'person', subBuilder: $32.Person.create)
     ..hasRequiredFields = false
   ;
 
@@ -107,15 +107,15 @@ class GetPersonResponse extends $pb.GeneratedMessage {
   static GetPersonResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $31.Person get person => $_getN(0);
+  $32.Person get person => $_getN(0);
   @$pb.TagNumber(1)
-  set person($31.Person v) { setField(1, v); }
+  set person($32.Person v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasPerson() => $_has(0);
   @$pb.TagNumber(1)
   void clearPerson() => clearField(1);
   @$pb.TagNumber(1)
-  $31.Person ensurePerson() => $_ensure(0);
+  $32.Person ensurePerson() => $_ensure(0);
 }
 
 

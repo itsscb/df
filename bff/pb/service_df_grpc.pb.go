@@ -45,6 +45,7 @@ const (
 	Df_ListReturnsLog_FullMethodName       = "/pb.df/ListReturnsLog"
 	Df_UploadDocument_FullMethodName       = "/pb.df/UploadDocument"
 	Df_DeleteDocument_FullMethodName       = "/pb.df/DeleteDocument"
+	Df_ResendVerification_FullMethodName   = "/pb.df/ResendVerification"
 	Df_VerifyEmail_FullMethodName          = "/pb.df/VerifyEmail"
 )
 
@@ -78,6 +79,7 @@ type DfClient interface {
 	ListReturnsLog(ctx context.Context, in *ListReturnsLogRequest, opts ...grpc.CallOption) (*ListReturnsLogResponse, error)
 	UploadDocument(ctx context.Context, in *UploadDocumentRequest, opts ...grpc.CallOption) (*UploadDocumentResponse, error)
 	DeleteDocument(ctx context.Context, in *DeleteDocumentRequest, opts ...grpc.CallOption) (*DeleteDocumentResponse, error)
+	ResendVerification(ctx context.Context, in *ResendVerificationRequest, opts ...grpc.CallOption) (*ResendVerificationResponse, error)
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 }
 
@@ -323,6 +325,15 @@ func (c *dfClient) DeleteDocument(ctx context.Context, in *DeleteDocumentRequest
 	return out, nil
 }
 
+func (c *dfClient) ResendVerification(ctx context.Context, in *ResendVerificationRequest, opts ...grpc.CallOption) (*ResendVerificationResponse, error) {
+	out := new(ResendVerificationResponse)
+	err := c.cc.Invoke(ctx, Df_ResendVerification_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *dfClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error) {
 	out := new(VerifyEmailResponse)
 	err := c.cc.Invoke(ctx, Df_VerifyEmail_FullMethodName, in, out, opts...)
@@ -362,6 +373,7 @@ type DfServer interface {
 	ListReturnsLog(context.Context, *ListReturnsLogRequest) (*ListReturnsLogResponse, error)
 	UploadDocument(context.Context, *UploadDocumentRequest) (*UploadDocumentResponse, error)
 	DeleteDocument(context.Context, *DeleteDocumentRequest) (*DeleteDocumentResponse, error)
+	ResendVerification(context.Context, *ResendVerificationRequest) (*ResendVerificationResponse, error)
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	mustEmbedUnimplementedDfServer()
 }
@@ -447,6 +459,9 @@ func (UnimplementedDfServer) UploadDocument(context.Context, *UploadDocumentRequ
 }
 func (UnimplementedDfServer) DeleteDocument(context.Context, *DeleteDocumentRequest) (*DeleteDocumentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDocument not implemented")
+}
+func (UnimplementedDfServer) ResendVerification(context.Context, *ResendVerificationRequest) (*ResendVerificationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendVerification not implemented")
 }
 func (UnimplementedDfServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
@@ -932,6 +947,24 @@ func _Df_DeleteDocument_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Df_ResendVerification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResendVerificationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).ResendVerification(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_ResendVerification_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).ResendVerification(ctx, req.(*ResendVerificationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Df_VerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(VerifyEmailRequest)
 	if err := dec(in); err != nil {
@@ -1060,6 +1093,10 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteDocument",
 			Handler:    _Df_DeleteDocument_Handler,
+		},
+		{
+			MethodName: "ResendVerification",
+			Handler:    _Df_ResendVerification_Handler,
 		},
 		{
 			MethodName: "VerifyEmail",

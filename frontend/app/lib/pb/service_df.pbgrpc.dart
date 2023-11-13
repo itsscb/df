@@ -35,13 +35,14 @@ import 'rpc_list_returns_log_by_person_id.pb.dart' as $23;
 import 'rpc_list_sessions.pb.dart' as $2;
 import 'rpc_login.pb.dart' as $0;
 import 'rpc_refresh_token.pb.dart' as $1;
+import 'rpc_resend_verification.pb.dart' as $26;
 import 'rpc_update_account.pb.dart' as $7;
 import 'rpc_update_account_info.pb.dart' as $11;
 import 'rpc_update_account_privacy.pb.dart' as $12;
 import 'rpc_update_payment.pb.dart' as $22;
 import 'rpc_update_person.pb.dart' as $14;
 import 'rpc_upload_document.pb.dart' as $24;
-import 'rpc_verify_email.pb.dart' as $26;
+import 'rpc_verify_email.pb.dart' as $27;
 
 export 'service_df.pb.dart';
 
@@ -151,10 +152,14 @@ class dfClient extends $grpc.Client {
       '/pb.df/DeleteDocument',
       ($25.DeleteDocumentRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $25.DeleteDocumentResponse.fromBuffer(value));
-  static final _$verifyEmail = $grpc.ClientMethod<$26.VerifyEmailRequest, $26.VerifyEmailResponse>(
+  static final _$resendVerification = $grpc.ClientMethod<$26.ResendVerificationRequest, $26.ResendVerificationResponse>(
+      '/pb.df/ResendVerification',
+      ($26.ResendVerificationRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $26.ResendVerificationResponse.fromBuffer(value));
+  static final _$verifyEmail = $grpc.ClientMethod<$27.VerifyEmailRequest, $27.VerifyEmailResponse>(
       '/pb.df/VerifyEmail',
-      ($26.VerifyEmailRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $26.VerifyEmailResponse.fromBuffer(value));
+      ($27.VerifyEmailRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $27.VerifyEmailResponse.fromBuffer(value));
 
   dfClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -266,7 +271,11 @@ class dfClient extends $grpc.Client {
     return $createUnaryCall(_$deleteDocument, request, options: options);
   }
 
-  $grpc.ResponseFuture<$26.VerifyEmailResponse> verifyEmail($26.VerifyEmailRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$26.ResendVerificationResponse> resendVerification($26.ResendVerificationRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$resendVerification, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$27.VerifyEmailResponse> verifyEmail($27.VerifyEmailRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$verifyEmail, request, options: options);
   }
 }
@@ -458,13 +467,20 @@ abstract class dfServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $25.DeleteDocumentRequest.fromBuffer(value),
         ($25.DeleteDocumentResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$26.VerifyEmailRequest, $26.VerifyEmailResponse>(
+    $addMethod($grpc.ServiceMethod<$26.ResendVerificationRequest, $26.ResendVerificationResponse>(
+        'ResendVerification',
+        resendVerification_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $26.ResendVerificationRequest.fromBuffer(value),
+        ($26.ResendVerificationResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$27.VerifyEmailRequest, $27.VerifyEmailResponse>(
         'VerifyEmail',
         verifyEmail_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $26.VerifyEmailRequest.fromBuffer(value),
-        ($26.VerifyEmailResponse value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $27.VerifyEmailRequest.fromBuffer(value),
+        ($27.VerifyEmailResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.LoginResponse> login_Pre($grpc.ServiceCall call, $async.Future<$0.LoginRequest> request) async {
@@ -571,7 +587,11 @@ abstract class dfServiceBase extends $grpc.Service {
     return deleteDocument(call, await request);
   }
 
-  $async.Future<$26.VerifyEmailResponse> verifyEmail_Pre($grpc.ServiceCall call, $async.Future<$26.VerifyEmailRequest> request) async {
+  $async.Future<$26.ResendVerificationResponse> resendVerification_Pre($grpc.ServiceCall call, $async.Future<$26.ResendVerificationRequest> request) async {
+    return resendVerification(call, await request);
+  }
+
+  $async.Future<$27.VerifyEmailResponse> verifyEmail_Pre($grpc.ServiceCall call, $async.Future<$27.VerifyEmailRequest> request) async {
     return verifyEmail(call, await request);
   }
 
@@ -601,5 +621,6 @@ abstract class dfServiceBase extends $grpc.Service {
   $async.Future<$23.ListReturnsLogResponse> listReturnsLog($grpc.ServiceCall call, $23.ListReturnsLogRequest request);
   $async.Future<$24.UploadDocumentResponse> uploadDocument($grpc.ServiceCall call, $24.UploadDocumentRequest request);
   $async.Future<$25.DeleteDocumentResponse> deleteDocument($grpc.ServiceCall call, $25.DeleteDocumentRequest request);
-  $async.Future<$26.VerifyEmailResponse> verifyEmail($grpc.ServiceCall call, $26.VerifyEmailRequest request);
+  $async.Future<$26.ResendVerificationResponse> resendVerification($grpc.ServiceCall call, $26.ResendVerificationRequest request);
+  $async.Future<$27.VerifyEmailResponse> verifyEmail($grpc.ServiceCall call, $27.VerifyEmailRequest request);
 }

@@ -1012,6 +1012,43 @@
         ]
       }
     },
+    "/v1/verify_email/{accountId}": {
+      "get": {
+        "summary": "Resend Verification Email",
+        "operationId": "df_ResendVerification",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbResendVerificationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/verify_email/{accountId}/{secretKey}": {
       "get": {
         "summary": "Verify Email with account_id and secret_key",
@@ -1908,6 +1945,15 @@
         }
       },
       "title": "Refresh Token Response"
+    },
+    "pbResendVerificationResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/pbAccount"
+        }
+      },
+      "title": "Resend Verification Email"
     },
     "pbReturnsLog": {
       "type": "object",

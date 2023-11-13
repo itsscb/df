@@ -14,14 +14,16 @@ const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts (
     "email",
     "passwordhash",
-    "secret_key"
+    "secret_key",
+    "verification_sent"
 )
 VALUES (    
     $1,
     $2,
-    $3
+    $3,
+    now()
 )
-RETURNING id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time
+RETURNING id, permission_level, passwordhash, email, secret_key, verification_sent, email_verified, email_verified_time
 `
 
 type CreateAccountParams struct {
@@ -39,6 +41,7 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		&i.Passwordhash,
 		&i.Email,
 		&i.SecretKey,
+		&i.VerificationSent,
 		&i.EmailVerified,
 		&i.EmailVerifiedTime,
 	)
@@ -56,7 +59,7 @@ func (q *Queries) DeleteAccount(ctx context.Context, id uint64) error {
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time FROM accounts
+SELECT id, permission_level, passwordhash, email, secret_key, verification_sent, email_verified, email_verified_time FROM accounts
 WHERE "id" = $1
 `
 
@@ -69,6 +72,7 @@ func (q *Queries) GetAccount(ctx context.Context, id uint64) (Account, error) {
 		&i.Passwordhash,
 		&i.Email,
 		&i.SecretKey,
+		&i.VerificationSent,
 		&i.EmailVerified,
 		&i.EmailVerifiedTime,
 	)
@@ -76,7 +80,7 @@ func (q *Queries) GetAccount(ctx context.Context, id uint64) (Account, error) {
 }
 
 const getAccountByEmail = `-- name: GetAccountByEmail :one
-SELECT id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time FROM accounts
+SELECT id, permission_level, passwordhash, email, secret_key, verification_sent, email_verified, email_verified_time FROM accounts
 WHERE "email" = $1
 `
 
@@ -89,6 +93,7 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (Account,
 		&i.Passwordhash,
 		&i.Email,
 		&i.SecretKey,
+		&i.VerificationSent,
 		&i.EmailVerified,
 		&i.EmailVerifiedTime,
 	)
@@ -96,7 +101,7 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (Account,
 }
 
 const listAccounts = `-- name: ListAccounts :many
-SELECT id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time FROM accounts
+SELECT id, permission_level, passwordhash, email, secret_key, verification_sent, email_verified, email_verified_time FROM accounts
 ORDER BY "email"
 LIMIT $1
 OFFSET $2
@@ -122,6 +127,7 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 			&i.Passwordhash,
 			&i.Email,
 			&i.SecretKey,
+			&i.VerificationSent,
 			&i.EmailVerified,
 			&i.EmailVerifiedTime,
 		); err != nil {
@@ -138,6 +144,36 @@ func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]A
 	return items, nil
 }
 
+const resendVerification = `-- name: ResendVerification :one
+UPDATE accounts
+SET
+    "secret_key" = $1,
+    "verification_sent" = now()
+WHERE "id" = $2
+RETURNING id, permission_level, passwordhash, email, secret_key, verification_sent, email_verified, email_verified_time
+`
+
+type ResendVerificationParams struct {
+	SecretKey sql.NullString `json:"secret_key"`
+	ID        uint64         `json:"id"`
+}
+
+func (q *Queries) ResendVerification(ctx context.Context, arg ResendVerificationParams) (Account, error) {
+	row := q.db.QueryRowContext(ctx, resendVerification, arg.SecretKey, arg.ID)
+	var i Account
+	err := row.Scan(
+		&i.ID,
+		&i.PermissionLevel,
+		&i.Passwordhash,
+		&i.Email,
+		&i.SecretKey,
+		&i.VerificationSent,
+		&i.EmailVerified,
+		&i.EmailVerifiedTime,
+	)
+	return i, err
+}
+
 const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts 
 SET
@@ -145,7 +181,7 @@ SET
     "passwordhash" = COALESCE($2, "passwordhash"),
     "secret_key" = COALESCE($3, "secret_key")
 WHERE "id" = $4
-RETURNING id, permission_level, passwordhash, email, secret_key, email_verified, email_verified_time
+RETURNING id, permission_level, passwordhash, email, secret_key, verification_sent, email_verified, email_verified_time
 `
 
 type UpdateAccountParams struct {
@@ -169,6 +205,7 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		&i.Passwordhash,
 		&i.Email,
 		&i.SecretKey,
+		&i.VerificationSent,
 		&i.EmailVerified,
 		&i.EmailVerifiedTime,
 	)

@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'person.pb.dart' as $31;
+import 'person.pb.dart' as $32;
 
 class ListPersonsRequest extends $pb.GeneratedMessage {
   factory ListPersonsRequest({
@@ -68,7 +68,7 @@ class ListPersonsRequest extends $pb.GeneratedMessage {
 
 class ListPersonsResponse extends $pb.GeneratedMessage {
   factory ListPersonsResponse({
-    $core.Iterable<$31.Person>? persons,
+    $core.Iterable<$32.Person>? persons,
   }) {
     final $result = create();
     if (persons != null) {
@@ -81,7 +81,7 @@ class ListPersonsResponse extends $pb.GeneratedMessage {
   factory ListPersonsResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ListPersonsResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..pc<$31.Person>(1, _omitFieldNames ? '' : 'persons', $pb.PbFieldType.PM, subBuilder: $31.Person.create)
+    ..pc<$32.Person>(1, _omitFieldNames ? '' : 'persons', $pb.PbFieldType.PM, subBuilder: $32.Person.create)
     ..hasRequiredFields = false
   ;
 
@@ -107,7 +107,7 @@ class ListPersonsResponse extends $pb.GeneratedMessage {
   static ListPersonsResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$31.Person> get persons => $_getList(0);
+  $core.List<$32.Person> get persons => $_getList(0);
 }
 
 

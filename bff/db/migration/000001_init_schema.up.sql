@@ -18,6 +18,7 @@ CREATE TABLE "accounts" (
   "passwordhash" varchar NOT NULL,
   "email" varchar UNIQUE NOT NULL,
   "secret_key" varchar,
+  "verification_sent" timestamptz,
   "email_verified" boolean DEFAULT false,
   "email_verified_time" timestamptz
 );
