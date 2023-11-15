@@ -46,7 +46,7 @@ func main() {
 
 	store := db.NewStore(conn)
 
-	if config.Environment == "development" {
+	if config.Swagger {
 		subDir, err := fs.Sub(swaggerFiles, "doc/swagger")
 		if err != nil {
 			log.Fatalf("could not import swagger files")
