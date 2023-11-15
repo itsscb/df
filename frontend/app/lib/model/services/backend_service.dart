@@ -33,7 +33,7 @@ class BackendService {
   late Session _session;
 
   final dfClient _client = dfClient(
-    ClientChannel('10.0.2.2',
+    ClientChannel('df.itsscb.de',
         port: 9090,
         options: const ChannelOptions(
           credentials: ChannelCredentials.insecure(),
@@ -44,7 +44,7 @@ class BackendService {
   );
 
   static get client => dfClient(
-        ClientChannel('10.0.2.2',
+        ClientChannel('df.itsscb.de',
             port: 9090,
             options: const ChannelOptions(
               credentials: ChannelCredentials.insecure(),
