@@ -16,6 +16,7 @@ type Config struct {
 	TokenPrivateKeyHex   string        `mapstructure:"TOKEN_PRIVATEKEY_HEX"`
 	MigrationURL         string        `mapstructure:"MIGRATION_URL"`
 	Swagger              bool          `mapstructure:"SWAGGER"`
+	Url                  string        `mapstructure:"URL"`
 	SMTPAddress          string        `mapstructure:"SMTP_ADDRESS"`
 	SMTPPassword         string        `mapstructure:"SMTP_PASSWORD"`
 	SMTPMail             string        `mapstructure:"SMTP_MAIL"`

@@ -69,7 +69,7 @@ func (server *Server) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRe
 			}
 		} else {
 			arg.AfterUpdate = func(a db.Account) error {
-				return server.mailSender.SendEmail("Verify your E-Mail Address", fmt.Sprintf("Hello %s,</br></br>please verify your E-Mail Addres by clicking on the following link:</br><a href=\"http://localhost:8080/v1/verify_email/%d/%s\">Verification Link</a></br></br></br>Your Team of DF", req.GetEmail(), a.ID, a.SecretKey.String), []string{req.GetEmail()}, nil, nil, nil)
+				return server.mailSender.SendEmail("Verify your E-Mail Address", fmt.Sprintf("Hello %s,</br></br>please verify your E-Mail Addres by clicking on the following link:</br><a href=\"%s/v1/verify_email/%d/%s\">Verification Link</a></br></br></br>Your Team of DF", req.GetEmail(), server.config.Url, a.ID, a.SecretKey.String), []string{req.GetEmail()}, nil, nil, nil)
 			}
 		}
 	}
