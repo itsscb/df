@@ -1,5 +1,7 @@
 import 'package:app/model/services/storage_service.dart';
 import 'package:app/pages/registration_page.dart';
+import 'package:app/pages/security_page.dart';
+import 'package:app/pages/verify_email_page.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -25,18 +27,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _init() async {
-    final accountLevel = await _storageService.accountLevel;
-    if (accountLevel > 2 && mounted) {
-      await Navigator.push(context,
-          MaterialPageRoute(builder: (builder) => const RegistrationPage()));
-      setState(() {
-        _loading = false;
-      });
-    } else {
-      setState(() {
-        _loading = false;
-      });
+    if (await _storageService.accountLevel < 2) {
+      await _storageService.setAccountLevel(2);
     }
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -67,11 +63,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
               appBar: AppBar(
                 leading: BackButton(
                   color: CustomColors.primary,
-                  onPressed: () async {
-                    await _storageService.setAccountLevel(1);
-                    if (mounted) {
-                      Navigator.pop(context);
-                    }
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => const SecurityPage()),
+                        (route) => false);
                   },
                 ),
                 iconTheme: IconThemeData(
@@ -125,15 +122,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         ),
                         onPressed: () async {
                           await _setNotificationSetting(true);
-                          await _storageService.setAccountLevel(3);
-                          if (mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (builder) => const RegistrationPage(),
-                                // builder: (builder) => SecurityPage(),
-                              ),
-                            );
+                          if (await _storageService.accessToken != null) {
+                            if (mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (builder) => const VerifyEmailPage(),
+                                ),
+                              );
+                            }
+                          } else {
+                            if (mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (builder) =>
+                                      const RegistrationPage(),
+                                ),
+                              );
+                            }
                           }
                         },
                         child: const SizedBox(
@@ -163,15 +170,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     TextButton(
                       onPressed: () async {
                         await _setNotificationSetting(false);
-                        await _storageService.setAccountLevel(3);
-                        if (mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (builder) => const RegistrationPage(),
-                              // builder: (builder) => SecurityPage(),
-                            ),
-                          );
+                        if (await _storageService.accessToken != null) {
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (builder) => const VerifyEmailPage(),
+                                // builder: (builder) => SecurityPage(),
+                              ),
+                            );
+                          }
+                        } else {
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (builder) => const RegistrationPage(),
+                                // builder: (builder) => SecurityPage(),
+                              ),
+                            );
+                          }
                         }
                       },
                       child: Text(

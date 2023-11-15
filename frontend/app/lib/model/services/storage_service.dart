@@ -73,6 +73,14 @@ class StorageService {
     return await readData('access_token');
   }
 
+  Future<void> setVerified(bool verified) async {
+    return await writeData(StorageItem('verified', verified ? '1' : '0'));
+  }
+
+  Future<bool> get verified async {
+    return await readData('verified') == '1';
+  }
+
   Future<void> setAccountId(Int64 accountId) async {
     return await writeData(StorageItem('account_id', '$accountId'));
   }

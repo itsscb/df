@@ -126,13 +126,13 @@ class BackendService {
   Future<bool> createAccount(
       {required String email, required String password}) async {
     try {
-      final resp =
-          await BackendService.client.createAccount(CreateAccountRequest(
+      // final resp =
+      await BackendService.client.createAccount(CreateAccountRequest(
         email: email,
         password: password,
       ));
-      print(resp);
-      await _storageService.setAccountId(resp.account.id);
+      // print(resp);
+      // await _storageService.setAccountId(resp.account.id);
       return await login(email: email, password: password);
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
@@ -153,6 +153,29 @@ class BackendService {
             'Authorization': 'Bearer ${await _storageService.accessToken}'
           }));
       return resp.account.id == accountId;
+    } on SocketException {
+      throw FetchDataException('Keine Internet Verbindung');
+    } on GrpcError catch (err) {
+      throw FetchDataException('${err.message}');
+    } catch (err) {
+      throw InternalException(err.toString());
+    }
+  }
+
+  Future<Account?> get account async {
+    try {
+      final id = await _storageService.accountId;
+      if (id == 0) {
+        return null;
+      }
+      final resp = await _client.getAccount(GetAccountRequest(id: id),
+          options: CallOptions(metadata: {
+            'Authorization': 'Bearer ${await _storageService.accessToken}'
+          }));
+      if (resp.account.id < 1) {
+        return null;
+      }
+      return resp.account;
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
     } on GrpcError catch (err) {
@@ -399,6 +422,7 @@ class BackendService {
       // );
 
       await _storageService.setAccessToken(response.accessToken);
+      await _storageService.setAccountId(response.accountId);
 
       // await Session.newSession(s);
       return response.accessToken != '';

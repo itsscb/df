@@ -1,7 +1,7 @@
 import 'package:app/model/apis/api_response.dart';
 import 'package:app/model/services/backend_service.dart';
 import 'package:app/model/services/storage_service.dart';
-import 'package:app/pages_draft/home_page.dart';
+import 'package:app/pb/account.pb.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -29,51 +29,59 @@ class BaseViewModel with ChangeNotifier {
   //   // }
   // }
 
-  Future<bool> isLoggedIn(BuildContext context) async {
-    final messenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
-    bool loggedIn = false;
-    try {
-      loggedIn = await BackendService.isLoggedIn;
-    } catch (err) {
-      if (err.toString().contains('session is blocked')) {
-        _apiResponse = ApiResponse.error('Sitzung ist abgelaufen');
-        navigator.pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (builder) => HomePage(
-                      loggedOut: true,
-                    )),
-            (route) => false);
-        messenger.showSnackBar(SnackBar(
-          backgroundColor: CustomColors.error,
-          content: const Text(
-            'Sitzung ist abgelaufen',
-            style: TextStyle(color: Colors.white),
-          ),
-          // action: SnackBarAction(
-          //   label: 'Details',
-          //   onPressed: () {
-          //     if (context.mounted) {
-          //       showDialog(
-          //           context: context,
-          //           builder: (context) => AlertDialog(
-          //                 backgroundColor: Colors.black,
-          //                 icon: Icon(
-          //                   Icons.error,
-          //                   color: CustomColors.error,
-          //                 ),
-          //                 content: Text(
-          //                   err.toString(),
-          //                   textAlign: TextAlign.center,
-          //                 ),
-          //               ));
-          //     }
-          //   },
-          // ),
-        ));
-      }
-    }
-    return loggedIn;
+  // Future<bool> isLoggedIn(BuildContext context) async {
+  //   final messenger = ScaffoldMessenger.of(context);
+  //   final navigator = Navigator.of(context);
+  //   bool loggedIn = false;
+  //   try {
+  //     loggedIn = await BackendService.isLoggedIn;
+  //   } catch (err) {
+  //     if (err.toString().contains('session is blocked')) {
+  //       _apiResponse = ApiResponse.error('Sitzung ist abgelaufen');
+  //       navigator.pushAndRemoveUntil(
+  //           MaterialPageRoute(
+  //               builder: (builder) => HomePage(
+  //                     loggedOut: true,
+  //                   )),
+  //           (route) => false);
+  //       messenger.showSnackBar(SnackBar(
+  //         backgroundColor: CustomColors.error,
+  //         content: const Text(
+  //           'Sitzung ist abgelaufen',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //         // action: SnackBarAction(
+  //         //   label: 'Details',
+  //         //   onPressed: () {
+  //         //     if (context.mounted) {
+  //         //       showDialog(
+  //         //           context: context,
+  //         //           builder: (context) => AlertDialog(
+  //         //                 backgroundColor: Colors.black,
+  //         //                 icon: Icon(
+  //         //                   Icons.error,
+  //         //                   color: CustomColors.error,
+  //         //                 ),
+  //         //                 content: Text(
+  //         //                   err.toString(),
+  //         //                   textAlign: TextAlign.center,
+  //         //                 ),
+  //         //               ));
+  //         //     }
+  //         //   },
+  //         // ),
+  //       ));
+  //     }
+  //   }
+  //   return loggedIn;
+  // }
+
+  Future<Account?> get account async {
+    notifyListeners();
+    final acc = await _service.account;
+    ApiResponse.completed(acc);
+    notifyListeners();
+    return acc;
   }
 
   Future<void> getAccount(BuildContext context) async {

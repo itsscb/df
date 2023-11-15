@@ -1,6 +1,7 @@
 import 'package:app/model/services/auth_service.dart';
 import 'package:app/model/services/storage_service.dart';
 import 'package:app/pages/notifications_page.dart';
+import 'package:app/pages/start_page.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -22,18 +23,12 @@ class _SecurityPageState extends State<SecurityPage> {
   }
 
   void _init() async {
-    final accountLevel = await _storageService.accountLevel;
-    if (accountLevel > 1 && mounted) {
-      await Navigator.push(context,
-          MaterialPageRoute(builder: (builder) => const NotificationsPage()));
-      setState(() {
-        _loading = false;
-      });
-    } else {
-      setState(() {
-        _loading = false;
-      });
+    if (await _storageService.accountLevel < 1) {
+      await _storageService.setAccountLevel(1);
     }
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -63,11 +58,12 @@ class _SecurityPageState extends State<SecurityPage> {
               appBar: AppBar(
                 leading: BackButton(
                   color: CustomColors.primary,
-                  onPressed: () async {
-                    await _storageService.setAccountLevel(0);
-                    if (mounted) {
-                      Navigator.pop(context);
-                    }
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => const StartPage()),
+                        (route) => false);
                   },
                 ),
                 iconTheme: IconThemeData(color: CustomColors.primary),
@@ -117,14 +113,14 @@ class _SecurityPageState extends State<SecurityPage> {
                             bool isAuthenticated =
                                 await AuthService.authenticateWithBiometrics();
                             if (isAuthenticated) {
-                              await _storageService.setAccountLevel(2);
-                              // ignore: use_build_context_synchronously
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const NotificationsPage()),
-                              );
+                              if (mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const NotificationsPage()),
+                                );
+                              }
                             }
                           },
                           child: const SizedBox(

@@ -1,6 +1,6 @@
 import 'package:app/model/services/storage_service.dart';
+import 'package:app/pages/notifications_page.dart';
 import 'package:app/pages/password_page.dart';
-import 'package:app/pages/verify_email_page.dart';
 import 'package:app/util/colors.dart';
 import 'package:app/util/validation.dart';
 import 'package:flutter/material.dart';
@@ -26,18 +26,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   void _init() async {
-    final accountLevel = await _storageService.accountLevel;
-    if (accountLevel > 3 && mounted) {
-      await Navigator.push(context,
-          MaterialPageRoute(builder: (builder) => const VerifyEmailPage()));
-      setState(() {
-        _loading = false;
-      });
-    } else {
-      setState(() {
-        _loading = false;
-      });
+    if (await _storageService.accountLevel < 3) {
+      await _storageService.setAccountLevel(3);
     }
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -73,11 +67,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
               appBar: AppBar(
                 leading: BackButton(
                   color: CustomColors.primary,
-                  onPressed: () async {
-                    await _storageService.setAccountLevel(2);
-                    if (mounted) {
-                      Navigator.pop(context);
-                    }
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => const NotificationsPage()),
+                        (route) => false);
                   },
                 ),
                 iconTheme: IconThemeData(
