@@ -1,5 +1,6 @@
 import 'package:app/model/services/storage_service.dart';
 import 'package:app/model/view_model/base_vm.dart';
+import 'package:app/pages/account_info_page.dart';
 import 'package:app/pages/notifications_page.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +114,31 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: CustomColors.primary,
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            final acc = await _vm.account;
+                            if (acc != null && acc.emailVerified) {
+                              if (mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) =>
+                                          const AccountInfoPage()),
+                                );
+                              }
+                            } else {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).clearSnackBars();
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  backgroundColor: CustomColors.error,
+                                  content: const Text(
+                                    'E-Mail Adresse ist noch nicht verifiziert.',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ));
+                              }
+                            }
+                          },
                           child: const SizedBox(
                             height: 50,
                             width: 100,

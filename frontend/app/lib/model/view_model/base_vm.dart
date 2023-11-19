@@ -149,6 +149,67 @@ class BaseViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> createAccountInfo(
+    BuildContext context, {
+    required String firstname,
+    required String lastname,
+    required String streetAddress,
+    required String zip,
+    required String city,
+    required String country,
+    required String phoneNumber,
+    required DateTime birthday,
+  }) async {
+    notifyListeners();
+    final messenger = ScaffoldMessenger.of(context);
+    bool resp = false;
+    try {
+      resp = await _service.createAccountInfo(
+        firstname: firstname,
+        lastname: lastname,
+        streetAddress: streetAddress,
+        zip: zip,
+        city: city,
+        country: country,
+        phoneNumber: phoneNumber,
+        birthday: birthday,
+      );
+      if (resp) {
+        _apiResponse = ApiResponse.completed('Registrierung abgeschlossen');
+      }
+      return resp;
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(
+        backgroundColor: CustomColors.error,
+        content: const Text(
+          'Daten konnten nicht übertragen werden',
+          style: TextStyle(color: Colors.white),
+        ),
+        action: SnackBarAction(
+          label: 'Details',
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      backgroundColor: Colors.black,
+                      icon: Icon(
+                        Icons.error,
+                        color: CustomColors.error,
+                      ),
+                      content: Text(
+                        e.toString(),
+                        textAlign: TextAlign.center,
+                      ),
+                    ));
+          },
+        ),
+      ));
+      _apiResponse = ApiResponse.error(e.toString());
+    }
+    notifyListeners();
+    return resp;
+  }
+
   Future<void> logout() async {
     _apiResponse = ApiResponse.loading('Logge aus');
     notifyListeners();

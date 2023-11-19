@@ -1,4 +1,5 @@
 import 'package:app/model/view_model/base_vm.dart';
+import 'package:app/pages/account_info_page.dart';
 import 'package:app/pages/verify_email_page.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
@@ -201,7 +202,17 @@ class _PasswordPageState extends State<PasswordPage> {
                                         password: _passwordController1.text,
                                       );
                                     }
-                                    if (loggedin && mounted) {
+                                    if (loggedin) {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      final acc = await _vm.account;
+                                      if (acc!.emailVerified) {
+                                        navigator.push(
+                                          MaterialPageRoute(
+                                              builder: (builder) =>
+                                                  const AccountInfoPage()),
+                                        );
+                                      }
                                       navigator.push(
                                         MaterialPageRoute(
                                           builder: (builder) =>
@@ -220,7 +231,7 @@ class _PasswordPageState extends State<PasswordPage> {
                               children: [
                                 Text(
                                   widget.register
-                                      ? 'Registrierung abschließen'
+                                      ? 'Konto erstellen'
                                       : 'Einloggen',
                                   style: const TextStyle(
                                     fontSize: 20,

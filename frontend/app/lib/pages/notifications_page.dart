@@ -1,4 +1,6 @@
 import 'package:app/model/services/storage_service.dart';
+import 'package:app/pages/account_info_page.dart';
+import 'package:app/pages/late_person_page.dart';
 import 'package:app/pages/registration_page.dart';
 import 'package:app/pages/security_page.dart';
 import 'package:app/pages/verify_email_page.dart';
@@ -123,13 +125,39 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         onPressed: () async {
                           await _setNotificationSetting(true);
                           if (await _storageService.accessToken != null) {
-                            if (mounted) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (builder) => const VerifyEmailPage(),
-                                ),
-                              );
+                            if (await _storageService.verified) {
+                              switch (await _storageService.accountLevel) {
+                                case 4 || 5:
+                                  if (mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (builder) =>
+                                            const AccountInfoPage(),
+                                      ),
+                                    );
+                                  }
+                                case 6:
+                                  if (mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (builder) =>
+                                            const LatePersonPage(),
+                                      ),
+                                    );
+                                  }
+                              }
+                            } else {
+                              if (mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (builder) =>
+                                        const VerifyEmailPage(),
+                                  ),
+                                );
+                              }
                             }
                           } else {
                             if (mounted) {
@@ -171,14 +199,38 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       onPressed: () async {
                         await _setNotificationSetting(false);
                         if (await _storageService.accessToken != null) {
-                          if (mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (builder) => const VerifyEmailPage(),
-                                // builder: (builder) => SecurityPage(),
-                              ),
-                            );
+                          if (await _storageService.verified) {
+                            switch (await _storageService.accountLevel) {
+                              case 4 || 5:
+                                if (mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (builder) =>
+                                          const AccountInfoPage(),
+                                    ),
+                                  );
+                                }
+                              case 6:
+                                if (mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (builder) =>
+                                          const LatePersonPage(),
+                                    ),
+                                  );
+                                }
+                            }
+                          } else {
+                            if (mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (builder) => const VerifyEmailPage(),
+                                ),
+                              );
+                            }
                           }
                         } else {
                           if (mounted) {
@@ -186,7 +238,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (builder) => const RegistrationPage(),
-                                // builder: (builder) => SecurityPage(),
                               ),
                             );
                           }

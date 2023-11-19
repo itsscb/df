@@ -1,6 +1,8 @@
 import 'package:app/model/services/auth_service.dart';
 import 'package:app/model/services/storage_service.dart';
 import 'package:app/model/view_model/base_vm.dart';
+import 'package:app/pages/account_info_page.dart';
+import 'package:app/pages/late_person_page.dart';
 import 'package:app/pages/notifications_page.dart';
 import 'package:app/pages/registration_page.dart';
 import 'package:app/pages/security_page.dart';
@@ -110,30 +112,30 @@ class _DigitalerFriedenState extends State<DigitalerFrieden> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 150,
-              ),
-              Hero(
-                tag: 'logo',
-                child: Image.asset(
-                  'assets/JPEG.jpg',
-                  height: 180,
-                ),
-              ),
-              CircularProgressIndicator(
-                color: CustomColors.primary,
-              ),
-            ],
-          ),
-        ),
-      );
+      return const StartPage();
+      // return SafeArea(
+      //   child: Center(
+      //     child: Column(
+      //       mainAxisAlignment: MainAxisAlignment.center,
+      //       children: [
+      //         Hero(
+      //           tag: 'logo',
+      //           child: Image.asset(
+      //             'assets/JPEG.jpg',
+      //             height: 180,
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // );
     }
     if (verified) {
       switch (accountLevel) {
+        case 6:
+          return const LatePersonPage();
+        case 4 || 5:
+          return const AccountInfoPage();
         default:
           return const StartPage();
       }
