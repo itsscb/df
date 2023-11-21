@@ -88,16 +88,25 @@ class _DigitalerFriedenState extends State<DigitalerFrieden> {
     accountLevel = await _storageService.accountLevel;
     accessToken = await _storageService.accessToken;
     verified = await _storageService.verified;
-    if (accountLevel! > 1) {
-      authenticated = await AuthService.authenticateWithBiometrics();
-    }
-    if (authenticated && accountLevel != null && accountLevel! > 3) {
+
+    if (accessToken != null) {
       account = await _vm.account;
     }
 
-    if (account != null && !verified && account!.emailVerified) {
-      await _storageService.setVerified(account!.emailVerified);
-      verified = account!.emailVerified;
+    if (account != null) {
+      if (verified != account!.emailVerified) {
+        verified = account!.emailVerified;
+        _storageService.setVerified(verified);
+      }
+
+      if (accountLevel == null || account!.accountLevel > accountLevel!) {
+        accountLevel = account!.accountLevel;
+        _storageService.setAccountLevel(account!.accountLevel);
+      }
+    }
+
+    if (accountLevel! > 1) {
+      authenticated = await AuthService.authenticateWithBiometrics();
     }
 
     print(
