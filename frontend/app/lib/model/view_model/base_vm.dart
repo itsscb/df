@@ -1,7 +1,7 @@
 import 'package:app/model/apis/api_response.dart';
 import 'package:app/model/services/backend_service.dart';
 import 'package:app/model/services/storage_service.dart';
-import 'package:app/pages_draft/home_page.dart';
+import 'package:app/pb/account.pb.dart';
 import 'package:app/util/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -29,51 +29,59 @@ class BaseViewModel with ChangeNotifier {
   //   // }
   // }
 
-  Future<bool> isLoggedIn(BuildContext context) async {
-    final messenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
-    bool loggedIn = false;
-    try {
-      loggedIn = await BackendService.isLoggedIn;
-    } catch (err) {
-      if (err.toString().contains('session is blocked')) {
-        _apiResponse = ApiResponse.error('Sitzung ist abgelaufen');
-        navigator.pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (builder) => HomePage(
-                      loggedOut: true,
-                    )),
-            (route) => false);
-        messenger.showSnackBar(SnackBar(
-          backgroundColor: CustomColors.error,
-          content: const Text(
-            'Sitzung ist abgelaufen',
-            style: TextStyle(color: Colors.white),
-          ),
-          // action: SnackBarAction(
-          //   label: 'Details',
-          //   onPressed: () {
-          //     if (context.mounted) {
-          //       showDialog(
-          //           context: context,
-          //           builder: (context) => AlertDialog(
-          //                 backgroundColor: Colors.black,
-          //                 icon: Icon(
-          //                   Icons.error,
-          //                   color: CustomColors.error,
-          //                 ),
-          //                 content: Text(
-          //                   err.toString(),
-          //                   textAlign: TextAlign.center,
-          //                 ),
-          //               ));
-          //     }
-          //   },
-          // ),
-        ));
-      }
-    }
-    return loggedIn;
+  // Future<bool> isLoggedIn(BuildContext context) async {
+  //   final messenger = ScaffoldMessenger.of(context);
+  //   final navigator = Navigator.of(context);
+  //   bool loggedIn = false;
+  //   try {
+  //     loggedIn = await BackendService.isLoggedIn;
+  //   } catch (err) {
+  //     if (err.toString().contains('session is blocked')) {
+  //       _apiResponse = ApiResponse.error('Sitzung ist abgelaufen');
+  //       navigator.pushAndRemoveUntil(
+  //           MaterialPageRoute(
+  //               builder: (builder) => HomePage(
+  //                     loggedOut: true,
+  //                   )),
+  //           (route) => false);
+  //       messenger.showSnackBar(SnackBar(
+  //         backgroundColor: CustomColors.error,
+  //         content: const Text(
+  //           'Sitzung ist abgelaufen',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //         // action: SnackBarAction(
+  //         //   label: 'Details',
+  //         //   onPressed: () {
+  //         //     if (context.mounted) {
+  //         //       showDialog(
+  //         //           context: context,
+  //         //           builder: (context) => AlertDialog(
+  //         //                 backgroundColor: Colors.black,
+  //         //                 icon: Icon(
+  //         //                   Icons.error,
+  //         //                   color: CustomColors.error,
+  //         //                 ),
+  //         //                 content: Text(
+  //         //                   err.toString(),
+  //         //                   textAlign: TextAlign.center,
+  //         //                 ),
+  //         //               ));
+  //         //     }
+  //         //   },
+  //         // ),
+  //       ));
+  //     }
+  //   }
+  //   return loggedIn;
+  // }
+
+  Future<Account?> get account async {
+    notifyListeners();
+    final acc = await _service.account;
+    ApiResponse.completed(acc);
+    notifyListeners();
+    return acc;
   }
 
   Future<void> getAccount(BuildContext context) async {
@@ -139,6 +147,67 @@ class BaseViewModel with ChangeNotifier {
       _apiResponse = ApiResponse.error(e.toString());
     }
     notifyListeners();
+  }
+
+  Future<bool> createAccountInfo(
+    BuildContext context, {
+    required String firstname,
+    required String lastname,
+    required String streetAddress,
+    required String zip,
+    required String city,
+    required String country,
+    required String phoneNumber,
+    required DateTime birthday,
+  }) async {
+    notifyListeners();
+    final messenger = ScaffoldMessenger.of(context);
+    bool resp = false;
+    try {
+      resp = await _service.createAccountInfo(
+        firstname: firstname,
+        lastname: lastname,
+        streetAddress: streetAddress,
+        zip: zip,
+        city: city,
+        country: country,
+        phoneNumber: phoneNumber,
+        birthday: birthday,
+      );
+      if (resp) {
+        _apiResponse = ApiResponse.completed('Registrierung abgeschlossen');
+      }
+      return resp;
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(
+        backgroundColor: CustomColors.error,
+        content: const Text(
+          'Daten konnten nicht übertragen werden',
+          style: TextStyle(color: Colors.white),
+        ),
+        action: SnackBarAction(
+          label: 'Details',
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      backgroundColor: Colors.black,
+                      icon: Icon(
+                        Icons.error,
+                        color: CustomColors.error,
+                      ),
+                      content: Text(
+                        e.toString(),
+                        textAlign: TextAlign.center,
+                      ),
+                    ));
+          },
+        ),
+      ));
+      _apiResponse = ApiResponse.error(e.toString());
+    }
+    notifyListeners();
+    return resp;
   }
 
   Future<void> logout() async {

@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $28;
+import 'google/protobuf/timestamp.pb.dart' as $30;
 
 class LoginRequest extends $pb.GeneratedMessage {
   factory LoginRequest({
@@ -84,9 +84,9 @@ class LoginResponse extends $pb.GeneratedMessage {
   factory LoginResponse({
     $core.String? sessionId,
     $core.String? accessToken,
-    $28.Timestamp? accessTokenExpiresAt,
+    $30.Timestamp? accessTokenExpiresAt,
     $core.String? refreshToken,
-    $28.Timestamp? refreshTokenExpiresAt,
+    $30.Timestamp? refreshTokenExpiresAt,
     $fixnum.Int64? accountId,
   }) {
     final $result = create();
@@ -117,9 +117,9 @@ class LoginResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'LoginResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'sessionId')
     ..aOS(2, _omitFieldNames ? '' : 'accessToken')
-    ..aOM<$28.Timestamp>(3, _omitFieldNames ? '' : 'accessTokenExpiresAt', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(3, _omitFieldNames ? '' : 'accessTokenExpiresAt', subBuilder: $30.Timestamp.create)
     ..aOS(4, _omitFieldNames ? '' : 'refreshToken')
-    ..aOM<$28.Timestamp>(5, _omitFieldNames ? '' : 'refreshTokenExpiresAt', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(5, _omitFieldNames ? '' : 'refreshTokenExpiresAt', subBuilder: $30.Timestamp.create)
     ..a<$fixnum.Int64>(6, _omitFieldNames ? '' : 'accountId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false
   ;
@@ -164,15 +164,15 @@ class LoginResponse extends $pb.GeneratedMessage {
   void clearAccessToken() => clearField(2);
 
   @$pb.TagNumber(3)
-  $28.Timestamp get accessTokenExpiresAt => $_getN(2);
+  $30.Timestamp get accessTokenExpiresAt => $_getN(2);
   @$pb.TagNumber(3)
-  set accessTokenExpiresAt($28.Timestamp v) { setField(3, v); }
+  set accessTokenExpiresAt($30.Timestamp v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasAccessTokenExpiresAt() => $_has(2);
   @$pb.TagNumber(3)
   void clearAccessTokenExpiresAt() => clearField(3);
   @$pb.TagNumber(3)
-  $28.Timestamp ensureAccessTokenExpiresAt() => $_ensure(2);
+  $30.Timestamp ensureAccessTokenExpiresAt() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $core.String get refreshToken => $_getSZ(3);
@@ -184,15 +184,15 @@ class LoginResponse extends $pb.GeneratedMessage {
   void clearRefreshToken() => clearField(4);
 
   @$pb.TagNumber(5)
-  $28.Timestamp get refreshTokenExpiresAt => $_getN(4);
+  $30.Timestamp get refreshTokenExpiresAt => $_getN(4);
   @$pb.TagNumber(5)
-  set refreshTokenExpiresAt($28.Timestamp v) { setField(5, v); }
+  set refreshTokenExpiresAt($30.Timestamp v) { setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasRefreshTokenExpiresAt() => $_has(4);
   @$pb.TagNumber(5)
   void clearRefreshTokenExpiresAt() => clearField(5);
   @$pb.TagNumber(5)
-  $28.Timestamp ensureRefreshTokenExpiresAt() => $_ensure(4);
+  $30.Timestamp ensureRefreshTokenExpiresAt() => $_ensure(4);
 
   @$pb.TagNumber(6)
   $fixnum.Int64 get accountId => $_getI64(5);

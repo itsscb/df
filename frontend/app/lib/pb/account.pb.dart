@@ -14,16 +14,17 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $28;
+import 'google/protobuf/timestamp.pb.dart' as $30;
 
 class Account extends $pb.GeneratedMessage {
   factory Account({
     $fixnum.Int64? id,
     $core.String? email,
     $core.String? secretKey,
-    $28.Timestamp? emailVerifiedTime,
+    $core.int? accountLevel,
+    $30.Timestamp? emailVerifiedTime,
     $core.bool? emailVerified,
-    $28.Timestamp? privacyAcceptedDate,
+    $30.Timestamp? privacyAcceptedDate,
     $core.int? permissionLevel,
   }) {
     final $result = create();
@@ -35,6 +36,9 @@ class Account extends $pb.GeneratedMessage {
     }
     if (secretKey != null) {
       $result.secretKey = secretKey;
+    }
+    if (accountLevel != null) {
+      $result.accountLevel = accountLevel;
     }
     if (emailVerifiedTime != null) {
       $result.emailVerifiedTime = emailVerifiedTime;
@@ -58,9 +62,10 @@ class Account extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(1, _omitFieldNames ? '' : 'id', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(2, _omitFieldNames ? '' : 'email')
     ..aOS(3, _omitFieldNames ? '' : 'secretKey')
-    ..aOM<$28.Timestamp>(9, _omitFieldNames ? '' : 'emailVerifiedTime', subBuilder: $28.Timestamp.create)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'accountLevel', $pb.PbFieldType.OU3)
+    ..aOM<$30.Timestamp>(9, _omitFieldNames ? '' : 'emailVerifiedTime', subBuilder: $30.Timestamp.create)
     ..aOB(10, _omitFieldNames ? '' : 'emailVerified')
-    ..aOM<$28.Timestamp>(12, _omitFieldNames ? '' : 'privacyAcceptedDate', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(12, _omitFieldNames ? '' : 'privacyAcceptedDate', subBuilder: $30.Timestamp.create)
     ..a<$core.int>(13, _omitFieldNames ? '' : 'permissionLevel', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
@@ -113,43 +118,52 @@ class Account extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearSecretKey() => clearField(3);
 
+  @$pb.TagNumber(4)
+  $core.int get accountLevel => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set accountLevel($core.int v) { $_setUnsignedInt32(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasAccountLevel() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAccountLevel() => clearField(4);
+
   @$pb.TagNumber(9)
-  $28.Timestamp get emailVerifiedTime => $_getN(3);
+  $30.Timestamp get emailVerifiedTime => $_getN(4);
   @$pb.TagNumber(9)
-  set emailVerifiedTime($28.Timestamp v) { setField(9, v); }
+  set emailVerifiedTime($30.Timestamp v) { setField(9, v); }
   @$pb.TagNumber(9)
-  $core.bool hasEmailVerifiedTime() => $_has(3);
+  $core.bool hasEmailVerifiedTime() => $_has(4);
   @$pb.TagNumber(9)
   void clearEmailVerifiedTime() => clearField(9);
   @$pb.TagNumber(9)
-  $28.Timestamp ensureEmailVerifiedTime() => $_ensure(3);
+  $30.Timestamp ensureEmailVerifiedTime() => $_ensure(4);
 
   @$pb.TagNumber(10)
-  $core.bool get emailVerified => $_getBF(4);
+  $core.bool get emailVerified => $_getBF(5);
   @$pb.TagNumber(10)
-  set emailVerified($core.bool v) { $_setBool(4, v); }
+  set emailVerified($core.bool v) { $_setBool(5, v); }
   @$pb.TagNumber(10)
-  $core.bool hasEmailVerified() => $_has(4);
+  $core.bool hasEmailVerified() => $_has(5);
   @$pb.TagNumber(10)
   void clearEmailVerified() => clearField(10);
 
   @$pb.TagNumber(12)
-  $28.Timestamp get privacyAcceptedDate => $_getN(5);
+  $30.Timestamp get privacyAcceptedDate => $_getN(6);
   @$pb.TagNumber(12)
-  set privacyAcceptedDate($28.Timestamp v) { setField(12, v); }
+  set privacyAcceptedDate($30.Timestamp v) { setField(12, v); }
   @$pb.TagNumber(12)
-  $core.bool hasPrivacyAcceptedDate() => $_has(5);
+  $core.bool hasPrivacyAcceptedDate() => $_has(6);
   @$pb.TagNumber(12)
   void clearPrivacyAcceptedDate() => clearField(12);
   @$pb.TagNumber(12)
-  $28.Timestamp ensurePrivacyAcceptedDate() => $_ensure(5);
+  $30.Timestamp ensurePrivacyAcceptedDate() => $_ensure(6);
 
   @$pb.TagNumber(13)
-  $core.int get permissionLevel => $_getIZ(6);
+  $core.int get permissionLevel => $_getIZ(7);
   @$pb.TagNumber(13)
-  set permissionLevel($core.int v) { $_setSignedInt32(6, v); }
+  set permissionLevel($core.int v) { $_setSignedInt32(7, v); }
   @$pb.TagNumber(13)
-  $core.bool hasPermissionLevel() => $_has(6);
+  $core.bool hasPermissionLevel() => $_has(7);
   @$pb.TagNumber(13)
   void clearPermissionLevel() => clearField(13);
 }

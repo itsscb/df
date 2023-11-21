@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'payment.pb.dart' as $31;
+import 'payment.pb.dart' as $34;
 
 class GetPaymentRequest extends $pb.GeneratedMessage {
   factory GetPaymentRequest({
@@ -68,7 +68,7 @@ class GetPaymentRequest extends $pb.GeneratedMessage {
 
 class GetPaymentResponse extends $pb.GeneratedMessage {
   factory GetPaymentResponse({
-    $31.Payment? payment,
+    $34.Payment? payment,
   }) {
     final $result = create();
     if (payment != null) {
@@ -81,7 +81,7 @@ class GetPaymentResponse extends $pb.GeneratedMessage {
   factory GetPaymentResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GetPaymentResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..aOM<$31.Payment>(1, _omitFieldNames ? '' : 'payment', subBuilder: $31.Payment.create)
+    ..aOM<$34.Payment>(1, _omitFieldNames ? '' : 'payment', subBuilder: $34.Payment.create)
     ..hasRequiredFields = false
   ;
 
@@ -107,15 +107,15 @@ class GetPaymentResponse extends $pb.GeneratedMessage {
   static GetPaymentResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $31.Payment get payment => $_getN(0);
+  $34.Payment get payment => $_getN(0);
   @$pb.TagNumber(1)
-  set payment($31.Payment v) { setField(1, v); }
+  set payment($34.Payment v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasPayment() => $_has(0);
   @$pb.TagNumber(1)
   void clearPayment() => clearField(1);
   @$pb.TagNumber(1)
-  $31.Payment ensurePayment() => $_ensure(0);
+  $34.Payment ensurePayment() => $_ensure(0);
 }
 
 

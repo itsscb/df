@@ -8,6 +8,7 @@ import 'package:app/pb/google/protobuf/timestamp.pb.dart';
 import 'package:app/pb/person.pb.dart';
 import 'package:app/data/database.dart';
 import 'package:app/pb/rpc_create_account.pb.dart';
+import 'package:app/pb/rpc_create_account_info.pb.dart';
 import 'package:app/pb/rpc_create_person.pb.dart';
 import 'package:app/pb/rpc_get_account.pb.dart';
 import 'package:app/pb/rpc_get_account_info.pb.dart';
@@ -126,14 +127,56 @@ class BackendService {
   Future<bool> createAccount(
       {required String email, required String password}) async {
     try {
-      final resp =
-          await BackendService.client.createAccount(CreateAccountRequest(
+      // final resp =
+      await BackendService.client.createAccount(CreateAccountRequest(
         email: email,
         password: password,
       ));
-      print(resp);
-      await _storageService.setAccountId(resp.account.id);
+      // print(resp);
+      // await _storageService.setAccountId(resp.account.id);
       return await login(email: email, password: password);
+    } on SocketException {
+      throw FetchDataException('Keine Internet Verbindung');
+    } on GrpcError catch (err) {
+      throw FetchDataException('${err.message}');
+    } catch (err) {
+      throw InternalException(err.toString());
+    }
+  }
+
+  Future<bool> createAccountInfo(
+      {required String firstname,
+      required String lastname,
+      required String streetAddress,
+      required String zip,
+      required String city,
+      required String country,
+      required String phoneNumber,
+      required DateTime birthday}) async {
+    try {
+      final acc = await account;
+      if (acc == null) {
+        throw FetchDataException('AccountID nicht gespeichert');
+      }
+      final resp = BackendService.client.createAccountInfo(
+        CreateAccountInfoRequest(
+          accountId: acc.id,
+          firstname: firstname,
+          lastname: lastname,
+          street: streetAddress,
+          zip: zip,
+          city: city,
+          country: country,
+          phone: phoneNumber,
+          birthday: Timestamp.fromDateTime(birthday),
+        ),
+        options: CallOptions(
+          metadata: {
+            'Authorization': 'Bearer ${await _storageService.accessToken}'
+          },
+        ),
+      );
+      return resp != null;
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
     } on GrpcError catch (err) {
@@ -146,13 +189,39 @@ class BackendService {
   Future<bool> resendVerification({required Int64 accountId}) async {
     try {
       final resp = await BackendService.client.resendVerification(
-          ResendVerificationRequest(
-            accountId: accountId,
-          ),
+        ResendVerificationRequest(
+          accountId: accountId,
+        ),
+        options: CallOptions(
+          metadata: {
+            'Authorization': 'Bearer ${await _storageService.accessToken}'
+          },
+        ),
+      );
+      return resp.account.id == accountId;
+    } on SocketException {
+      throw FetchDataException('Keine Internet Verbindung');
+    } on GrpcError catch (err) {
+      throw FetchDataException('${err.message}');
+    } catch (err) {
+      throw InternalException(err.toString());
+    }
+  }
+
+  Future<Account?> get account async {
+    try {
+      final id = await _storageService.accountId;
+      if (id == 0) {
+        return null;
+      }
+      final resp = await _client.getAccount(GetAccountRequest(id: id),
           options: CallOptions(metadata: {
             'Authorization': 'Bearer ${await _storageService.accessToken}'
           }));
-      return resp.account.id == accountId;
+      if (resp.account.id < 1) {
+        return null;
+      }
+      return resp.account;
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
     } on GrpcError catch (err) {
@@ -399,6 +468,7 @@ class BackendService {
       // );
 
       await _storageService.setAccessToken(response.accessToken);
+      await _storageService.setAccountId(response.accountId);
 
       // await Session.newSession(s);
       return response.accessToken != '';

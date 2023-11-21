@@ -28,7 +28,8 @@ message UpdatePersonRequest {
     optional string city = 5;
     optional string zip = 6;
     optional string country = 7;
-    optional google.protobuf.Timestamp birthday = 8 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    optional string relationship = 8;
+    optional google.protobuf.Timestamp birthday = 9 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       example: "\"1990-10-05T00:00:00Z\""
   }];
 }

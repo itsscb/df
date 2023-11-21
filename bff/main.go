@@ -78,6 +78,11 @@ func runDBMigration(migrationURL string, dbSource string, retries int) {
 		}
 	}
 
+	// TODO: Remove in Production!
+	if err = migration.Down(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("failed to run migrate down")
+	}
+
 	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
 		log.Fatal("failed to run migrate up")
 	}

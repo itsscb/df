@@ -105,5 +105,11 @@ func validateUpdatePersonRequest(req *pb.UpdatePersonRequest) (violations []*err
 		violations = append(violations, fieldViolation("id", errors.New("must be greater than 0")))
 	}
 
+	if req.GetRelationship() != "" {
+		if req.GetRelationship() != "sole_heir" || req.GetRelationship() != "widow" || req.GetRelationship() != "child" {
+			violations = append(violations, fieldViolation("relationship", errors.New("allowed values are: 'sole_heir', 'widow', 'child'")))
+		}
+	}
+
 	return violations
 }

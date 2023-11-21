@@ -2,20 +2,22 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
 type CreatePersonTxParams struct {
-	AccountID uint64    `json:"account_id"`
-	Firstname string    `json:"firstname"`
-	Lastname  string    `json:"lastname"`
-	Birthday  time.Time `json:"birthday"`
-	City      string    `json:"city"`
-	Zip       string    `json:"zip"`
-	Street    string    `json:"street"`
-	Country   string    `json:"country"`
-	Creator   string    `json:"creator"`
-	Changer   string    `json:"changer"`
+	AccountID    uint64         `json:"account_id"`
+	Firstname    string         `json:"firstname"`
+	Lastname     string         `json:"lastname"`
+	Birthday     time.Time      `json:"birthday"`
+	City         string         `json:"city"`
+	Zip          string         `json:"zip"`
+	Street       string         `json:"street"`
+	Relationship sql.NullString `json:"relationship"`
+	Country      string         `json:"country"`
+	Creator      string         `json:"creator"`
+	Changer      string         `json:"changer"`
 }
 
 type CreatePersonTxResult struct {

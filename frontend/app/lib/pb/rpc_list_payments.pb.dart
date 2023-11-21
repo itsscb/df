@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'payment.pb.dart' as $31;
+import 'payment.pb.dart' as $34;
 
 class ListPaymentsRequest extends $pb.GeneratedMessage {
   factory ListPaymentsRequest({
@@ -68,7 +68,7 @@ class ListPaymentsRequest extends $pb.GeneratedMessage {
 
 class ListPaymentsResponse extends $pb.GeneratedMessage {
   factory ListPaymentsResponse({
-    $core.Iterable<$31.Payment>? payments,
+    $core.Iterable<$34.Payment>? payments,
   }) {
     final $result = create();
     if (payments != null) {
@@ -81,7 +81,7 @@ class ListPaymentsResponse extends $pb.GeneratedMessage {
   factory ListPaymentsResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ListPaymentsResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..pc<$31.Payment>(1, _omitFieldNames ? '' : 'payments', $pb.PbFieldType.PM, subBuilder: $31.Payment.create)
+    ..pc<$34.Payment>(1, _omitFieldNames ? '' : 'payments', $pb.PbFieldType.PM, subBuilder: $34.Payment.create)
     ..hasRequiredFields = false
   ;
 
@@ -107,7 +107,7 @@ class ListPaymentsResponse extends $pb.GeneratedMessage {
   static ListPaymentsResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$31.Payment> get payments => $_getList(0);
+  $core.List<$34.Payment> get payments => $_getList(0);
 }
 
 

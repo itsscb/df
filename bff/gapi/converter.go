@@ -37,6 +37,14 @@ func convertAccountInfo(account_info db.AccountInfo) *pb.AccountInfo {
 	}
 }
 
+func convertEmail(email db.EmailAddress) *pb.EmailAddress {
+	return &pb.EmailAddress{
+		Id:       email.ID,
+		PersonId: email.PersonID,
+		Email:    email.Email,
+	}
+}
+
 func convertPerson(person db.Person) *pb.Person {
 	return &pb.Person{
 		Id:        person.ID,

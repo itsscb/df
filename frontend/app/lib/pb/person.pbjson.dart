@@ -30,8 +30,12 @@ const Person$json = {
     {'1': 'created', '3': 11, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '8': {}, '10': 'created'},
     {'1': 'changer', '3': 12, '4': 1, '5': 9, '10': 'changer'},
     {'1': 'changed', '3': 13, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '8': {}, '10': 'changed'},
+    {'1': 'relationship', '3': 14, '4': 1, '5': 9, '9': 0, '10': 'relationship', '17': true},
   ],
   '7': {},
+  '8': [
+    {'1': '_relationship'},
+  ],
 };
 
 /// Descriptor for `Person`. Decode as a `google.protobuf.DescriptorProto`.
@@ -45,13 +49,14 @@ final $typed_data.Uint8List personDescriptor = $convert.base64Decode(
     'b29nbGUucHJvdG9idWYuVGltZXN0YW1wQhuSQRhKFiIyMDIzLTEwLTA1VDAwOjAwOjAwWiJSB2'
     'NyZWF0ZWQSGAoHY2hhbmdlchgMIAEoCVIHY2hhbmdlchJRCgdjaGFuZ2VkGA0gASgLMhouZ29v'
     'Z2xlLnByb3RvYnVmLlRpbWVzdGFtcEIbkkEYShYiMjAyMy0xMC0wNVQwMDowMDowMFoiUgdjaG'
-    'FuZ2VkOrwDkkG4AwoIKgZQZXJzb24yqwN7ImlkIjogIjEiLCJlbWFpbCI6ICJqb2huLmRvZUBl'
-    'eGFtcGxlLmNvbSIsICJmaXJzdG5hbWUiOiAiSm9obiIsICJsYXN0bmFtZSI6ICJEb2UiLCAicG'
-    'hvbmUiOiAiIiwgInN0cmVldCI6ICJEZWF0aCBTdGFyIDIiLCAiemlwIjogIjA4MTUiLCAiY2l0'
-    'eSI6ICJOZXcgWW9yayIsICJjb3VudHJ5IjogIlVTQSIsICJiaXJ0aGRheSI6ICIxOTkwLTEwLT'
-    'A1VDAwOjAwOjAwWiIsICJwcml2YWN5X2FjY2VwdGVkIjogZmFsc2UsICJwcml2YWN5X2FjY2Vw'
-    'dGVkX2RhdGUiOiAiMDAwMS0wMS0wMVQwMDowMDowMFoiLCAiY3JlYXRvciI6ICJqb2huLmRvZU'
-    'BleGFtcGxlLmNvbSIsICJjcmVhdGVkIjogIjIwMjMtMTAtMDVUMDI6MzA6NTNaIiwgImNoYW5n'
-    'ZXIiOiAiam9obi5kb2VAZXhhbXBsZS5jb20iLCAiY2hhbmdlZCI6ICIyMDIzLTEwLTA1VDAyOj'
-    'MwOjUzWiJ9');
+    'FuZ2VkEicKDHJlbGF0aW9uc2hpcBgOIAEoCUgAUgxyZWxhdGlvbnNoaXCIAQE6vAOSQbgDCggq'
+    'BlBlcnNvbjKrA3siaWQiOiAiMSIsImVtYWlsIjogImpvaG4uZG9lQGV4YW1wbGUuY29tIiwgIm'
+    'ZpcnN0bmFtZSI6ICJKb2huIiwgImxhc3RuYW1lIjogIkRvZSIsICJwaG9uZSI6ICIiLCAic3Ry'
+    'ZWV0IjogIkRlYXRoIFN0YXIgMiIsICJ6aXAiOiAiMDgxNSIsICJjaXR5IjogIk5ldyBZb3JrIi'
+    'wgImNvdW50cnkiOiAiVVNBIiwgImJpcnRoZGF5IjogIjE5OTAtMTAtMDVUMDA6MDA6MDBaIiwg'
+    'InByaXZhY3lfYWNjZXB0ZWQiOiBmYWxzZSwgInByaXZhY3lfYWNjZXB0ZWRfZGF0ZSI6ICIwMD'
+    'AxLTAxLTAxVDAwOjAwOjAwWiIsICJjcmVhdG9yIjogImpvaG4uZG9lQGV4YW1wbGUuY29tIiwg'
+    'ImNyZWF0ZWQiOiAiMjAyMy0xMC0wNVQwMjozMDo1M1oiLCAiY2hhbmdlciI6ICJqb2huLmRvZU'
+    'BleGFtcGxlLmNvbSIsICJjaGFuZ2VkIjogIjIwMjMtMTAtMDVUMDI6MzA6NTNaIn1CDwoNX3Jl'
+    'bGF0aW9uc2hpcA==');
 

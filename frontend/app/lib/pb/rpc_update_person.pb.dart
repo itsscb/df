@@ -14,8 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $28;
-import 'person.pb.dart' as $32;
+import 'google/protobuf/timestamp.pb.dart' as $30;
+import 'person.pb.dart' as $35;
 
 class UpdatePersonRequest extends $pb.GeneratedMessage {
   factory UpdatePersonRequest({
@@ -26,7 +26,8 @@ class UpdatePersonRequest extends $pb.GeneratedMessage {
     $core.String? city,
     $core.String? zip,
     $core.String? country,
-    $28.Timestamp? birthday,
+    $core.String? relationship,
+    $30.Timestamp? birthday,
   }) {
     final $result = create();
     if (id != null) {
@@ -50,6 +51,9 @@ class UpdatePersonRequest extends $pb.GeneratedMessage {
     if (country != null) {
       $result.country = country;
     }
+    if (relationship != null) {
+      $result.relationship = relationship;
+    }
     if (birthday != null) {
       $result.birthday = birthday;
     }
@@ -67,7 +71,8 @@ class UpdatePersonRequest extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'city')
     ..aOS(6, _omitFieldNames ? '' : 'zip')
     ..aOS(7, _omitFieldNames ? '' : 'country')
-    ..aOM<$28.Timestamp>(8, _omitFieldNames ? '' : 'birthday', subBuilder: $28.Timestamp.create)
+    ..aOS(8, _omitFieldNames ? '' : 'relationship')
+    ..aOM<$30.Timestamp>(9, _omitFieldNames ? '' : 'birthday', subBuilder: $30.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -156,20 +161,29 @@ class UpdatePersonRequest extends $pb.GeneratedMessage {
   void clearCountry() => clearField(7);
 
   @$pb.TagNumber(8)
-  $28.Timestamp get birthday => $_getN(7);
+  $core.String get relationship => $_getSZ(7);
   @$pb.TagNumber(8)
-  set birthday($28.Timestamp v) { setField(8, v); }
+  set relationship($core.String v) { $_setString(7, v); }
   @$pb.TagNumber(8)
-  $core.bool hasBirthday() => $_has(7);
+  $core.bool hasRelationship() => $_has(7);
   @$pb.TagNumber(8)
-  void clearBirthday() => clearField(8);
-  @$pb.TagNumber(8)
-  $28.Timestamp ensureBirthday() => $_ensure(7);
+  void clearRelationship() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $30.Timestamp get birthday => $_getN(8);
+  @$pb.TagNumber(9)
+  set birthday($30.Timestamp v) { setField(9, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasBirthday() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearBirthday() => clearField(9);
+  @$pb.TagNumber(9)
+  $30.Timestamp ensureBirthday() => $_ensure(8);
 }
 
 class UpdatePersonResponse extends $pb.GeneratedMessage {
   factory UpdatePersonResponse({
-    $32.Person? person,
+    $35.Person? person,
   }) {
     final $result = create();
     if (person != null) {
@@ -182,7 +196,7 @@ class UpdatePersonResponse extends $pb.GeneratedMessage {
   factory UpdatePersonResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'UpdatePersonResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..aOM<$32.Person>(1, _omitFieldNames ? '' : 'person', subBuilder: $32.Person.create)
+    ..aOM<$35.Person>(1, _omitFieldNames ? '' : 'person', subBuilder: $35.Person.create)
     ..hasRequiredFields = false
   ;
 
@@ -208,15 +222,15 @@ class UpdatePersonResponse extends $pb.GeneratedMessage {
   static UpdatePersonResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $32.Person get person => $_getN(0);
+  $35.Person get person => $_getN(0);
   @$pb.TagNumber(1)
-  set person($32.Person v) { setField(1, v); }
+  set person($35.Person v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasPerson() => $_has(0);
   @$pb.TagNumber(1)
   void clearPerson() => clearField(1);
   @$pb.TagNumber(1)
-  $32.Person ensurePerson() => $_ensure(0);
+  $35.Person ensurePerson() => $_ensure(0);
 }
 
 
