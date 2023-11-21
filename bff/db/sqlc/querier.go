@@ -12,6 +12,8 @@ import (
 )
 
 type Querier interface {
+	AddEmailAddress(ctx context.Context, arg AddEmailAddressParams) (EmailAddress, error)
+	AddPhoneNumber(ctx context.Context, arg AddPhoneNumberParams) (PhoneNumber, error)
 	BlockSession(ctx context.Context, id uuid.UUID) error
 	CloneProviders(ctx context.Context, arg CloneProvidersParams) error
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
@@ -28,8 +30,11 @@ type Querier interface {
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	DeleteAccount(ctx context.Context, id uint64) error
 	DeleteAccountInfo(ctx context.Context, accountID uint64) error
+	DeleteAllEmailAddresses(ctx context.Context, personID uint64) error
+	DeleteAllPhoneNumbers(ctx context.Context, personID uint64) error
 	DeleteDocument(ctx context.Context, id uint64) error
 	DeleteDocumentsByPersonID(ctx context.Context, personID sql.NullInt64) error
+	DeleteEmailAddress(ctx context.Context, id uint64) error
 	// -- name: UpdateMail :one
 	// UPDATE mails
 	// SET
@@ -46,6 +51,7 @@ type Querier interface {
 	DeleteMail(ctx context.Context, id uint64) error
 	DeletePayment(ctx context.Context, id uint64) error
 	DeletePerson(ctx context.Context, id uint64) error
+	DeletePhoneNumber(ctx context.Context, id uint64) error
 	DeleteProvider(ctx context.Context, id uint64) error
 	DeleteReturn(ctx context.Context, id uint64) error
 	DeleteReturnsByPersonID(ctx context.Context, personID uint64) error
@@ -54,12 +60,15 @@ type Querier interface {
 	GetAccount(ctx context.Context, id uint64) (Account, error)
 	GetAccountByEmail(ctx context.Context, email string) (Account, error)
 	GetAccountInfo(ctx context.Context, accountID uint64) (AccountInfo, error)
+	GetAccountLevel(ctx context.Context, accountID uint64) (GetAccountLevelRow, error)
 	GetDocument(ctx context.Context, id uint64) (Document, error)
 	GetDocumentByHash(ctx context.Context, arg GetDocumentByHashParams) ([]uint64, error)
 	GetDocumentByIDWithAccountID(ctx context.Context, arg GetDocumentByIDWithAccountIDParams) (Document, error)
+	GetEmailAddresses(ctx context.Context, personID uint64) ([]EmailAddress, error)
 	GetMail(ctx context.Context, id uint64) (Mail, error)
 	GetPayment(ctx context.Context, id uint64) (Payment, error)
 	GetPerson(ctx context.Context, id uint64) (Person, error)
+	GetPhoneNumbers(ctx context.Context, personID uint64) ([]PhoneNumber, error)
 	GetProvider(ctx context.Context, id uint64) (Provider, error)
 	GetReturn(ctx context.Context, id uint64) (Return, error)
 	GetReturnIDsByPersonID(ctx context.Context, personID uint64) ([]uint64, error)

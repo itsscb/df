@@ -49,9 +49,13 @@ func (server *Server) CreatePerson(ctx context.Context, req *pb.CreatePersonRequ
 		City:      req.GetCity(),
 		Street:    req.GetStreet(),
 		Country:   req.GetCountry(),
-		Zip:       req.GetZip(),
-		Creator:   account.Email,
-		Changer:   account.Email,
+		Relationship: sql.NullString{
+			Valid:  req.GetRelationship() != "",
+			String: req.GetRelationship(),
+		},
+		Zip:     req.GetZip(),
+		Creator: account.Email,
+		Changer: account.Email,
 	}
 
 	person, err := server.store.CreatePersonTx(ctx, arg)
@@ -94,6 +98,10 @@ func validateCreatePersonRequest(req *pb.CreatePersonRequest) (violations []*err
 
 	if len(req.GetZip()) < 4 {
 		violations = append(violations, fieldViolation("zip", errors.New("must be at least 4 characters long")))
+	}
+
+	if req.GetRelationship() != "sole_heir" || req.GetRelationship() != "widow" || req.GetRelationship() != "child" {
+		violations = append(violations, fieldViolation("relationship", errors.New("allowed values are: 'sole_heir', 'widow', 'child'")))
 	}
 
 	return violations

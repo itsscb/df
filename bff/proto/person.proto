@@ -33,4 +33,5 @@ message Person {
     google.protobuf.Timestamp changed = 13 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       example: "\"2023-10-05T00:00:00Z\""
   }];
+  optional string relationship = 14;
 }

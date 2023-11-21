@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $28;
+import 'google/protobuf/timestamp.pb.dart' as $30;
 
 class Document extends $pb.GeneratedMessage {
   factory Document({
@@ -26,11 +26,11 @@ class Document extends $pb.GeneratedMessage {
     $core.String? url,
     $core.bool? valid,
     $core.String? validatedBy,
-    $28.Timestamp? validDate,
+    $30.Timestamp? validDate,
     $core.String? creator,
-    $28.Timestamp? created,
+    $30.Timestamp? created,
     $core.String? changer,
-    $28.Timestamp? changed,
+    $30.Timestamp? changed,
     $fixnum.Int64? id,
   }) {
     final $result = create();
@@ -91,11 +91,11 @@ class Document extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'url')
     ..aOB(7, _omitFieldNames ? '' : 'valid')
     ..aOS(8, _omitFieldNames ? '' : 'validatedBy')
-    ..aOM<$28.Timestamp>(9, _omitFieldNames ? '' : 'validDate', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(9, _omitFieldNames ? '' : 'validDate', subBuilder: $30.Timestamp.create)
     ..aOS(10, _omitFieldNames ? '' : 'creator')
-    ..aOM<$28.Timestamp>(11, _omitFieldNames ? '' : 'created', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(11, _omitFieldNames ? '' : 'created', subBuilder: $30.Timestamp.create)
     ..aOS(12, _omitFieldNames ? '' : 'changer')
-    ..aOM<$28.Timestamp>(13, _omitFieldNames ? '' : 'changed', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(13, _omitFieldNames ? '' : 'changed', subBuilder: $30.Timestamp.create)
     ..a<$fixnum.Int64>(14, _omitFieldNames ? '' : 'id', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false
   ;
@@ -194,15 +194,15 @@ class Document extends $pb.GeneratedMessage {
   void clearValidatedBy() => clearField(8);
 
   @$pb.TagNumber(9)
-  $28.Timestamp get validDate => $_getN(8);
+  $30.Timestamp get validDate => $_getN(8);
   @$pb.TagNumber(9)
-  set validDate($28.Timestamp v) { setField(9, v); }
+  set validDate($30.Timestamp v) { setField(9, v); }
   @$pb.TagNumber(9)
   $core.bool hasValidDate() => $_has(8);
   @$pb.TagNumber(9)
   void clearValidDate() => clearField(9);
   @$pb.TagNumber(9)
-  $28.Timestamp ensureValidDate() => $_ensure(8);
+  $30.Timestamp ensureValidDate() => $_ensure(8);
 
   @$pb.TagNumber(10)
   $core.String get creator => $_getSZ(9);
@@ -214,15 +214,15 @@ class Document extends $pb.GeneratedMessage {
   void clearCreator() => clearField(10);
 
   @$pb.TagNumber(11)
-  $28.Timestamp get created => $_getN(10);
+  $30.Timestamp get created => $_getN(10);
   @$pb.TagNumber(11)
-  set created($28.Timestamp v) { setField(11, v); }
+  set created($30.Timestamp v) { setField(11, v); }
   @$pb.TagNumber(11)
   $core.bool hasCreated() => $_has(10);
   @$pb.TagNumber(11)
   void clearCreated() => clearField(11);
   @$pb.TagNumber(11)
-  $28.Timestamp ensureCreated() => $_ensure(10);
+  $30.Timestamp ensureCreated() => $_ensure(10);
 
   @$pb.TagNumber(12)
   $core.String get changer => $_getSZ(11);
@@ -234,15 +234,15 @@ class Document extends $pb.GeneratedMessage {
   void clearChanger() => clearField(12);
 
   @$pb.TagNumber(13)
-  $28.Timestamp get changed => $_getN(12);
+  $30.Timestamp get changed => $_getN(12);
   @$pb.TagNumber(13)
-  set changed($28.Timestamp v) { setField(13, v); }
+  set changed($30.Timestamp v) { setField(13, v); }
   @$pb.TagNumber(13)
   $core.bool hasChanged() => $_has(12);
   @$pb.TagNumber(13)
   void clearChanged() => clearField(13);
   @$pb.TagNumber(13)
-  $28.Timestamp ensureChanged() => $_ensure(12);
+  $30.Timestamp ensureChanged() => $_ensure(12);
 
   @$pb.TagNumber(14)
   $fixnum.Int64 get id => $_getI64(13);

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message DeleteEmailAddressRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Delete EmailAddress";
+          description: "Delete an EmailAddress";
+          required: [
+            "id"
+            ];
+        };
+    };
+    uint64 id = 1;
+}
+
+message DeleteEmailAddressResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Deleted EmailAddress";
+        };
+    };
+    uint64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $28;
+import 'google/protobuf/timestamp.pb.dart' as $30;
 
 class Payment extends $pb.GeneratedMessage {
   factory Payment({
@@ -29,9 +29,9 @@ class Payment extends $pb.GeneratedMessage {
     $core.String? paymentSystem,
     $core.String? type,
     $core.String? creator,
-    $28.Timestamp? created,
+    $30.Timestamp? created,
     $core.String? changer,
-    $28.Timestamp? changed,
+    $30.Timestamp? changed,
   }) {
     final $result = create();
     if (id != null) {
@@ -94,9 +94,9 @@ class Payment extends $pb.GeneratedMessage {
     ..aOS(9, _omitFieldNames ? '' : 'paymentSystem')
     ..aOS(10, _omitFieldNames ? '' : 'type')
     ..aOS(11, _omitFieldNames ? '' : 'creator')
-    ..aOM<$28.Timestamp>(12, _omitFieldNames ? '' : 'created', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(12, _omitFieldNames ? '' : 'created', subBuilder: $30.Timestamp.create)
     ..aOS(13, _omitFieldNames ? '' : 'changer')
-    ..aOM<$28.Timestamp>(14, _omitFieldNames ? '' : 'changed', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(14, _omitFieldNames ? '' : 'changed', subBuilder: $30.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -221,15 +221,15 @@ class Payment extends $pb.GeneratedMessage {
   void clearCreator() => clearField(11);
 
   @$pb.TagNumber(12)
-  $28.Timestamp get created => $_getN(11);
+  $30.Timestamp get created => $_getN(11);
   @$pb.TagNumber(12)
-  set created($28.Timestamp v) { setField(12, v); }
+  set created($30.Timestamp v) { setField(12, v); }
   @$pb.TagNumber(12)
   $core.bool hasCreated() => $_has(11);
   @$pb.TagNumber(12)
   void clearCreated() => clearField(12);
   @$pb.TagNumber(12)
-  $28.Timestamp ensureCreated() => $_ensure(11);
+  $30.Timestamp ensureCreated() => $_ensure(11);
 
   @$pb.TagNumber(13)
   $core.String get changer => $_getSZ(12);
@@ -241,15 +241,15 @@ class Payment extends $pb.GeneratedMessage {
   void clearChanger() => clearField(13);
 
   @$pb.TagNumber(14)
-  $28.Timestamp get changed => $_getN(13);
+  $30.Timestamp get changed => $_getN(13);
   @$pb.TagNumber(14)
-  set changed($28.Timestamp v) { setField(14, v); }
+  set changed($30.Timestamp v) { setField(14, v); }
   @$pb.TagNumber(14)
   $core.bool hasChanged() => $_has(13);
   @$pb.TagNumber(14)
   void clearChanged() => clearField(14);
   @$pb.TagNumber(14)
-  $28.Timestamp ensureChanged() => $_ensure(13);
+  $30.Timestamp ensureChanged() => $_ensure(13);
 }
 
 

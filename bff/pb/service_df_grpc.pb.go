@@ -32,6 +32,8 @@ const (
 	Df_CreateAccountInfo_FullMethodName    = "/pb.df/CreateAccountInfo"
 	Df_UpdateAccountInfo_FullMethodName    = "/pb.df/UpdateAccountInfo"
 	Df_UpdateAccountPrivacy_FullMethodName = "/pb.df/UpdateAccountPrivacy"
+	Df_AddEmailAddress_FullMethodName      = "/pb.df/AddEmailAddress"
+	Df_AddEmailAddresses_FullMethodName    = "/pb.df/AddEmailAddresses"
 	Df_CreatePerson_FullMethodName         = "/pb.df/CreatePerson"
 	Df_UpdatePerson_FullMethodName         = "/pb.df/UpdatePerson"
 	Df_GetPerson_FullMethodName            = "/pb.df/GetPerson"
@@ -66,6 +68,8 @@ type DfClient interface {
 	CreateAccountInfo(ctx context.Context, in *CreateAccountInfoRequest, opts ...grpc.CallOption) (*CreateAccountInfoResponse, error)
 	UpdateAccountInfo(ctx context.Context, in *UpdateAccountInfoRequest, opts ...grpc.CallOption) (*UpdateAccountInfoResponse, error)
 	UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error)
+	AddEmailAddress(ctx context.Context, in *AddEmailAddressRequest, opts ...grpc.CallOption) (*AddEmailAddressResponse, error)
+	AddEmailAddresses(ctx context.Context, in *AddEmailAddressesRequest, opts ...grpc.CallOption) (*AddEmailAddressesResponse, error)
 	CreatePerson(ctx context.Context, in *CreatePersonRequest, opts ...grpc.CallOption) (*CreatePersonResponse, error)
 	UpdatePerson(ctx context.Context, in *UpdatePersonRequest, opts ...grpc.CallOption) (*UpdatePersonResponse, error)
 	GetPerson(ctx context.Context, in *GetPersonRequest, opts ...grpc.CallOption) (*GetPersonResponse, error)
@@ -202,6 +206,24 @@ func (c *dfClient) UpdateAccountInfo(ctx context.Context, in *UpdateAccountInfoR
 func (c *dfClient) UpdateAccountPrivacy(ctx context.Context, in *UpdateAccountPrivacyRequest, opts ...grpc.CallOption) (*UpdateAccountPrivacyResponse, error) {
 	out := new(UpdateAccountPrivacyResponse)
 	err := c.cc.Invoke(ctx, Df_UpdateAccountPrivacy_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) AddEmailAddress(ctx context.Context, in *AddEmailAddressRequest, opts ...grpc.CallOption) (*AddEmailAddressResponse, error) {
+	out := new(AddEmailAddressResponse)
+	err := c.cc.Invoke(ctx, Df_AddEmailAddress_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dfClient) AddEmailAddresses(ctx context.Context, in *AddEmailAddressesRequest, opts ...grpc.CallOption) (*AddEmailAddressesResponse, error) {
+	out := new(AddEmailAddressesResponse)
+	err := c.cc.Invoke(ctx, Df_AddEmailAddresses_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -360,6 +382,8 @@ type DfServer interface {
 	CreateAccountInfo(context.Context, *CreateAccountInfoRequest) (*CreateAccountInfoResponse, error)
 	UpdateAccountInfo(context.Context, *UpdateAccountInfoRequest) (*UpdateAccountInfoResponse, error)
 	UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error)
+	AddEmailAddress(context.Context, *AddEmailAddressRequest) (*AddEmailAddressResponse, error)
+	AddEmailAddresses(context.Context, *AddEmailAddressesRequest) (*AddEmailAddressesResponse, error)
 	CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error)
 	UpdatePerson(context.Context, *UpdatePersonRequest) (*UpdatePersonResponse, error)
 	GetPerson(context.Context, *GetPersonRequest) (*GetPersonResponse, error)
@@ -420,6 +444,12 @@ func (UnimplementedDfServer) UpdateAccountInfo(context.Context, *UpdateAccountIn
 }
 func (UnimplementedDfServer) UpdateAccountPrivacy(context.Context, *UpdateAccountPrivacyRequest) (*UpdateAccountPrivacyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccountPrivacy not implemented")
+}
+func (UnimplementedDfServer) AddEmailAddress(context.Context, *AddEmailAddressRequest) (*AddEmailAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddEmailAddress not implemented")
+}
+func (UnimplementedDfServer) AddEmailAddresses(context.Context, *AddEmailAddressesRequest) (*AddEmailAddressesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddEmailAddresses not implemented")
 }
 func (UnimplementedDfServer) CreatePerson(context.Context, *CreatePersonRequest) (*CreatePersonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePerson not implemented")
@@ -709,6 +739,42 @@ func _Df_UpdateAccountPrivacy_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DfServer).UpdateAccountPrivacy(ctx, req.(*UpdateAccountPrivacyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_AddEmailAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddEmailAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).AddEmailAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_AddEmailAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).AddEmailAddress(ctx, req.(*AddEmailAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Df_AddEmailAddresses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddEmailAddressesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DfServer).AddEmailAddresses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Df_AddEmailAddresses_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DfServer).AddEmailAddresses(ctx, req.(*AddEmailAddressesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1041,6 +1107,14 @@ var Df_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAccountPrivacy",
 			Handler:    _Df_UpdateAccountPrivacy_Handler,
+		},
+		{
+			MethodName: "AddEmailAddress",
+			Handler:    _Df_AddEmailAddress_Handler,
+		},
+		{
+			MethodName: "AddEmailAddresses",
+			Handler:    _Df_AddEmailAddresses_Handler,
 		},
 		{
 			MethodName: "CreatePerson",

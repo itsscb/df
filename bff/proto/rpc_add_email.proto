@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package pb;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "email_address.proto";
+
+option go_package = "github.com/itsscb/df/pb";
+
+message AddEmailAddressRequest {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Add EmailAddress";
+          description: "Add an EmailAddress";
+          required: [
+            "person_id",
+            "email"
+            ];
+        };
+    };
+    uint64 person_id = 1;
+    string email = 2;
+}
+
+message AddEmailAddressResponse {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema: {
+          title: "Added EmailAddress";
+          description: "Returns the added EmailAddress";
+        };
+    };
+    EmailAddress email = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      }];
+}

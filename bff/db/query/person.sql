@@ -11,11 +11,12 @@ INSERT INTO persons (
     "city",
     "zip",
     "street",
+    "relationship",
     "country",
     "creator",
     "changer"
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
 ) RETURNING *;
 
 -- name: ListPersons :many
@@ -33,6 +34,7 @@ SET
     "zip" = COALESCE(sqlc.narg(zip), "zip"),
     "street" = COALESCE(sqlc.narg(street), "street"),
     "country" = COALESCE(sqlc.narg(country), "country"),
+    "relationship" = COALESCE(sqlc.narg(relationship), "relationship"),
     "changer" = $2,
     "changed" = now()
 WHERE "id" = $1
@@ -45,3 +47,44 @@ WHERE "id" = sqlc.arg(id);
 -- name: GetReturns :many
 SELECT * FROM returns
 WHERE "person_id" = sqlc.arg(id);
+
+
+-- name: GetPhoneNumbers :many
+SELECT * FROM phone_numbers
+WHERE "person_id" = sqlc.arg(person_id);
+
+-- name: AddPhoneNumber :one
+INSERT INTO phone_numbers (
+    "person_id",
+    "phone"
+) VALUES (
+    sqlc.arg(person_id), sqlc.arg(email)
+) RETURNING *;
+
+-- name: DeletePhoneNumber :exec
+DELETE FROM phone_numbers
+WHERE "id" = sqlc.arg(id);
+
+-- name: DeleteAllPhoneNumbers :exec
+DELETE FROM phone_numbers
+WHERE "person_id" = sqlc.arg(person_id);
+
+-- name: GetEmailAddresses :many
+SELECT * FROM email_addresses
+WHERE "person_id" = sqlc.arg(person_id);
+
+-- name: AddEmailAddress :one
+INSERT INTO email_addresses (
+    "person_id",
+    "email"
+) VALUES (
+    sqlc.arg(person_id), sqlc.arg(email)
+) RETURNING *;
+
+-- name: DeleteEmailAddress :exec
+DELETE FROM email_addresses
+WHERE "id" = sqlc.arg(id);
+
+-- name: DeleteAllEmailAddresses :exec
+DELETE FROM email_addresses
+WHERE "person_id" = sqlc.arg(person_id);

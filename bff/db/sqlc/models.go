@@ -57,6 +57,12 @@ type Document struct {
 	Changed     time.Time      `json:"changed"`
 }
 
+type EmailAddress struct {
+	ID       uint64 `json:"id"`
+	Email    string `json:"email"`
+	PersonID uint64 `json:"person_id"`
+}
+
 type Mail struct {
 	ID        uint64    `json:"id"`
 	From      string    `json:"from"`
@@ -89,19 +95,26 @@ type Payment struct {
 }
 
 type Person struct {
-	ID        uint64    `json:"id"`
-	AccountID uint64    `json:"account_id"`
-	Firstname string    `json:"firstname"`
-	Lastname  string    `json:"lastname"`
-	Birthday  time.Time `json:"birthday"`
-	City      string    `json:"city"`
-	Zip       string    `json:"zip"`
-	Street    string    `json:"street"`
-	Country   string    `json:"country"`
-	Creator   string    `json:"creator"`
-	Created   time.Time `json:"created"`
-	Changer   string    `json:"changer"`
-	Changed   time.Time `json:"changed"`
+	ID           uint64         `json:"id"`
+	AccountID    uint64         `json:"account_id"`
+	Firstname    string         `json:"firstname"`
+	Lastname     string         `json:"lastname"`
+	Birthday     time.Time      `json:"birthday"`
+	City         string         `json:"city"`
+	Zip          string         `json:"zip"`
+	Street       string         `json:"street"`
+	Country      string         `json:"country"`
+	Relationship sql.NullString `json:"relationship"`
+	Creator      string         `json:"creator"`
+	Created      time.Time      `json:"created"`
+	Changer      string         `json:"changer"`
+	Changed      time.Time      `json:"changed"`
+}
+
+type PhoneNumber struct {
+	ID       uint64 `json:"id"`
+	Phone    string `json:"phone"`
+	PersonID uint64 `json:"person_id"`
 }
 
 type Provider struct {

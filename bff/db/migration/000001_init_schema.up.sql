@@ -62,10 +62,23 @@ CREATE TABLE "persons" (
   "zip" varchar NOT NULL,
   "street" varchar NOT NULL,
   "country" varchar NOT NULL,
+  "relationship" varchar,
   "creator" varchar NOT NULL,
   "created" timestamptz NOT NULL DEFAULT (now()),
   "changer" varchar NOT NULL,
   "changed" timestamptz NOT NULL DEFAULT (now())
+);
+
+CREATE TABLE "email_addresses" (
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
+  "email" varchar NOT NULL,
+  "person_id" bigint NOT NULL
+);
+
+CREATE TABLE "phone_numbers" (
+  "id" BIGSERIAL UNIQUE PRIMARY KEY NOT NULL,
+  "phone" varchar NOT NULL,
+  "person_id" bigint NOT NULL
 );
 
 CREATE TABLE "documents" (
@@ -146,6 +159,10 @@ ALTER TABLE "account_info" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" 
 ALTER TABLE "sessions" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
 ALTER TABLE "persons" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
+
+ALTER TABLE "email_addresses" ADD FOREIGN KEY ("person_id") REFERENCES "persons" ("id");
+
+ALTER TABLE "phone_numbers" ADD FOREIGN KEY ("person_id") REFERENCES "persons" ("id");
 
 ALTER TABLE "payments" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 

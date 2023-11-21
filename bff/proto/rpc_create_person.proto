@@ -22,6 +22,7 @@ message CreatePersonRequest {
             "city",
             "zip",
             "country",
+            "relationship",
             "birthday"
             ];
         };
@@ -34,7 +35,8 @@ message CreatePersonRequest {
     string city = 5;
     string zip = 6;
     string country = 7;
-    google.protobuf.Timestamp birthday = 8 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    string relationship = 8;
+    google.protobuf.Timestamp birthday = 9 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         example: "\"1990-10-05T00:00:00Z\""
     }];
 }

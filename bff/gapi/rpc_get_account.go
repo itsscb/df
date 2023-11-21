@@ -38,9 +38,17 @@ func (server *Server) GetAccount(ctx context.Context, req *pb.GetAccountRequest)
 		}
 	}
 
+	accountLevel, err := server.store.GetAccountLevel(ctx, account.ID)
+	if err != nil {
+		slog.Error("get_account_level (db)", slog.Int64("invoked_by", int64(authPayload.AccountID)), slog.Int64("account_id", int64(req.GetId())), slog.String("error", err.Error()))
+	}
+
 	rsp := &pb.GetAccountResponse{
 		Account: convertAccount(account),
 	}
+
+	lvl := uint32(accountLevel.AccountLevel)
+	rsp.Account.AccountLevel = &lvl
 
 	return rsp, nil
 }

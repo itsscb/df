@@ -42,6 +42,36 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// AddEmailAddress mocks base method.
+func (m *MockStore) AddEmailAddress(arg0 context.Context, arg1 db.AddEmailAddressParams) (db.EmailAddress, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddEmailAddress", arg0, arg1)
+	ret0, _ := ret[0].(db.EmailAddress)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddEmailAddress indicates an expected call of AddEmailAddress.
+func (mr *MockStoreMockRecorder) AddEmailAddress(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEmailAddress", reflect.TypeOf((*MockStore)(nil).AddEmailAddress), arg0, arg1)
+}
+
+// AddPhoneNumber mocks base method.
+func (m *MockStore) AddPhoneNumber(arg0 context.Context, arg1 db.AddPhoneNumberParams) (db.PhoneNumber, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddPhoneNumber", arg0, arg1)
+	ret0, _ := ret[0].(db.PhoneNumber)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddPhoneNumber indicates an expected call of AddPhoneNumber.
+func (mr *MockStoreMockRecorder) AddPhoneNumber(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddPhoneNumber", reflect.TypeOf((*MockStore)(nil).AddPhoneNumber), arg0, arg1)
+}
+
 // BlockSession mocks base method.
 func (m *MockStore) BlockSession(arg0 context.Context, arg1 uuid.UUID) error {
 	m.ctrl.T.Helper()
@@ -324,6 +354,34 @@ func (mr *MockStoreMockRecorder) DeleteAccountInfo(arg0, arg1 any) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAccountInfo", reflect.TypeOf((*MockStore)(nil).DeleteAccountInfo), arg0, arg1)
 }
 
+// DeleteAllEmailAddresses mocks base method.
+func (m *MockStore) DeleteAllEmailAddresses(arg0 context.Context, arg1 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAllEmailAddresses", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAllEmailAddresses indicates an expected call of DeleteAllEmailAddresses.
+func (mr *MockStoreMockRecorder) DeleteAllEmailAddresses(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllEmailAddresses", reflect.TypeOf((*MockStore)(nil).DeleteAllEmailAddresses), arg0, arg1)
+}
+
+// DeleteAllPhoneNumbers mocks base method.
+func (m *MockStore) DeleteAllPhoneNumbers(arg0 context.Context, arg1 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAllPhoneNumbers", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAllPhoneNumbers indicates an expected call of DeleteAllPhoneNumbers.
+func (mr *MockStoreMockRecorder) DeleteAllPhoneNumbers(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllPhoneNumbers", reflect.TypeOf((*MockStore)(nil).DeleteAllPhoneNumbers), arg0, arg1)
+}
+
 // DeleteDocument mocks base method.
 func (m *MockStore) DeleteDocument(arg0 context.Context, arg1 uint64) error {
 	m.ctrl.T.Helper()
@@ -365,6 +423,20 @@ func (m *MockStore) DeleteDocumentsByPersonID(arg0 context.Context, arg1 sql.Nul
 func (mr *MockStoreMockRecorder) DeleteDocumentsByPersonID(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDocumentsByPersonID", reflect.TypeOf((*MockStore)(nil).DeleteDocumentsByPersonID), arg0, arg1)
+}
+
+// DeleteEmailAddress mocks base method.
+func (m *MockStore) DeleteEmailAddress(arg0 context.Context, arg1 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteEmailAddress", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteEmailAddress indicates an expected call of DeleteEmailAddress.
+func (mr *MockStoreMockRecorder) DeleteEmailAddress(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteEmailAddress", reflect.TypeOf((*MockStore)(nil).DeleteEmailAddress), arg0, arg1)
 }
 
 // DeleteMail mocks base method.
@@ -421,6 +493,20 @@ func (m *MockStore) DeletePersonTx(arg0 context.Context, arg1 uint64) error {
 func (mr *MockStoreMockRecorder) DeletePersonTx(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePersonTx", reflect.TypeOf((*MockStore)(nil).DeletePersonTx), arg0, arg1)
+}
+
+// DeletePhoneNumber mocks base method.
+func (m *MockStore) DeletePhoneNumber(arg0 context.Context, arg1 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeletePhoneNumber", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeletePhoneNumber indicates an expected call of DeletePhoneNumber.
+func (mr *MockStoreMockRecorder) DeletePhoneNumber(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePhoneNumber", reflect.TypeOf((*MockStore)(nil).DeletePhoneNumber), arg0, arg1)
 }
 
 // DeleteProvider mocks base method.
@@ -538,6 +624,21 @@ func (mr *MockStoreMockRecorder) GetAccountInfo(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountInfo", reflect.TypeOf((*MockStore)(nil).GetAccountInfo), arg0, arg1)
 }
 
+// GetAccountLevel mocks base method.
+func (m *MockStore) GetAccountLevel(arg0 context.Context, arg1 uint64) (db.GetAccountLevelRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccountLevel", arg0, arg1)
+	ret0, _ := ret[0].(db.GetAccountLevelRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccountLevel indicates an expected call of GetAccountLevel.
+func (mr *MockStoreMockRecorder) GetAccountLevel(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountLevel", reflect.TypeOf((*MockStore)(nil).GetAccountLevel), arg0, arg1)
+}
+
 // GetDocument mocks base method.
 func (m *MockStore) GetDocument(arg0 context.Context, arg1 uint64) (db.Document, error) {
 	m.ctrl.T.Helper()
@@ -583,6 +684,21 @@ func (mr *MockStoreMockRecorder) GetDocumentByIDWithAccountID(arg0, arg1 any) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDocumentByIDWithAccountID", reflect.TypeOf((*MockStore)(nil).GetDocumentByIDWithAccountID), arg0, arg1)
 }
 
+// GetEmailAddresses mocks base method.
+func (m *MockStore) GetEmailAddresses(arg0 context.Context, arg1 uint64) ([]db.EmailAddress, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetEmailAddresses", arg0, arg1)
+	ret0, _ := ret[0].([]db.EmailAddress)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetEmailAddresses indicates an expected call of GetEmailAddresses.
+func (mr *MockStoreMockRecorder) GetEmailAddresses(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmailAddresses", reflect.TypeOf((*MockStore)(nil).GetEmailAddresses), arg0, arg1)
+}
+
 // GetMail mocks base method.
 func (m *MockStore) GetMail(arg0 context.Context, arg1 uint64) (db.Mail, error) {
 	m.ctrl.T.Helper()
@@ -626,6 +742,21 @@ func (m *MockStore) GetPerson(arg0 context.Context, arg1 uint64) (db.Person, err
 func (mr *MockStoreMockRecorder) GetPerson(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPerson", reflect.TypeOf((*MockStore)(nil).GetPerson), arg0, arg1)
+}
+
+// GetPhoneNumbers mocks base method.
+func (m *MockStore) GetPhoneNumbers(arg0 context.Context, arg1 uint64) ([]db.PhoneNumber, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPhoneNumbers", arg0, arg1)
+	ret0, _ := ret[0].([]db.PhoneNumber)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPhoneNumbers indicates an expected call of GetPhoneNumbers.
+func (mr *MockStoreMockRecorder) GetPhoneNumbers(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhoneNumbers", reflect.TypeOf((*MockStore)(nil).GetPhoneNumbers), arg0, arg1)
 }
 
 // GetProvider mocks base method.
@@ -898,6 +1029,51 @@ func (mr *MockStoreMockRecorder) ListSessions(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSessions", reflect.TypeOf((*MockStore)(nil).ListSessions), arg0, arg1)
 }
 
+// ResendVerification mocks base method.
+func (m *MockStore) ResendVerification(arg0 context.Context, arg1 db.ResendVerificationParams) (db.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ResendVerification", arg0, arg1)
+	ret0, _ := ret[0].(db.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ResendVerification indicates an expected call of ResendVerification.
+func (mr *MockStoreMockRecorder) ResendVerification(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResendVerification", reflect.TypeOf((*MockStore)(nil).ResendVerification), arg0, arg1)
+}
+
+// ResendVerificationTx mocks base method.
+func (m *MockStore) ResendVerificationTx(arg0 context.Context, arg1 db.ResendVerificationTxParams) (db.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ResendVerificationTx", arg0, arg1)
+	ret0, _ := ret[0].(db.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ResendVerificationTx indicates an expected call of ResendVerificationTx.
+func (mr *MockStoreMockRecorder) ResendVerificationTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResendVerificationTx", reflect.TypeOf((*MockStore)(nil).ResendVerificationTx), arg0, arg1)
+}
+
+// UpdateAccount mocks base method.
+func (m *MockStore) UpdateAccount(arg0 context.Context, arg1 db.UpdateAccountParams) (db.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAccount", arg0, arg1)
+	ret0, _ := ret[0].(db.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateAccount indicates an expected call of UpdateAccount.
+func (mr *MockStoreMockRecorder) UpdateAccount(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockStore)(nil).UpdateAccount), arg0, arg1)
+}
+
 // UpdateAccountInfo mocks base method.
 func (m *MockStore) UpdateAccountInfo(arg0 context.Context, arg1 db.UpdateAccountInfoParams) (db.AccountInfo, error) {
 	m.ctrl.T.Helper()
@@ -956,6 +1132,21 @@ func (m *MockStore) UpdateAccountPrivacyTx(arg0 context.Context, arg1 db.UpdateA
 func (mr *MockStoreMockRecorder) UpdateAccountPrivacyTx(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccountPrivacyTx", reflect.TypeOf((*MockStore)(nil).UpdateAccountPrivacyTx), arg0, arg1)
+}
+
+// UpdateAccountTx mocks base method.
+func (m *MockStore) UpdateAccountTx(arg0 context.Context, arg1 db.UpdateAccountTxParams) (db.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAccountTx", arg0, arg1)
+	ret0, _ := ret[0].(db.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateAccountTx indicates an expected call of UpdateAccountTx.
+func (mr *MockStoreMockRecorder) UpdateAccountTx(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccountTx", reflect.TypeOf((*MockStore)(nil).UpdateAccountTx), arg0, arg1)
 }
 
 // UpdateDocument mocks base method.

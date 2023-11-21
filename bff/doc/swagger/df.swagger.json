@@ -677,6 +677,84 @@
         ]
       }
     },
+    "/v1/persons/add_email": {
+      "post": {
+        "summary": "Add Email Address",
+        "operationId": "df_AddEmailAddress",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbAddEmailAddressResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Add an EmailAddress",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbAddEmailAddressRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/persons/add_emails": {
+      "post": {
+        "summary": "Add Email Addresses",
+        "operationId": "df_AddEmailAddresses",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbAddEmailAddressesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Add an EmailAddress",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbAddEmailAddressesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "df"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/persons/create_person": {
       "post": {
         "summary": "Create Person",
@@ -1120,6 +1198,10 @@
         "secretKey": {
           "type": "string"
         },
+        "accountLevel": {
+          "type": "integer",
+          "format": "int64"
+        },
         "emailVerifiedTime": {
           "type": "string",
           "format": "date-time",
@@ -1222,6 +1304,69 @@
         }
       },
       "title": "AccountInfo"
+    },
+    "pbAddEmailAddressRequest": {
+      "type": "object",
+      "properties": {
+        "personId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "description": "Add an EmailAddress",
+      "title": "Add EmailAddress",
+      "required": [
+        "personId",
+        "email"
+      ]
+    },
+    "pbAddEmailAddressResponse": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "$ref": "#/definitions/pbEmailAddress"
+        }
+      },
+      "description": "Returns the added EmailAddress",
+      "title": "Added EmailAddress"
+    },
+    "pbAddEmailAddressesRequest": {
+      "type": "object",
+      "properties": {
+        "personId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "email": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Add an EmailAddress",
+      "title": "Add EmailAddress",
+      "required": [
+        "personId",
+        "email"
+      ]
+    },
+    "pbAddEmailAddressesResponse": {
+      "type": "object",
+      "properties": {
+        "emails": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbEmailAddress"
+          }
+        }
+      },
+      "description": "Returns the added EmailAddresses",
+      "title": "Added EmailAddresses"
     },
     "pbBlockSessionRequest": {
       "type": "object",
@@ -1455,6 +1600,9 @@
         "country": {
           "type": "string"
         },
+        "relationship": {
+          "type": "string"
+        },
         "birthday": {
           "type": "string",
           "format": "date-time",
@@ -1471,6 +1619,7 @@
         "city",
         "zip",
         "country",
+        "relationship",
         "birthday"
       ]
     },
@@ -1591,6 +1740,23 @@
         }
       },
       "title": "Document"
+    },
+    "pbEmailAddress": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "personId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "title": "EmailAddress"
     },
     "pbGetAccountInfoResponse": {
       "type": "object",
@@ -1906,6 +2072,9 @@
           "type": "string",
           "format": "date-time",
           "example": "2023-10-05T00:00:00Z"
+        },
+        "relationship": {
+          "type": "string"
         }
       },
       "title": "Person"
@@ -2268,6 +2437,9 @@
           "type": "string"
         },
         "country": {
+          "type": "string"
+        },
+        "relationship": {
           "type": "string"
         },
         "birthday": {

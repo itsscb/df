@@ -16,6 +16,8 @@ import "rpc_get_person.proto";
 import "rpc_list_persons.proto";
 import "rpc_update_person.proto";
 import "rpc_delete_person.proto";
+import "rpc_add_email.proto";
+import "rpc_add_emails.proto";
 
 import "rpc_create_account.proto";
 import "rpc_get_account.proto";
@@ -235,6 +237,36 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             summary: "Update Account Privacy Settings"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc AddEmailAddress (AddEmailAddressRequest) returns (AddEmailAddressResponse) {
+        option (google.api.http) = {
+            post: "/v1/persons/add_email"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Add Email Address"
+            security: {
+                security_requirement: {
+                    key: "BearerAuth";
+                    value: {}
+                }
+            }
+        };
+    };
+    rpc AddEmailAddresses (AddEmailAddressesRequest) returns (AddEmailAddressesResponse) {
+        option (google.api.http) = {
+            post: "/v1/persons/add_emails"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Add Email Addresses"
             security: {
                 security_requirement: {
                     key: "BearerAuth";

@@ -24,7 +24,8 @@ const UpdatePersonRequest$json = {
     {'1': 'city', '3': 5, '4': 1, '5': 9, '9': 3, '10': 'city', '17': true},
     {'1': 'zip', '3': 6, '4': 1, '5': 9, '9': 4, '10': 'zip', '17': true},
     {'1': 'country', '3': 7, '4': 1, '5': 9, '9': 5, '10': 'country', '17': true},
-    {'1': 'birthday', '3': 8, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '8': {}, '9': 6, '10': 'birthday', '17': true},
+    {'1': 'relationship', '3': 8, '4': 1, '5': 9, '9': 6, '10': 'relationship', '17': true},
+    {'1': 'birthday', '3': 9, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '8': {}, '9': 7, '10': 'birthday', '17': true},
   ],
   '7': {},
   '8': [
@@ -34,6 +35,7 @@ const UpdatePersonRequest$json = {
     {'1': '_city'},
     {'1': '_zip'},
     {'1': '_country'},
+    {'1': '_relationship'},
     {'1': '_birthday'},
   ],
 };
@@ -43,15 +45,16 @@ final $typed_data.Uint8List updatePersonRequestDescriptor = $convert.base64Decod
     'ChNVcGRhdGVQZXJzb25SZXF1ZXN0Eg4KAmlkGAEgASgEUgJpZBIhCglmaXJzdG5hbWUYAiABKA'
     'lIAFIJZmlyc3RuYW1liAEBEh8KCGxhc3RuYW1lGAMgASgJSAFSCGxhc3RuYW1liAEBEhsKBnN0'
     'cmVldBgEIAEoCUgCUgZzdHJlZXSIAQESFwoEY2l0eRgFIAEoCUgDUgRjaXR5iAEBEhUKA3ppcB'
-    'gGIAEoCUgEUgN6aXCIAQESHQoHY291bnRyeRgHIAEoCUgFUgdjb3VudHJ5iAEBElgKCGJpcnRo'
-    'ZGF5GAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEIbkkEYShYiMTk5MC0xMC0wNV'
-    'QwMDowMDowMFoiSAZSCGJpcnRoZGF5iAEBOuUBkkHhAQomKg1VcGRhdGUgUGVyc29uMhBVcGRh'
-    'dGUgYW4gUGVyc29u0gECaWQytgF7ImlkIjogIjEiLCAiZmlyc3RuYW1lIjogIkpvaG4iLCAibG'
-    'FzdG5hbWUiOiAiRG9lIiwgInBob25lIjogIiIsICJzdHJlZXQiOiAiRGVhdGggU3RhciAzIiwg'
-    'InppcCI6ICIwODE2IiwgImNpdHkiOiAiTW9udGFuYSIsICJjb3VudHJ5IjogIkNhbmFkYSIsIC'
-    'JiaXJ0aGRheSI6ICIxOTkyLTEwLTA1VDAwOjAwOjAwWiIgfUIMCgpfZmlyc3RuYW1lQgsKCV9s'
-    'YXN0bmFtZUIJCgdfc3RyZWV0QgcKBV9jaXR5QgYKBF96aXBCCgoIX2NvdW50cnlCCwoJX2Jpcn'
-    'RoZGF5');
+    'gGIAEoCUgEUgN6aXCIAQESHQoHY291bnRyeRgHIAEoCUgFUgdjb3VudHJ5iAEBEicKDHJlbGF0'
+    'aW9uc2hpcBgIIAEoCUgGUgxyZWxhdGlvbnNoaXCIAQESWAoIYmlydGhkYXkYCSABKAsyGi5nb2'
+    '9nbGUucHJvdG9idWYuVGltZXN0YW1wQhuSQRhKFiIxOTkwLTEwLTA1VDAwOjAwOjAwWiJIB1II'
+    'YmlydGhkYXmIAQE65QGSQeEBCiYqDVVwZGF0ZSBQZXJzb24yEFVwZGF0ZSBhbiBQZXJzb27SAQ'
+    'JpZDK2AXsiaWQiOiAiMSIsICJmaXJzdG5hbWUiOiAiSm9obiIsICJsYXN0bmFtZSI6ICJEb2Ui'
+    'LCAicGhvbmUiOiAiIiwgInN0cmVldCI6ICJEZWF0aCBTdGFyIDMiLCAiemlwIjogIjA4MTYiLC'
+    'AiY2l0eSI6ICJNb250YW5hIiwgImNvdW50cnkiOiAiQ2FuYWRhIiwgImJpcnRoZGF5IjogIjE5'
+    'OTItMTAtMDVUMDA6MDA6MDBaIiB9QgwKCl9maXJzdG5hbWVCCwoJX2xhc3RuYW1lQgkKB19zdH'
+    'JlZXRCBwoFX2NpdHlCBgoEX3ppcEIKCghfY291bnRyeUIPCg1fcmVsYXRpb25zaGlwQgsKCV9i'
+    'aXJ0aGRheQ==');
 
 @$core.Deprecated('Use updatePersonResponseDescriptor instead')
 const UpdatePersonResponse$json = {

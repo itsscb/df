@@ -17,6 +17,7 @@ message Account {
     uint64 id = 1;
     string email = 2;
     optional string secret_key = 3;
+    optional uint32 account_level = 4;
     google.protobuf.Timestamp email_verified_time = 9 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       example: "\"2023-10-05T00:00:00Z\""
   }];

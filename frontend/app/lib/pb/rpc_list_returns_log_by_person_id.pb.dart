@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'returns_log.pb.dart' as $33;
+import 'returns_log.pb.dart' as $36;
 
 class ListReturnsLogRequest extends $pb.GeneratedMessage {
   factory ListReturnsLogRequest({
@@ -68,7 +68,7 @@ class ListReturnsLogRequest extends $pb.GeneratedMessage {
 
 class ListReturnsLogResponse extends $pb.GeneratedMessage {
   factory ListReturnsLogResponse({
-    $core.Iterable<$33.ReturnsLog>? returnsLog,
+    $core.Iterable<$36.ReturnsLog>? returnsLog,
   }) {
     final $result = create();
     if (returnsLog != null) {
@@ -81,7 +81,7 @@ class ListReturnsLogResponse extends $pb.GeneratedMessage {
   factory ListReturnsLogResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ListReturnsLogResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..pc<$33.ReturnsLog>(1, _omitFieldNames ? '' : 'returnsLog', $pb.PbFieldType.PM, subBuilder: $33.ReturnsLog.create)
+    ..pc<$36.ReturnsLog>(1, _omitFieldNames ? '' : 'returnsLog', $pb.PbFieldType.PM, subBuilder: $36.ReturnsLog.create)
     ..hasRequiredFields = false
   ;
 
@@ -107,7 +107,7 @@ class ListReturnsLogResponse extends $pb.GeneratedMessage {
   static ListReturnsLogResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$33.ReturnsLog> get returnsLog => $_getList(0);
+  $core.List<$36.ReturnsLog> get returnsLog => $_getList(0);
 }
 
 

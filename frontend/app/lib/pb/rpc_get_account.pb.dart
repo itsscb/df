@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'account.pb.dart' as $30;
+import 'account.pb.dart' as $33;
 
 class GetAccountRequest extends $pb.GeneratedMessage {
   factory GetAccountRequest({
@@ -68,7 +68,7 @@ class GetAccountRequest extends $pb.GeneratedMessage {
 
 class GetAccountResponse extends $pb.GeneratedMessage {
   factory GetAccountResponse({
-    $30.Account? account,
+    $33.Account? account,
   }) {
     final $result = create();
     if (account != null) {
@@ -81,7 +81,7 @@ class GetAccountResponse extends $pb.GeneratedMessage {
   factory GetAccountResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GetAccountResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'pb'), createEmptyInstance: create)
-    ..aOM<$30.Account>(1, _omitFieldNames ? '' : 'account', subBuilder: $30.Account.create)
+    ..aOM<$33.Account>(1, _omitFieldNames ? '' : 'account', subBuilder: $33.Account.create)
     ..hasRequiredFields = false
   ;
 
@@ -107,15 +107,15 @@ class GetAccountResponse extends $pb.GeneratedMessage {
   static GetAccountResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $30.Account get account => $_getN(0);
+  $33.Account get account => $_getN(0);
   @$pb.TagNumber(1)
-  set account($30.Account v) { setField(1, v); }
+  set account($33.Account v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasAccount() => $_has(0);
   @$pb.TagNumber(1)
   void clearAccount() => clearField(1);
   @$pb.TagNumber(1)
-  $30.Account ensureAccount() => $_ensure(0);
+  $33.Account ensureAccount() => $_ensure(0);
 }
 
 

@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $28;
+import 'google/protobuf/timestamp.pb.dart' as $30;
 
 class Person extends $pb.GeneratedMessage {
   factory Person({
@@ -26,11 +26,12 @@ class Person extends $pb.GeneratedMessage {
     $core.String? city,
     $core.String? zip,
     $core.String? country,
-    $28.Timestamp? birthday,
+    $30.Timestamp? birthday,
     $core.String? creator,
-    $28.Timestamp? created,
+    $30.Timestamp? created,
     $core.String? changer,
-    $28.Timestamp? changed,
+    $30.Timestamp? changed,
+    $core.String? relationship,
   }) {
     final $result = create();
     if (id != null) {
@@ -72,6 +73,9 @@ class Person extends $pb.GeneratedMessage {
     if (changed != null) {
       $result.changed = changed;
     }
+    if (relationship != null) {
+      $result.relationship = relationship;
+    }
     return $result;
   }
   Person._() : super();
@@ -87,11 +91,12 @@ class Person extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'city')
     ..aOS(7, _omitFieldNames ? '' : 'zip')
     ..aOS(8, _omitFieldNames ? '' : 'country')
-    ..aOM<$28.Timestamp>(9, _omitFieldNames ? '' : 'birthday', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(9, _omitFieldNames ? '' : 'birthday', subBuilder: $30.Timestamp.create)
     ..aOS(10, _omitFieldNames ? '' : 'creator')
-    ..aOM<$28.Timestamp>(11, _omitFieldNames ? '' : 'created', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(11, _omitFieldNames ? '' : 'created', subBuilder: $30.Timestamp.create)
     ..aOS(12, _omitFieldNames ? '' : 'changer')
-    ..aOM<$28.Timestamp>(13, _omitFieldNames ? '' : 'changed', subBuilder: $28.Timestamp.create)
+    ..aOM<$30.Timestamp>(13, _omitFieldNames ? '' : 'changed', subBuilder: $30.Timestamp.create)
+    ..aOS(14, _omitFieldNames ? '' : 'relationship')
     ..hasRequiredFields = false
   ;
 
@@ -189,15 +194,15 @@ class Person extends $pb.GeneratedMessage {
   void clearCountry() => clearField(8);
 
   @$pb.TagNumber(9)
-  $28.Timestamp get birthday => $_getN(8);
+  $30.Timestamp get birthday => $_getN(8);
   @$pb.TagNumber(9)
-  set birthday($28.Timestamp v) { setField(9, v); }
+  set birthday($30.Timestamp v) { setField(9, v); }
   @$pb.TagNumber(9)
   $core.bool hasBirthday() => $_has(8);
   @$pb.TagNumber(9)
   void clearBirthday() => clearField(9);
   @$pb.TagNumber(9)
-  $28.Timestamp ensureBirthday() => $_ensure(8);
+  $30.Timestamp ensureBirthday() => $_ensure(8);
 
   @$pb.TagNumber(10)
   $core.String get creator => $_getSZ(9);
@@ -209,15 +214,15 @@ class Person extends $pb.GeneratedMessage {
   void clearCreator() => clearField(10);
 
   @$pb.TagNumber(11)
-  $28.Timestamp get created => $_getN(10);
+  $30.Timestamp get created => $_getN(10);
   @$pb.TagNumber(11)
-  set created($28.Timestamp v) { setField(11, v); }
+  set created($30.Timestamp v) { setField(11, v); }
   @$pb.TagNumber(11)
   $core.bool hasCreated() => $_has(10);
   @$pb.TagNumber(11)
   void clearCreated() => clearField(11);
   @$pb.TagNumber(11)
-  $28.Timestamp ensureCreated() => $_ensure(10);
+  $30.Timestamp ensureCreated() => $_ensure(10);
 
   @$pb.TagNumber(12)
   $core.String get changer => $_getSZ(11);
@@ -229,15 +234,24 @@ class Person extends $pb.GeneratedMessage {
   void clearChanger() => clearField(12);
 
   @$pb.TagNumber(13)
-  $28.Timestamp get changed => $_getN(12);
+  $30.Timestamp get changed => $_getN(12);
   @$pb.TagNumber(13)
-  set changed($28.Timestamp v) { setField(13, v); }
+  set changed($30.Timestamp v) { setField(13, v); }
   @$pb.TagNumber(13)
   $core.bool hasChanged() => $_has(12);
   @$pb.TagNumber(13)
   void clearChanged() => clearField(13);
   @$pb.TagNumber(13)
-  $28.Timestamp ensureChanged() => $_ensure(12);
+  $30.Timestamp ensureChanged() => $_ensure(12);
+
+  @$pb.TagNumber(14)
+  $core.String get relationship => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set relationship($core.String v) { $_setString(13, v); }
+  @$pb.TagNumber(14)
+  $core.bool hasRelationship() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearRelationship() => clearField(14);
 }
 
 
