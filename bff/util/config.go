@@ -19,6 +19,7 @@ type Config struct {
 	SMTPPassword         string        `mapstructure:"SMTP_PASSWORD"`
 	SMTPMail             string        `mapstructure:"SMTP_MAIL"`
 	MigrationRetries     int           `mapstructure:"MIGRATION_RETRIES"`
+	Swagger              bool          `mapstructure:"SWAGGER"`
 	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
 }

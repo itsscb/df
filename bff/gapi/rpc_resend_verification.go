@@ -50,7 +50,7 @@ func (server *Server) ResendVerification(ctx context.Context, req *pb.ResendVeri
 			ID: req.GetAccountId(),
 		},
 		AfterCreate: func(a db.Account) error {
-			return server.mailSender.SendEmail("Verify your E-Mail Address", fmt.Sprintf("Hello %s,</br></br>please verify your E-Mail Addres by clicking on the following link:</br><a href=\"http://localhost:8080/v1/verify_email/%d/%s\">Verification Link</a></br></br></br>Your Team of DF", account.Email, a.ID, a.SecretKey.String), []string{account.Email}, nil, nil, nil)
+			return server.mailSender.SendEmail("Verify your E-Mail Address", fmt.Sprintf("Hello %s,</br></br>please verify your E-Mail Addres by clicking on the following link:</br><a href=\"https://df.itsscb.de/v1/verify_email/%d/%s\">Verification Link</a></br></br></br>Your Team of DF", account.Email, a.ID, a.SecretKey.String), []string{account.Email}, nil, nil, nil)
 		},
 	}
 
