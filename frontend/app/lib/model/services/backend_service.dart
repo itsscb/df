@@ -225,6 +225,9 @@ class BackendService {
     } on SocketException {
       throw FetchDataException('Keine Internet Verbindung');
     } on GrpcError catch (err) {
+      if (err.code == 12) {
+        throw UnauthorizedException('${err.message}');
+      }
       throw FetchDataException('${err.message}');
     } catch (err) {
       throw InternalException(err.toString());
